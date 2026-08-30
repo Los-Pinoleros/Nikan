@@ -95,7 +95,7 @@ $current = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
     <header class="header">
-        <a href="/" class="header__logo">NIK0N</a>
+        <a href="/" class="header__logo">NIKAN</a>
         <img src="assets/leon.ico" alt="León" class="header__leon">
         <nav class="header__nav">
             <a href="?page=inicio" class="header__link"><img src="assets/inicio.ico" alt="Inicio">Inicio</a>
