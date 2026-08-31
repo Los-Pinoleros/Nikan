@@ -106,16 +106,11 @@
 
 .arte-texto h1 {
     font-size: 82px;
-    color: #c9b27a;
+    color: #C6372E;
     margin: 0 0 24px;
     line-height: 1.05;
     letter-spacing: 3px;
-    /* degradado dorado clásico para títulos de museo */
-    background: linear-gradient(180deg, #e6d7a8 0%, #c9a94f 40%, #8a6a2f 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 2px rgba(90, 60, 20, 0.3));
+    text-shadow: 0 2px 2px rgba(90, 60, 20, 0.25);
 }
 
 .arte-texto p {
