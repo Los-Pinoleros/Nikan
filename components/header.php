@@ -10,6 +10,12 @@ $current = basename($_SERVER['PHP_SELF']);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Felthgothic';
+            src: url('../fonts/Felthgothic Bold Italic.otf') format('opentype');
+            font-weight: bold;
+            font-style: italic;
+        }
         :root {
             --nikan-bg: #C6372E;
             --nikan-bg-rgb: 195, 55, 46;
@@ -47,8 +53,8 @@ $current = basename($_SERVER['PHP_SELF']);
             padding: 28px 48px;
         }
         .header__logo {
-            font: oblique bold 120% cursive;
-            font-size: 34px;
+            font: oblique bold 120% 'Felthgothic', cursive;
+            font-size: 48px;
             letter-spacing: 2px;
             color: #fff;
             text-decoration: none;
@@ -75,7 +81,8 @@ $current = basename($_SERVER['PHP_SELF']);
             max-width: 100%;
         }
         .header__link {
-            font: oblique bold 120% cursive;
+            font: oblique bold 120% 'Felthgothic', cursive;
+            font-size: 20px;
             color: #fff;
             text-decoration: none;
             text-transform: uppercase;
@@ -96,12 +103,12 @@ $current = basename($_SERVER['PHP_SELF']);
 <body>
     <header class="header">
         <a href="/" class="header__logo">NIKAN</a>
-        <img src="assets/leon.ico" alt="León" class="header__leon">
+        <img src="assets/leon.svg" alt="León" class="header__leon">
         <nav class="header__nav">
-            <a href="?page=inicio" class="header__link"><img src="assets/inicio.ico" alt="Inicio">Inicio</a>
-            <a href="?page=arte" class="header__link"><img src="assets/arte.ico" alt="Arte">Arte</a>
-            <a href="?page=literatura" class="header__link"><img src="assets/literatura.ico" alt="Literatura">Literatura</a>
-            <a href="?page=musica" class="header__link"><img src="assets/musica.ico" alt="Música">Música</a>
-            <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.ico" alt="Nosotros">Nosotros</a>
+            <a href="?page=inicio" class="header__link"><img src="assets/inicio.svg" alt="Inicio">Inicio</a>
+            <a href="?page=arte" class="header__link"><img src="assets/arte.svg" alt="Arte">Arte</a>
+            <a href="?page=literatura" class="header__link"><img src="assets/literatura.svg" alt="Literatura">Literatura</a>
+            <a href="?page=musica" class="header__link"><img src="assets/musica.svg" alt="Música">Música</a>
+            <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
         </nav>
     </header>
