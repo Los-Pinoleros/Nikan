@@ -1,0 +1,237 @@
+/* ===== NIKAN - Animaciones globales ===== */
+
+html { scroll-behavior: smooth; }
+section[id^="seccion-"],
+section[id^="det"] { scroll-margin-top: 130px; }
+
+/* ---------- Preloader ---------- */
+#nikan-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgb(var(--nikan-bg-rgb));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 18px;
+    transition: opacity 0.7s ease, visibility 0.7s;
+}
+#nikan-loader.done { opacity: 0; visibility: hidden; }
+#nikan-loader .nikan-loader-word {
+    font: oblique bold 120% 'Felthgothic', cursive;
+    font-size: 84px;
+    letter-spacing: 8px;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.7);
+    animation: nikanLoaderWord 1.4s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+#nikan-loader .nikan-loader-bar {
+    width: 160px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    overflow: hidden;
+}
+#nikan-loader .nikan-loader-bar::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 40%;
+    background: #fff;
+    border-radius: 4px;
+    animation: nikanLoaderBar 1.1s ease-in-out infinite;
+}
+@keyframes nikanLoaderWord {
+    0%   { opacity: 0; transform: scale(0.7); letter-spacing: 20px; filter: blur(6px); }
+    60%  { opacity: 1; transform: scale(1.05); letter-spacing: 8px; filter: blur(0); }
+    100% { opacity: 1; transform: scale(1); letter-spacing: 8px; filter: blur(0); }
+}
+@keyframes nikanLoaderBar {
+    0%   { transform: translateX(-110%); }
+    100% { transform: translateX(320%); }
+}
+
+/* ---------- Partículas doradas (canvas) ---------- */
+#nikan-velo {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+}
+
+/* ---------- Brillo del cursor ---------- */
+#nikan-cursor {
+    position: fixed;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 224, 138, 0.22), rgba(255, 224, 138, 0.05) 45%, transparent 70%);
+    filter: blur(24px);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 4;
+}
+#nikan-cursor.on { opacity: 1; }
+
+/* ---------- Auroras de fondo ---------- */
+.nikan-aurora {
+    position: fixed;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 50%;
+    filter: blur(70px);
+    mix-blend-mode: screen;
+    opacity: 0.5;
+}
+.nikan-aurora--1 {
+    width: 48vw;
+    height: 48vw;
+    left: -12vw;
+    top: 6vh;
+    background: radial-gradient(circle, rgba(201, 169, 79, 0.55), transparent 70%);
+    animation: nikanFloat 22s ease-in-out infinite alternate;
+}
+.nikan-aurora--2 {
+    width: 42vw;
+    height: 42vw;
+    right: -14vw;
+    bottom: 0vh;
+    background: radial-gradient(circle, rgba(198, 55, 46, 0.4), transparent 70%);
+    animation: nikanFloat 28s ease-in-out infinite alternate-reverse;
+}
+.nikan-aurora--3 {
+    width: 26vw;
+    height: 26vw;
+    left: 40vw;
+    bottom: -8vh;
+    background: radial-gradient(circle, rgba(120, 150, 90, 0.3), transparent 70%);
+    animation: nikanFloat 34s ease-in-out infinite alternate;
+}
+@keyframes nikanFloat {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(4vw, -4vh, 0) scale(1.12); }
+    100% { transform: translate3d(-3vw, 3vh, 0) scale(0.95); }
+}
+
+/* ---------- Header compacto al hacer scroll ---------- */
+.header { transition: padding 0.35s ease, box-shadow 0.35s ease, background 0.35s; }
+.header--scrolled {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    background: rgba(198, 55, 46, 0.95);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+.header--scrolled .header__logo { font-size: 36px; }
+.header--scrolled .header__leon { height: 44px; }
+.header__logo, .header__leon { transition: font-size 0.35s ease, height 0.35s ease; }
+
+/* ---------- Reveal al hacer scroll ---------- */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(42px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+[data-reveal][data-reveal="left"]  { transform: translateX(-48px); }
+[data-reveal][data-reveal="right"] { transform: translateX(48px); }
+[data-reveal][data-reveal="zoom"]  { transform: scale(0.85); }
+[data-reveal].in-view { opacity: 1; transform: none; }
+
+/* ---------- Títulos con letras en cascada ---------- */
+.nikan-cascade h1,
+.cascade-title {
+    display: block;
+}
+.nikan-cascade .nikan-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.6em) rotate(4deg);
+    animation: nikanCharIn 0.7s cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
+    animation-delay: var(--d, 0s);
+    will-change: transform, opacity;
+}
+.nikan-cascade.ran .nikan-char { animation-name: nikanCharIn; }
+@keyframes nikanCharIn {
+    0%   { opacity: 0; transform: translateY(0.6em) rotate(6deg); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0) rotate(0); filter: blur(0); }
+}
+
+/* ---------- Enlaces/pseudos magnéticos ---------- */
+.magnetic { transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1); }
+
+/* ---------- Spotlight en tarjetas ---------- */
+.artec-card, .lite-card, .poe-card, .aut-card, .det-mini, .detl-mini, .detp-mini {
+    position: relative;
+}
+.spot-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        340px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(255, 255, 255, 0.22),
+        transparent 65%
+    );
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 0.35s;
+}
+.spot-card:hover::before { opacity: 1; }
+.spot-card > * { position: relative; z-index: 1; }
+
+/* ---------- Flotación de emblemas ---------- */
+.arte-imagen img, .lite-emblema, .poe-emblema, .aut-emblema {
+    animation: nikanHover 5s ease-in-out infinite;
+}
+.arte-imagen img { animation-delay: 0s; }
+.lite-emblema, .poe-emblema { animation-delay: 0.6s; }
+.aut-emblema { animation-delay: 1.2s; }
+@keyframes nikanHover {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-10px) rotate(-1.2deg); }
+}
+.arte-imagen img:hover { animation-play-state: paused; }
+
+/* ---------- Brillo en botones ---------- */
+.btn, .login__btn, .header__link {
+    position: relative;
+    overflow: hidden;
+}
+.btn::after, .login__btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-22deg);
+    transition: left 0.55s ease;
+}
+.btn:hover::after, .login__btn:hover::after { left: 130%; }
+
+/* ---------- Puntitos brillantes sobre imágenes ---------- */
+.artec-img img, .lite-img img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+.artec-card:hover .artec-img img,
+.lite-card:hover img, .poe-card:hover .poe-img img { transform: scale(1.08); }
+
+/* ---------- Preferencia de movimiento reducida ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    #nikan-loader, #nikan-cursor, #nikan-velo, .nikan-aurora { display: none; }
+    [data-reveal], .nikan-cascade .nikan-char { opacity: 1 !important; transform: none !important; animation: none !important; }
+    .arte-imagen img, .lite-emblema, .poe-emblema, .aut-emblema { animation: none !important; }
+}

@@ -1,17 +1,17 @@
 <?php
 /**
- * Vista de Arte: "La Vida Precolombina"
+ * Vista de Literatura
  * Muestra secciones y obras administrables desde el panel de administración.
  */
 require_once __DIR__ . '/../config/config.php';
 
 try {
     $pdo = getDB();
-    $secciones = $pdo->query('SELECT * FROM arte_secciones ORDER BY orden ASC')->fetchAll();
+    $secciones = $pdo->query('SELECT * FROM lit_secciones ORDER BY orden ASC')->fetchAll();
 
     if ($secciones) {
         $in = implode(',', array_map('intval', array_column($secciones, 'id')));
-        $obras = $pdo->query("SELECT * FROM arte_obras WHERE seccion_id IN ($in) ORDER BY orden ASC")->fetchAll();
+        $obras = $pdo->query("SELECT * FROM lit_obras WHERE seccion_id IN ($in) ORDER BY orden ASC")->fetchAll();
         $obrasPorSeccion = [];
         foreach ($obras as $o) {
             $obrasPorSeccion[$o['seccion_id']][] = $o;
@@ -25,70 +25,66 @@ try {
 }
 ?>
 
-<section class="arte-section">
-    <div class="arte-container">
-        <div class="arte-texto">
-            <div class="arte-tag">
-                <img src="assets/arte.svg" alt="Arte" class="icono">
-                <span>ARTE</span>
+<section class="lite-section">
+    <div class="lite-container">
+        <div class="lite-texto">
+            <div class="lite-tag">
+                <img src="assets/literatura.svg" alt="Literatura" class="lite-icono">
+                <span>LITERATURA</span>
             </div>
-            <h1>LA VIDA<br>PRECOLOMBINA</h1>
+            <h1>LA PALABRA<br>NICARAGÜENSE</h1>
             <p>
-                Sala “La Vida Precolombina” refleja la llegada del hombre a nuestro territorio
-                hasta el desarrollo de la técnica cerámica en el país, la cual está íntimamente
-                ligada a la producción agrícola.
+                Un recorrido por la palabra escrita y oral del país: la novela, el cuento,
+                el teatro, las leyendas y los mitos que alimentan nuestra identidad cultural.
             </p>
         </div>
 
-        <div class="arte-imagen">
-            <span class="spotlight"></span>
-            <span class="marco-dorado"></span>
-            <img src="assets/estatua1.svg" alt="Estatua precolombina">
-            <span class="pie-sombra"></span>
+        <div class="lite-imagen">
+            <div class="lite-marco-deco"></div>
+            <img src="assets/literatura.svg" alt="Literatura" class="lite-emblema">
+            <span class="lite-sombras"></span>
         </div>
     </div>
 </section>
 
 <?php foreach ($secciones as $idx => $seccion): ?>
-<section class="artec-seccion" id="seccion-<?php echo $seccion['id']; ?>">
-    <div class="artec-container">
-        <div class="artec-cabecera">
-            <span class="artec-num"><?php echo str_pad((string)($idx + 1), 2, '0', STR_PAD_LEFT); ?></span>
+<section class="lite-seccion" id="seccion-<?php echo $seccion['id']; ?>">
+    <div class="lite-inner">
+        <div class="lite-cabecera">
+            <span class="lite-num"><?php echo str_pad((string)($idx + 1), 2, '0', STR_PAD_LEFT); ?></span>
             <h2><?php echo htmlspecialchars($seccion['titulo']); ?></h2>
         </div>
         <?php if (!empty($seccion['descripcion'])): ?>
-            <p class="artec-desc"><?php echo htmlspecialchars($seccion['descripcion']); ?></p>
+            <p class="lite-desc"><?php echo htmlspecialchars($seccion['descripcion']); ?></p>
         <?php endif; ?>
 
         <?php $lista = $obrasPorSeccion[$seccion['id']] ?? []; ?>
         <?php if ($lista): ?>
-            <div class="artec-grid">
+            <div class="lite-grid">
                 <?php foreach ($lista as $obra): ?>
-                    <a href="?page=arte_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="artec-card">
-                        <div class="artec-img">
-                            <?php if ($obra['imagen']): ?>
-                                <img src="<?php echo htmlspecialchars($obra['imagen']); ?>" alt="<?php echo htmlspecialchars($obra['titulo']); ?>">
-                            <?php else: ?>
-                                <span class="artec-img-ph">Sin imagen</span>
-                            <?php endif; ?>
-                            <span class="artec-marco"></span>
-                            <span class="artec-ver">Ver detalles →</span>
-                        </div>
-                        <div class="artec-card-body">
+                    <a href="?page=lit_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="lite-card">
+                        <div class="lite-card-head">
                             <h3><?php echo htmlspecialchars($obra['titulo']); ?></h3>
-                            <div class="artec-meta">
-                                <?php if (!empty($obra['autor'])): ?><span class="artec-label">Autor/a: <strong><?php echo htmlspecialchars($obra['autor']); ?></strong></span><?php endif; ?>
-                                <?php if (!empty($obra['anio'])): ?><span class="artec-label">Año: <strong><?php echo htmlspecialchars($obra['anio']); ?></strong></span><?php endif; ?>
-                            </div>
-                            <?php if (!empty($obra['descripcion'])): ?>
-                                <p class="artec-obra-desc"><?php echo htmlspecialchars($obra['descripcion']); ?></p>
+                            <?php if (!empty($obra['autor'])): ?>
+                                <span class="lite-autor"><?php echo htmlspecialchars($obra['autor']); ?></span>
                             <?php endif; ?>
                         </div>
+                        <div class="lite-meta">
+                            <?php if (!empty($obra['genero'])): ?><span class="lite-label">Género: <strong><?php echo htmlspecialchars($obra['genero']); ?></strong></span><?php endif; ?>
+                            <?php if (!empty($obra['anio'])): ?><span class="lite-label">Año: <strong><?php echo htmlspecialchars($obra['anio']); ?></strong></span><?php endif; ?>
+                        </div>
+                        <?php if (!empty($obra['sinopsis'])): ?>
+                            <p class="lite-sinopsis"><?php echo htmlspecialchars($obra['sinopsis']); ?></p>
+                        <?php endif; ?>
+                        <?php if (!empty($obra['fragmento'])): ?>
+                            <blockquote class="lite-cita">«<?php echo htmlspecialchars($obra['fragmento']); ?>»</blockquote>
+                        <?php endif; ?>
+                        <span class="lite-ver">Ver ficha →</span>
                     </a>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p class="artec-vacio">Esta sección aún no tiene obras.</p>
+            <p class="lite-vacio">Esta sección aún no tiene obras.</p>
         <?php endif; ?>
     </div>
 </section>
@@ -100,7 +96,7 @@ try {
     src: url('../fonts/Felthgothic Bold.otf') format('opentype');
 }
 
-.arte-section {
+.lite-section {
     background:
         radial-gradient(ellipse at 25% 40%, rgba(255, 244, 222, 0.9), transparent 60%),
         radial-gradient(ellipse at 75% 45%, rgba(255, 244, 222, 0.7), transparent 55%),
@@ -115,7 +111,7 @@ try {
     overflow: hidden;
 }
 
-.arte-section::before {
+.lite-section::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -126,7 +122,7 @@ try {
     pointer-events: none;
 }
 
-.arte-container {
+.lite-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -135,12 +131,12 @@ try {
     position: relative;
 }
 
-.arte-texto {
+.lite-texto {
     max-width: 45%;
     padding-bottom: 120px;
 }
 
-.arte-tag {
+.lite-tag {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -151,15 +147,15 @@ try {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.arte-tag .icono {
+.lite-tag .lite-icono {
     width: 44px;
     height: 44px;
     object-fit: contain;
     filter: invert(1) brightness(0);
 }
 
-.arte-texto h1 {
-    font-size: 82px;
+.lite-texto h1 {
+    font-size: 78px;
     color: #C6372E;
     margin: 0 0 24px;
     line-height: 1.05;
@@ -167,7 +163,7 @@ try {
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.25);
 }
 
-.arte-texto p {
+.lite-texto p {
     font-size: 22px;
     color: #4a3b22;
     line-height: 1.7;
@@ -175,20 +171,21 @@ try {
     max-width: 560px;
 }
 
-.arte-imagen {
+/* Emblema literario decorativo */
+.lite-imagen {
     position: relative;
     text-align: center;
     align-self: flex-end;
-    margin-bottom: -140px;
+    margin-bottom: -80px;
     transform: translateY(-60px);
     padding: 24px;
 }
 
-.marco-dorado {
+.lite-marco-deco {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 76%;
+    width: 66%;
     height: 88%;
     transform: translate(-50%, -52%);
     border: 2px solid #c9a94f;
@@ -201,50 +198,36 @@ try {
     z-index: 0;
 }
 
-.marco-dorado::before,
-.marco-dorado::after {
+.lite-marco-deco::before,
+.lite-marco-deco::after {
     content: "";
     position: absolute;
     width: 40px;
     height: 40px;
     border: 3px solid #8a6a2f;
 }
-.marco-dorado::before {
+.lite-marco-deco::before {
     top: -3px;
     left: -3px;
     border-right: none;
     border-bottom: none;
 }
-.marco-dorado::after {
+.lite-marco-deco::after {
     top: -3px;
     right: -3px;
     border-left: none;
     border-bottom: none;
 }
 
-.arte-imagen img {
-    width: 560px;
+.lite-emblema {
+    width: 340px;
     height: auto;
     display: block;
     position: relative;
     z-index: 2;
 }
 
-.spotlight {
-    position: absolute;
-    top: 22%;
-    left: 50%;
-    width: 90%;
-    height: 75%;
-    transform: translateX(-50%);
-    background: radial-gradient(ellipse at 50% 30%, rgba(255, 250, 230, 0.85), rgba(255, 244, 210, 0.25) 55%, transparent 75%);
-    filter: blur(12px);
-    pointer-events: none;
-    z-index: 1;
-    mix-blend-mode: screen;
-}
-
-.pie-sombra {
+.lite-sombras {
     position: absolute;
     bottom: 8%;
     left: 50%;
@@ -257,8 +240,8 @@ try {
     z-index: 3;
 }
 
-/* ===== SECCIONES DE ARTE ===== */
-.artec-seccion {
+/* ===== SECCIONES DE LITERATURA ===== */
+.lite-seccion {
     background:
         linear-gradient(135deg, #f6efe3 0%, #efe4d0 45%, #e7d8bd 100%);
     padding: 90px 80px;
@@ -268,31 +251,31 @@ try {
     border-top: 3px solid #c9a94f;
 }
 
-.artec-seccion:nth-child(even) {
+.lite-seccion:nth-child(even) {
     background:
         linear-gradient(135deg, #efe8d8 0%, #e5d6b8 60%, #dcc9a3 100%);
 }
 
-.artec-container {
+.lite-inner {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.artec-cabecera {
+.lite-cabecera {
     display: flex;
     align-items: center;
     gap: 18px;
     margin-bottom: 14px;
 }
 
-.artec-num {
+.lite-num {
     font-family: 'Felthgothic Bold', 'Felthgothic', serif;
     font-size: 42px;
     color: #c9a94f;
     text-shadow: 0 1px 0 rgba(255,255,255,0.4);
 }
 
-.artec-cabecera h2 {
+.lite-cabecera h2 {
     font-family: 'Felthgothic Bold', 'Felthgothic', serif;
     font-size: 40px;
     color: #C6372E;
@@ -300,7 +283,7 @@ try {
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.2);
 }
 
-.artec-desc {
+.lite-desc {
     font-size: 18px;
     color: #4a3b22;
     max-width: 760px;
@@ -308,13 +291,13 @@ try {
     margin-bottom: 32px;
 }
 
-.artec-grid {
+.lite-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 28px;
 }
 
-.artec-card {
+.lite-card {
     background: rgba(255, 255, 255, 0.55);
     border-radius: 12px;
     overflow: hidden;
@@ -322,102 +305,77 @@ try {
     display: flex;
     flex-direction: column;
     backdrop-filter: blur(2px);
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.18s, box-shadow 0.18s;
-}
-.artec-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(90, 60, 20, 0.25); }
-
-.artec-img {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    background: #fff8e8;
-    overflow: hidden;
-}
-
-.artec-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    position: relative;
-    z-index: 1;
-}
-
-.artec-img-ph {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #b9a06a;
-    font-size: 14px;
-    font-style: italic;
-    z-index: 1;
-}
-
-.artec-marco {
-    position: absolute;
-    inset: 0;
-    border: 2px solid rgba(201, 169, 79, 0.6);
-    box-shadow: 0 0 0 4px rgba(201, 169, 79, 0.15) inset;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.artec-ver {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 3;
-    background: linear-gradient(to top, rgba(12, 12, 12, 0.75), transparent);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 30px 18px 12px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.2s, transform 0.2s;
-}
-.artec-card:hover .artec-ver { opacity: 1; transform: translateY(0); }
-
-.artec-card-body {
-    padding: 18px 20px 22px;
+    border-top: 3px solid #c9a94f;
+    padding: 22px 22px 24px;
     color: #4a3b22;
+    text-decoration: none;
+    transition: transform 0.18s, box-shadow 0.18s;
+    position: relative;
+}
+.lite-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(90, 60, 20, 0.25);
+}
+.lite-ver {
+    margin-top: 14px;
+    color: #0a7a4b;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.artec-card-body h3 {
+.lite-card-head h3 {
     font-family: 'Felthgothic Bold', 'Felthgothic', serif;
     font-size: 24px;
     color: #C6372E;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
 }
 
-.artec-meta {
+.lite-autor {
+    display: block;
+    font-size: 14px;
+    font-style: italic;
+    color: #0a7a4b;
+    margin-bottom: 10px;
+}
+
+.lite-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
     font-size: 13px;
     color: #6a5a38;
-    margin-bottom: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(120, 90, 40, 0.3);
+    margin-bottom: 10px;
 }
 
-.artec-label strong {
+.lite-label strong {
     font-weight: 700;
     color: #3d3d20;
 }
 
-.artec-obra-desc {
+.lite-sinopsis {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.55;
     color: #4a3b22;
-    text-align: justify;
+    margin-bottom: 12px;
 }
 
-.artec-vacio {
+.lite-cita {
+    margin: 0;
+    padding: 12px 14px;
+    background: rgba(201, 169, 79, 0.14);
+    border-left: 3px solid #c9a94f;
+    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #5a4720;
+    font-style: italic;
+}
+
+.lite-vacio {
     color: #8a7a58;
     font-style: italic;
     font-size: 16px;

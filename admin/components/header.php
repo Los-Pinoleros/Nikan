@@ -3,8 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $current = basename($_SERVER['PHP_SELF']);
-$loggedIn = isset($_SESSION['user_id']);
-$role = $_SESSION['role'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,11 +12,10 @@ $role = $_SESSION['role'] ?? null;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/nikan-anim.css">
     <style>
         @font-face {
             font-family: 'Felthgothic';
-            src: url('../fonts/Felthgothic Bold Italic.otf') format('opentype');
+            src: url('../../fonts/Felthgothic Bold Italic.otf') format('opentype');
             font-weight: bold;
             font-style: italic;
         }
@@ -33,7 +30,7 @@ $role = $_SESSION['role'] ?? null;
             margin: 0;
             min-height: 100vh;
             width: 100%;
-            background-image: url('assets/fondo.svg');
+            background-image: url('../../assets/fondo.svg');
             background-position: center center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -152,31 +149,23 @@ $role = $_SESSION['role'] ?? null;
 </head>
 <body>
     <header class="header">
-        <a href="/" class="header__logo">NIKAN</a>
-        <?php if ($loggedIn): ?>
-            <button type="button" class="header__leon-btn" onclick="document.getElementById('userMenu').classList.toggle('open')" style="background:none;border:none;padding:0;">
-                <img src="assets/leon-verde.svg" alt="León" class="header__leon">
-            </button>
-            <div id="userMenu" class="header__user">
-                <div class="header__user-name"><?php echo htmlspecialchars($_SESSION['username']); ?></div>
-                <div class="header__user-role"><?php echo $role; ?></div>
-                <?php if ($role === 'admin'): ?>
-                    <a class="header__user-link" href="admin/dashboard.php">Panel admin</a>
-                <?php endif; ?>
-                <a class="header__user-link" href="auth/logout.php">Cerrar sesión</a>
-            </div>
-        <?php else: ?>
-            <a href="auth/login.php" aria-label="Iniciar sesión">
-                <img src="assets/leon.svg" alt="León" class="header__leon">
-            </a>
-        <?php endif; ?>
+        <a href="../index.php" class="header__logo">NIKAN</a>
+        <button type="button" class="header__leon-btn" onclick="document.getElementById('userMenu').classList.toggle('open')" style="background:none;border:none;padding:0;">
+            <img src="../../assets/leon-verde.svg" alt="León" class="header__leon">
+        </button>
+        <div id="userMenu" class="header__user">
+            <div class="header__user-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+            <div class="header__user-role"><?php echo $_SESSION['role'] ?? ''; ?></div>
+            <a class="header__user-link" href="../index.php">Ver sitio</a>
+            <a class="header__user-link" href="../auth/logout.php">Cerrar sesión</a>
+        </div>
         <nav class="header__nav">
-            <a href="?page=inicio" class="header__link"><img src="assets/inicio.svg" alt="Inicio">Inicio</a>
-            <a href="?page=arte" class="header__link"><img src="assets/arte.svg" alt="Arte">Arte</a>
-            <a href="?page=literatura" class="header__link"><img src="assets/literatura.svg" alt="Literatura">Literatura</a>
-            <a href="?page=poesia" class="header__link"><img src="assets/literatura.svg" alt="Poesía">Poesía</a>
-            <a href="?page=musica" class="header__link"><img src="assets/musica.svg" alt="Música">Música</a>
-            <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
+            <a href="dashboard.php" class="header__link"><img src="../../assets/inicio.svg" alt="Dashboard">Dashboard</a>
+            <a href="autores.php" class="header__link"><img src="../../assets/nosotros.svg" alt="Autores">Autores</a>
+            <a href="arte.php" class="header__link"><img src="../../assets/arte.svg" alt="Arte">Arte</a>
+            <a href="literatura.php" class="header__link"><img src="../../assets/literatura.svg" alt="Literatura">Literatura</a>
+            <a href="poesia.php" class="header__link"><img src="../../assets/literatura.svg" alt="Poesía">Poesía</a>
+            <a href="#" class="header__link"><img src="../../assets/nosotros.svg" alt="Usuarios">Usuarios</a>
         </nav>
     </header>
     <script>
