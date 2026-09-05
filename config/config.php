@@ -3,8 +3,8 @@ require_once __DIR__ . '/env.php';
 
 define('DB_HOST', env('DB_HOST', 'localhost'));
 define('DB_NAME', env('DB_NAME', 'nuevaguin_nikannicaragua'));
-define('DB_USER', env('DB_USER', 'nuevaguin_nikannicaragua'));
-define('DB_PASS', env('DB_PASS', 'jMwFVVh3cwPSjFqCCSnV'));
+define('DB_USER', env('DB_USER', 'nuevguin_ea'));
+define('DB_PASS', env('DB_PASS', 'WjarXD2004@2026'));
 
 function getDB() {
     static $conn = null;
