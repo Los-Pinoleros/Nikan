@@ -2,9 +2,9 @@
 require_once __DIR__ . '/env.php';
 
 define('DB_HOST', env('DB_HOST', 'localhost'));
-define('DB_NAME', env('DB_NAME', 'nikannicaragua'));
-define('DB_USER', env('DB_USER', 'root'));
-define('DB_PASS', env('DB_PASS', ''));
+define('DB_NAME', env('DB_NAME', 'nuevaguin_nikannicaragua'));
+define('DB_USER', env('DB_USER', 'nuevaguin_nikannicaragua'));
+define('DB_PASS', env('DB_PASS', 'jMwFVVh3cwPSjFqCCSnV'));
 
 function getDB() {
     static $conn = null;

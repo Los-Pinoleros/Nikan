@@ -1,0 +1,147 @@
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   620b657..86de85d  main       -> origin/main
+Updating 620b657..86de85d
+Fast-forward
+ components/header.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   86de85d..c7b19d7  main       -> origin/main
+Updating 86de85d..c7b19d7
+Fast-forward
+ components/header.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   c7b19d7..803f750  main       -> origin/main
+Updating c7b19d7..803f750
+Fast-forward
+ assets/arte.ico                   | Bin 16970 -> 0 bytes
+ assets/arte.svg                   |   8 ++
+ assets/estatuaarte1.svg           |   1 +
+ assets/inicio.ico                 | Bin 13667 -> 0 bytes
+ assets/inicio.svg                 |   8 ++
+ assets/leon.ico                   | Bin 152126 -> 0 bytes
+ assets/leon.svg                   |   8 ++
+ assets/literatura.ico             | Bin 11751 -> 0 bytes
+ assets/literatura.svg             |   8 ++
+ assets/musica.ico                 | Bin 13794 -> 0 bytes
+ assets/musica.svg                 |   8 ++
+ assets/nosotros.ico               | Bin 7221 -> 0 bytes
+ assets/nosotros.svg               |   8 ++
+ components/arte.php               | 230 ++++++++++++++++++++++++++++++++++++++
+ components/header.php             |  25 +++--
+ fonts/Felthgothic Bold Italic.otf | Bin 0 -> 51020 bytes
+ fonts/Felthgothic Bold.otf        | Bin 0 -> 50216 bytes
+ fonts/rustica-plains.regular.ttf  | Bin 0 -> 108736 bytes
+ index.php                         |  12 +-
+ 19 files changed, 306 insertions(+), 10 deletions(-)
+ delete mode 100644 assets/arte.ico
+ create mode 100644 assets/arte.svg
+ create mode 100644 assets/estatuaarte1.svg
+ delete mode 100644 assets/inicio.ico
+ create mode 100644 assets/inicio.svg
+ delete mode 100644 assets/leon.ico
+ create mode 100644 assets/leon.svg
+ delete mode 100644 assets/literatura.ico
+ create mode 100644 assets/literatura.svg
+ delete mode 100644 assets/musica.ico
+ create mode 100644 assets/musica.svg
+ delete mode 100644 assets/nosotros.ico
+ create mode 100644 assets/nosotros.svg
+ create mode 100644 components/arte.php
+ create mode 100644 fonts/Felthgothic Bold Italic.otf
+ create mode 100644 fonts/Felthgothic Bold.otf
+ create mode 100644 fonts/rustica-plains.regular.ttf
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   803f750..bebb6e3  main       -> origin/main
+Updating 803f750..bebb6e3
+Fast-forward
+ components/arte.php | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   bebb6e3..476d3b1  main       -> origin/main
+Updating bebb6e3..476d3b1
+Fast-forward
+ README.md | 157 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 157 insertions(+)
+ create mode 100644 README.md
+
+From github.com:Los-Pinoleros/Nikan
+ * branch            main       -> FETCH_HEAD
+   476d3b1..e53873a  main       -> origin/main
+Updating 476d3b1..e53873a
+Fast-forward
+ .env.example                |  12 +
+ .gitignore                  |   2 +
+ admin/arte.php              | 363 +++++++++++++++++++++++++++++
+ admin/arte_actions.php      | 103 ++++++++
+ admin/auth.php              |  13 ++
+ admin/autor_actions.php     |  93 ++++++++
+ admin/autores.php           | 266 +++++++++++++++++++++
+ admin/components/header.php | 178 ++++++++++++++
+ admin/dashboard.php         | 130 +++++++++++
+ admin/lit_actions.php       |  96 ++++++++
+ admin/literatura.php        | 338 +++++++++++++++++++++++++++
+ admin/poe_actions.php       | 109 +++++++++
+ admin/poesia.php            | 374 ++++++++++++++++++++++++++++++
+ assets/leon-verde.svg       |   8 +
+ assets/nikan-anim.css       | 237 +++++++++++++++++++
+ assets/nikan-anim.js        | 218 +++++++++++++++++
+ auth/login.php              | 226 ++++++++++++++++++
+ auth/logout.php             |  13 ++
+ components/arte.php         | 264 ++++++++++++++++++---
+ components/arte_detalle.php | 368 +++++++++++++++++++++++++++++
+ components/autores.php      | 554 ++++++++++++++++++++++++++++++++++++++++++++
+ components/foother.php      |   3 +
+ components/header.php       |  77 +++++-
+ components/lit_detalle.php  | 396 +++++++++++++++++++++++++++++++
+ components/literatura.php   | 383 ++++++++++++++++++++++++++++++
+ components/poe_detalle.php  | 403 ++++++++++++++++++++++++++++++++
+ components/poesia.php       | 436 ++++++++++++++++++++++++++++++++++
+ config/config.php           |  98 ++++++++
+ config/env.php              |  56 +++++
+ database/install.php        |  51 ++++
+ database/setup.sql          |  21 ++
+ index.php                   |  20 ++
+ 32 files changed, 5876 insertions(+), 33 deletions(-)
+ create mode 100644 .env.example
+ create mode 100644 .gitignore
+ create mode 100644 admin/arte.php
+ create mode 100644 admin/arte_actions.php
+ create mode 100644 admin/auth.php
+ create mode 100644 admin/autor_actions.php
+ create mode 100644 admin/autores.php
+ create mode 100644 admin/components/header.php
+ create mode 100644 admin/dashboard.php
+ create mode 100644 admin/lit_actions.php
+ create mode 100644 admin/literatura.php
+ create mode 100644 admin/poe_actions.php
+ create mode 100644 admin/poesia.php
+ create mode 100644 assets/leon-verde.svg
+ create mode 100644 assets/nikan-anim.css
+ create mode 100644 assets/nikan-anim.js
+ create mode 100644 auth/login.php
+ create mode 100644 auth/logout.php
+ create mode 100644 components/arte_detalle.php
+ create mode 100644 components/autores.php
+ create mode 100644 components/lit_detalle.php
+ create mode 100644 components/literatura.php
+ create mode 100644 components/poe_detalle.php
+ create mode 100644 components/poesia.php
+ create mode 100644 config/config.php
+ create mode 100644 config/env.php
+ create mode 100644 database/install.php
+ create mode 100644 database/setup.sql
+
