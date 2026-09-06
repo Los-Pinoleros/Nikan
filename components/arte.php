@@ -29,10 +29,9 @@ try {
     <div class="arte-container">
         <div class="arte-texto">
             <div class="arte-tag">
-                <img src="assets/arte.svg" alt="Arte" class="icono">
                 <span>ARTE</span>
             </div>
-            <h1>La vida<br>precolombina.</h1>
+            <h1 aria-label="La vida precolombina.">La<span class="arte-titulo-espacio" aria-hidden="true"></span>vida<br>precolombina.</h1>
             <p>
                 Sala “La Vida Precolombina” refleja la llegada del hombre a nuestro territorio
                 hasta el desarrollo de la técnica cerámica en el país, la cual está íntimamente
@@ -159,13 +158,18 @@ try {
 }
 
 .arte-texto h1 {
-    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
+    font-family: 'Felthgothic', serif;
     font-size: 82px;
     color: #C6372E;
     margin: 0 0 24px;
     line-height: 1.05;
     letter-spacing: 3px;
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.25);
+}
+
+.arte-titulo-espacio {
+    display: inline-block;
+    width: 0.28em;
 }
 
 .arte-texto p {

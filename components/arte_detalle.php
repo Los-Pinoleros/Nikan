@@ -81,7 +81,7 @@ try {
                 <?php if ($seccion_titulo): ?>
                     <span class="det-tag"><?php echo htmlspecialchars($seccion_titulo); ?></span>
                 <?php endif; ?>
-                <h1><?php echo htmlspecialchars($obra['titulo']); ?></h1>
+                <h1 aria-label="<?php echo htmlspecialchars($obra['titulo'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo preg_replace('/\s+/u', '<span class="det-titulo-espacio" aria-hidden="true"></span>', trim(htmlspecialchars($obra['titulo'], ENT_QUOTES, 'UTF-8'))); ?></h1>
 
                 <dl class="det-ficha">
                     <?php if ($autor): ?>
@@ -269,6 +269,7 @@ try {
     margin: 0 0 20px;
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.2);
 }
+.det-titulo-espacio { display: inline-block; width: 0.28em; }
 
 .det-ficha {
     margin: 0 0 20px;

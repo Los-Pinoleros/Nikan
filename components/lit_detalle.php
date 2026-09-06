@@ -83,7 +83,7 @@ try {
                 <?php if ($seccion_titulo): ?>
                     <span class="detl-tag"><?php echo htmlspecialchars($seccion_titulo); ?></span>
                 <?php endif; ?>
-                <h1><?php echo htmlspecialchars($obra['titulo']); ?></h1>
+                <h1 aria-label="<?php echo htmlspecialchars($obra['titulo'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo preg_replace('/\s+/u', '<span class="detl-titulo-espacio" aria-hidden="true"></span>', trim(htmlspecialchars($obra['titulo'], ENT_QUOTES, 'UTF-8'))); ?></h1>
 
                 <dl class="detl-ficha">
                     <?php if ($autor): ?>
@@ -287,6 +287,7 @@ try {
     margin: 0 0 20px;
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.2);
 }
+.detl-titulo-espacio { display: inline-block; width: 0.28em; }
 
 .detl-ficha { margin: 0 0 20px; }
 .detl-afil {

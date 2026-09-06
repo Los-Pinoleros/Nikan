@@ -32,7 +32,7 @@ try {
                 <img src="assets/literatura.svg" alt="Literatura" class="lite-icono">
                 <span>LITERATURA</span>
             </div>
-            <h1>LA PALABRA<br>NICARAGÜENSE</h1>
+            <h1 aria-label="LA PALABRA NICARAGÜENSE">LA<span class="lite-titulo-espacio" aria-hidden="true"></span>PALABRA<br>NICARAGÜENSE</h1>
             <p>
                 Un recorrido por la palabra escrita y oral del país: la novela, el cuento,
                 el teatro, las leyendas y los mitos que alimentan nuestra identidad cultural.
@@ -162,6 +162,11 @@ try {
     line-height: 1.05;
     letter-spacing: 3px;
     text-shadow: 0 2px 2px rgba(90, 60, 20, 0.25);
+}
+
+.lite-titulo-espacio {
+    display: inline-block;
+    width: 0.28em;
 }
 
 .lite-texto p {
