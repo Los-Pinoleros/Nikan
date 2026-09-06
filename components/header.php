@@ -31,7 +31,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;0,800;1,500&family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nikan-anim.css">
     <style>
         @font-face {
@@ -39,6 +39,10 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             src: url('../fonts/Felthgothic Bold Italic.otf') format('opentype');
             font-weight: bold;
             font-style: italic;
+        }
+        @font-face {
+            font-family: 'Nikan Felthgothic';
+            src: url('../fonts/Felthgothic Bold.ttf') format('opentype');
         }
         @font-face {
             font-family: 'Rustica';

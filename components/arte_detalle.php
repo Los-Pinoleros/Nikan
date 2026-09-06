@@ -187,7 +187,7 @@ try {
 <style>
 @font-face {
     font-family: 'Nikan Felthgothic';
-    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
+    src: url('../fonts/Felthgothic Bold.ttf') format('opentype');
 }
 
 .det-section {
@@ -262,7 +262,7 @@ try {
     margin-bottom: 14px;
 }
 .det-info h1 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 46px;
     color: #C6372E;
     line-height: 1.1;
@@ -297,7 +297,7 @@ try {
     border-top: 2px solid #c9a94f;
 }
 .det-bloque h2 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 30px;
     color: #C6372E;
     margin: 0 0 18px;
@@ -333,7 +333,7 @@ try {
 }
 .det-autor-retrato img { width: 100%; height: 100%; object-fit: cover; }
 .det-autor-ph { font-family: 'Nikan Felthgothic', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
-.det-autor-cuerpo h3 { font-family: 'Rustica', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
+.det-autor-cuerpo h3 { font-family: 'Nikan Felthgothic', 'Felthgothic', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
 .det-autor-datos { font-size: 14px; color: #6a5a38; margin: 0 0 10px; }
 .det-autor-bio { font-size: 15px; line-height: 1.6; color: #4a3b22; margin: 0 0 12px; }
 .det-autor-link { color: #0a7a4b; font-weight: 700; font-size: 14px; text-decoration: none; }

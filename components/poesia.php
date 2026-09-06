@@ -116,7 +116,7 @@ try {
 <style>
 @font-face {
     font-family: 'Nikan Felthgothic';
-    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
+    src: url('../fonts/Felthgothic Bold.ttf') format('opentype');
 }
 
 .poe-section {
@@ -178,7 +178,7 @@ try {
 }
 
 .poe-texto h1 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 78px;
     color: #C6372E;
     margin: 0 0 24px;
@@ -299,7 +299,7 @@ try {
 }
 
 .poe-cabecera h2 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 40px;
     color: #C6372E;
     letter-spacing: 1px;
@@ -307,6 +307,7 @@ try {
 }
 
 .poe-desc {
+    font-family: 'Rustica', serif;
     font-size: 18px;
     color: #4a3b22;
     max-width: 760px;
@@ -365,7 +366,7 @@ try {
 }
 
 .poe-card-body h3 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 24px;
     color: #C6372E;
     margin-bottom: 4px;

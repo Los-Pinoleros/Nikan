@@ -96,7 +96,7 @@ try {
 <style>
 @font-face {
     font-family: 'Nikan Felthgothic';
-    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
+    src: url('../fonts/Felthgothic Bold.ttf') format('opentype');
 }
 
 .mus-section {
@@ -158,7 +158,7 @@ try {
 }
 
 .mus-texto h1 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 82px;
     color: #C6372E;
     margin: 0 0 24px;
@@ -257,7 +257,7 @@ try {
 }
 
 .musc-cabecera h2 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 40px;
     color: #0a7a4b;
     letter-spacing: 1px;
@@ -265,6 +265,7 @@ try {
 }
 
 .musc-desc {
+    font-family: 'Rustica', serif;
     font-size: 18px;
     color: #4a3b22;
     max-width: 760px;
@@ -354,7 +355,7 @@ try {
 }
 
 .musc-card-body h3 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 24px;
     color: #0a7a4b;
     margin-bottom: 8px;

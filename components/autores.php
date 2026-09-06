@@ -189,7 +189,7 @@ try {
 <style>
 @font-face {
     font-family: 'Nikan Felthgothic';
-    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
+    src: url('../fonts/Felthgothic Bold.ttf') format('opentype');
 }
 
 .aut-section {
@@ -251,7 +251,7 @@ try {
 }
 
 .aut-texto h1 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 72px;
     color: #C6372E;
     margin: 0 0 24px;
@@ -401,7 +401,7 @@ try {
 .aut-card-info { flex: 1; min-width: 0; }
 .aut-card-nombre {
     display: block;
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 22px;
     color: #C6372E;
 }
@@ -467,7 +467,7 @@ try {
 }
 .aut-ficha-retrato img { width: 100%; height: 100%; object-fit: cover; }
 .aut-ficha-head h2 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 34px;
     color: #C6372E;
     margin: 0 0 4px;
@@ -491,7 +491,7 @@ try {
     border-top: 1px dashed rgba(120, 90, 40, 0.3);
 }
 .aut-ficha-bloque h3 {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 20px;
     color: #C6372E;
     margin-bottom: 8px;
