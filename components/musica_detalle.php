@@ -1,35 +1,33 @@
 <?php
 /**
- * Detalle de una obra de arte.
- * Se accede via ?page=arte_detalle&obra_id=ID
- * Muestra la obra completa + bloque del autor + otras obras del mismo autor.
+ * Detalle de una pieza musical.
+ * Se accede via ?page=musica_detalle&obra_id=ID
+ * Muestra la obra completa + audio + bloque del autor + otras obras del mismo autor.
  */
 require_once __DIR__ . '/../config/config.php';
 
 $obra_id = (int)($_GET['obra_id'] ?? 0);
 
-function arte_aut_area_label($area) {
+function mus_aut_area_label($area) {
     return ['arte' => 'Arte', 'lit' => 'Literatura', 'poe' => 'Poesía', 'mus' => 'Música'][$area] ?? $area;
 }
 
 try {
     $pdo = getDB();
-    $stmt = $pdo->prepare('SELECT * FROM arte_obras WHERE id=?');
+    $stmt = $pdo->prepare('SELECT * FROM musica_obras WHERE id=?');
     $stmt->execute([$obra_id]);
     $obra = $stmt->fetch();
 
     if (!$obra) {
-        echo '<div class="det-vacio"><a href="index.php?page=arte">← Volver a Arte</a><p>No se encontró la obra.</p></div>
-        <style>.det-vacio{position:relative;z-index:2;padding:160px 40px;text-align:center;font-family:Montserrat,sans-serif;color:#4a3b22}.det-vacio a{color:#C6372E;font-weight:700;text-decoration:none}.det-vacio p{font-size:18px;margin-top:12px;color:#8a7a58}</style>';
+        echo '<div class="det-vacio"><a href="index.php?page=musica">← Volver a Música</a><p>No se encontró la obra.</p></div>
+        <style>.det-vacio{position:relative;z-index:2;padding:160px 40px;text-align:center;font-family:Montserrat,sans-serif;color:#4a3b22}.det-vacio a{color:#0a7a4b;font-weight:700;text-decoration:none}.det-vacio p{font-size:18px;margin-top:12px;color:#8a7a58}</style>';
         return;
     }
 
-    // Sección a la que pertenece
-    $sec = $pdo->prepare('SELECT titulo FROM arte_secciones WHERE id=?');
+    $sec = $pdo->prepare('SELECT titulo FROM musica_secciones WHERE id=?');
     $sec->execute([$obra['seccion_id']]);
     $seccion_titulo = $sec->fetchColumn();
 
-    // Autor
     $autor = null;
     if (!empty($obra['autor_id'])) {
         $st = $pdo->prepare('SELECT * FROM autores WHERE id=?');
@@ -37,16 +35,14 @@ try {
         $autor = $st->fetch();
     }
 
-    // Otras obras de este autor (todas las áreas)
     $otras_obras = [];
     if ($autor) {
         $areas = ['arte' => 'arte_obras', 'lit' => 'lit_obras', 'poe' => 'poe_obras', 'mus' => 'musica_obras'];
         foreach ($areas as $area => $tabla) {
-            $imgCol = ($area === 'lit' || $area === 'mus') ? 'NULL' : 'imagen';
-            $excluir = $area === 'arte' ? " AND id<>?" : '';
-            $q = "SELECT id, titulo, $imgCol AS imagen, '{$area}' AS area FROM $tabla WHERE autor_id=?" . $excluir . " ORDER BY orden ASC";
+            $excluir = $area === 'mus' ? " AND id<>?" : '';
+            $q = "SELECT id, titulo, '$area' AS area FROM $tabla WHERE autor_id=?" . $excluir . " ORDER BY orden ASC";
             $params = [$obra['autor_id']];
-            if ($area === 'arte') $params[] = $obra_id;
+            if ($area === 'mus') $params[] = $obra_id;
             $stmtArea = $pdo->prepare($q);
             $stmtArea->execute($params);
             foreach ($stmtArea as $r) {
@@ -61,10 +57,25 @@ try {
 
 <?php if (!$obra) return; ?>
 
+<?php
+$youtube_id = '';
+if (!empty($obra['audio']) && !preg_match('~^uploads/~', $obra['audio'])) {
+    if (preg_match('~(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{6,})~', $obra['audio'], $m)) {
+        $youtube_id = $m[1];
+    }
+}
+$audio_src = '';
+if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_file'])) {
+    $audio_src = $obra['audio_file'];
+} elseif (!empty($obra['audio'])) {
+    $audio_src = $obra['audio'];
+}
+?>
+
 <section class="det-section">
     <div class="det-container">
 
-        <a href="?page=arte" class="det-back">← Volver a Arte</a>
+        <a href="?page=musica" class="det-back">← Volver a Música</a>
 
         <div class="det-hero">
             <div class="det-imagen">
@@ -97,11 +108,11 @@ try {
                             <dd><?php echo htmlspecialchars($obra['autor']); ?></dd>
                         </div>
                     <?php endif; ?>
+                    <?php if (!empty($obra['genero'])): ?>
+                        <div class="det-afil"><dt>Género</dt><dd><?php echo htmlspecialchars($obra['genero']); ?></dd></div>
+                    <?php endif; ?>
                     <?php if (!empty($obra['anio'])): ?>
                         <div class="det-afil"><dt>Año</dt><dd><?php echo htmlspecialchars($obra['anio']); ?></dd></div>
-                    <?php endif; ?>
-                    <?php if (!empty($obra['tecnica'])): ?>
-                        <div class="det-afil"><dt>Técnica</dt><dd><?php echo htmlspecialchars($obra['tecnica']); ?></dd></div>
                     <?php endif; ?>
                     <?php if (!empty($obra['seccion_id'])): ?>
                         <div class="det-afil"><dt>Colección</dt><dd><?php echo htmlspecialchars($seccion_titulo ?: '-'); ?></dd></div>
@@ -114,9 +125,34 @@ try {
             </div>
         </div>
 
+        <?php if (!empty($audio_src)): ?>
+            <div class="det-bloque">
+                <h2>Escucha esta pieza</h2>
+                <?php if ($youtube_id): ?>
+                    <div class="det-player">
+                        <iframe
+                            src="https://www.youtube.com/embed/<?php echo $youtube_id; ?>"
+                            title="Reproductor de <?php echo htmlspecialchars($obra['titulo']); ?>"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                    </div>
+                <?php else: ?>
+                    <div class="det-reproducir" data-src="<?php echo htmlspecialchars($audio_src); ?>" data-titulo="<?php echo htmlspecialchars($obra['titulo']); ?>">
+                        <button type="button" class="det-reproducir-btn" aria-label="Reproducir"><span>▶</span></button>
+                        <div class="det-reproducir-info">
+                            <span class="det-reproducir-estado">Reproducir</span>
+                            <span class="det-reproducir-titulo"><?php echo htmlspecialchars($obra['titulo']); ?></span>
+                        </div>
+                        <audio preload="none" src="<?php echo htmlspecialchars($audio_src); ?>"></audio>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
         <?php if (!empty($obra['detalle'])): ?>
             <div class="det-bloque">
-                <h2>Detalles de la obra</h2>
+                <h2>Detalles de la pieza</h2>
                 <div class="det-cuerpo"><?php echo nl2br(htmlspecialchars($obra['detalle'])); ?></div>
             </div>
         <?php endif; ?>
@@ -155,26 +191,20 @@ try {
                 <div class="det-otras">
                     <?php foreach ($otras_obras as $o): ?>
                         <?php
-                        $href = $o['area'] === 'arte'
-                            ? '?page=arte_detalle&obra_id=' . (int)$o['id']
-                            : ($o['area'] === 'lit'
-                                ? '?page=lit_detalle&obra_id=' . (int)$o['id']
-                                : ($o['area'] === 'poe'
-                                    ? '?page=poe_detalle&obra_id=' . (int)$o['id']
-                                    : '?page=musica_detalle&obra_id=' . (int)$o['id']));
+                        $href = $o['area'] === 'mus'
+                            ? '?page=musica_detalle&obra_id=' . (int)$o['id']
+                            : ($o['area'] === 'arte'
+                                ? '?page=arte_detalle&obra_id=' . (int)$o['id']
+                                : ($o['area'] === 'lit'
+                                    ? '?page=lit_detalle&obra_id=' . (int)$o['id']
+                                    : '?page=poe_detalle&obra_id=' . (int)$o['id']));
                         ?>
                         <a class="det-mini" href="<?php echo $href; ?>">
-                            <?php if ($o['area'] === 'arte' && !empty($o['imagen'])): ?>
-                                <div class="det-mini-img">
-                                    <img src="<?php echo htmlspecialchars($o['imagen']); ?>" alt="<?php echo htmlspecialchars($o['titulo']); ?>">
-                                </div>
-                            <?php else: ?>
-                                <div class="det-mini-img det-mini-img--txt">
-                                    <span class="det-mini-area"><?php echo arte_aut_area_label($o['area']); ?></span>
-                                </div>
-                            <?php endif; ?>
+                            <div class="det-mini-img det-mini-img--txt">
+                                <span class="det-mini-area"><?php echo mus_aut_area_label($o['area']); ?></span>
+                            </div>
                             <span class="det-mini-titulo"><?php echo htmlspecialchars($o['titulo']); ?></span>
-                            <span class="det-mini-area-label"><?php echo arte_aut_area_label($o['area']); ?></span>
+                            <span class="det-mini-area-label"><?php echo mus_aut_area_label($o['area']); ?></span>
                         </a>
                     <?php endforeach; ?>
                 </div>
@@ -309,6 +339,90 @@ try {
     max-width: 780px;
 }
 
+/* Reproductor */
+.det-player {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #c9a94f;
+    background: #000;
+}
+.det-player iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+.det-reproducir {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 252, 244, 0.65);
+    border: 2px solid #c9a94f;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 10px 26px rgba(90, 60, 20, 0.18);
+}
+.det-reproducir.playing {
+    animation: det-tarjeta-pulso 1.6s ease-in-out infinite;
+}
+@keyframes det-tarjeta-pulso {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 26px rgba(90, 60, 20, 0.18); }
+    50% { transform: scale(1.012); box-shadow: 0 12px 34px rgba(201, 169, 79, 0.4); }
+}
+.det-reproducir-btn {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 3px solid #C6372E;
+    background: #C6372E;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, background 0.15s;
+}
+.det-reproducir-btn:hover { transform: scale(1.06); }
+.det-reproducir-btn.playing::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 2px solid rgba(201, 169, 79, 0.6);
+    border-radius: 50%;
+    animation: det-pulso 1.4s ease-out infinite;
+}
+@keyframes det-pulso {
+    from { transform: scale(0.9); opacity: 1; }
+    to   { transform: scale(1.35); opacity: 0; }
+}
+.det-reproducir-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.det-reproducir-estado {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #0a7a4b;
+}
+.det-reproducir-titulo {
+    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-size: 22px;
+    color: #4a3b22;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.det-reproducir audio { display: none; }
+
 /* Autor */
 .det-autor-box {
     display: flex;
@@ -368,3 +482,42 @@ try {
     .det-section { padding: 120px 20px 60px; }
 }
 </style>
+
+<script>
+(function () {
+    document.querySelectorAll('.det-reproducir').forEach(function (wrap) {
+        var audio = wrap.querySelector('audio');
+        var btn = wrap.querySelector('.det-reproducir-btn');
+        var estado = wrap.querySelector('.det-reproducir-estado');
+        if (!audio || !btn) return;
+
+        function playing() {
+            wrap.classList.add('playing');
+            btn.classList.add('playing');
+            btn.innerHTML = '<span>❚❚</span>';
+            estado.textContent = 'Reproduciendo';
+        }
+        function paused() {
+            wrap.classList.remove('playing');
+            btn.classList.remove('playing');
+            btn.innerHTML = '<span>▶</span>';
+            estado.textContent = 'Reproducir';
+        }
+        btn.addEventListener('click', function () {
+            if (audio.paused) {
+                var p = audio.play();
+                if (p && p.catch) p.catch(function () {});
+            } else {
+                audio.pause();
+            }
+        });
+        audio.addEventListener('play', playing);
+        audio.addEventListener('pause', paused);
+        audio.addEventListener('ended', paused);
+        audio.addEventListener('error', function () {
+            estado.textContent = 'Error al reproducir';
+            paused();
+        });
+    });
+})();
+</script>

@@ -14,6 +14,7 @@ $titulos = [
     'poesia' => 'Poesía · NIKAN',
     'autores' => 'Autores · NIKAN',
     'musica' => 'Música · NIKAN',
+    'musica_detalle' => 'Pieza Musical · NIKAN',
     'nosotros' => 'Nosotros · NIKAN',
     'arte_detalle' => 'Obra de Arte · NIKAN',
     'lit_detalle' => 'Obra Literaria · NIKAN',

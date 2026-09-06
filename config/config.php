@@ -96,3 +96,27 @@ function subir_imagen_webp($file, $prefijo) {
     if (file_exists($dest)) @unlink($dest);
     return false;
 }
+
+/**
+ * Sube un archivo de audio (mp3 u ogg).
+ * Devuelve la ruta relativa (uploads/audio/xxx.ext) o false si falla.
+ */
+function subir_audio($file) {
+    if ($file['error'] === UPLOAD_ERR_NO_FILE) return '';
+    if ($file['error'] !== UPLOAD_ERR_OK) return false;
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['mp3', 'ogg'];
+    if (!in_array($ext, $allowed)) return false;
+
+    $dir = __DIR__ . '/../uploads/audio/';
+    if (!is_dir($dir)) mkdir($dir, 0775, true);
+
+    $filename = 'musica_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+    $dest = $dir . $filename;
+
+    if (move_uploaded_file($file['tmp_name'], $dest)) {
+        return 'uploads/audio/' . $filename;
+    }
+    return false;
+}

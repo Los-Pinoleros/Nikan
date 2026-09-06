@@ -8,10 +8,10 @@ $usuarios  = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
 $admins    = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE role='admin'")->fetchColumn();
 $miembros  = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE role='user'")->fetchColumn();
 $autores   = (int) $pdo->query('SELECT COUNT(*) FROM autores')->fetchColumn();
-$obrasTotal = (int) $pdo->query('SELECT (SELECT COUNT(*) FROM arte_obras) + (SELECT COUNT(*) FROM lit_obras) + (SELECT COUNT(*) FROM poe_obras)')->fetchColumn();
+$obrasTotal = (int) $pdo->query('SELECT (SELECT COUNT(*) FROM arte_obras) + (SELECT COUNT(*) FROM lit_obras) + (SELECT COUNT(*) FROM poe_obras) + (SELECT COUNT(*) FROM musica_obras)')->fetchColumn();
 
 $porArea = [];
-foreach (['Arte' => 'arte', 'Literatura' => 'lit', 'Poesía' => 'poe'] as $nombre => $prefijo) {
+foreach (['Arte' => 'arte', 'Literatura' => 'lit', 'Poesía' => 'poe', 'Música' => 'musica'] as $nombre => $prefijo) {
     $obras  = (int) $pdo->query("SELECT COUNT(*) FROM {$prefijo}_obras")->fetchColumn();
     $secciones = (int) $pdo->query("SELECT COUNT(*) FROM {$prefijo}_secciones")->fetchColumn();
     $porArea[$nombre] = ['obras' => $obras, 'secciones' => $secciones];
@@ -22,14 +22,15 @@ $topAutores = $pdo->query("
     SELECT a.nombre,
         (SELECT COUNT(*) FROM arte_obras  x WHERE x.autor_id = a.id OR x.autor = a.nombre) +
         (SELECT COUNT(*) FROM lit_obras   y WHERE y.autor_id = a.id OR y.autor = a.nombre) +
-        (SELECT COUNT(*) FROM poe_obras   z WHERE z.autor_id = a.id OR z.autor = a.nombre) AS total
+        (SELECT COUNT(*) FROM poe_obras   z WHERE z.autor_id = a.id OR z.autor = a.nombre) +
+        (SELECT COUNT(*) FROM musica_obras w WHERE w.autor_id = a.id OR w.autor = a.nombre) AS total
     FROM autores a
     ORDER BY total DESC
 ")->fetchAll();
 $maxObrasAutor = (int) (max(array_column($topAutores, 'total')) ?: 1);
 
 $seccionesResumen = [];
-foreach (['Arte' => 'arte', 'Literatura' => 'lit', 'Poesía' => 'poe'] as $nombre => $prefijo) {
+foreach (['Arte' => 'arte', 'Literatura' => 'lit', 'Poesía' => 'poe', 'Música' => 'musica'] as $nombre => $prefijo) {
     $rows = $pdo->query("
         SELECT s.titulo, COUNT(o.id) AS c
         FROM {$prefijo}_secciones s
@@ -45,6 +46,7 @@ $recientes = $pdo->query("
     SELECT 'Arte' AS area, titulo, created_at FROM arte_obras
     UNION ALL SELECT 'Literatura', titulo, created_at FROM lit_obras
     UNION ALL SELECT 'Poesía', titulo, created_at FROM poe_obras
+    UNION ALL SELECT 'Música', titulo, created_at FROM musica_obras
     ORDER BY created_at DESC
 ")->fetchAll();
 
@@ -75,12 +77,12 @@ include __DIR__ . '/components/header.php';
         <div class="kpi kpi--green">
             <div class="kpi__num"><?php echo $obrasTotal; ?></div>
             <div class="kpi__label">Obras</div>
-            <div class="kpi__sub"><?php echo $porArea['Arte']['obras']; ?> arte · <?php echo $porArea['Literatura']['obras']; ?> lit. · <?php echo $porArea['Poesía']['obras']; ?> poesía</div>
+            <div class="kpi__sub"><?php echo $porArea['Arte']['obras']; ?> arte · <?php echo $porArea['Literatura']['obras']; ?> lit. · <?php echo $porArea['Poesía']['obras']; ?> poesía · <?php echo $porArea['Música']['obras']; ?> música</div>
         </div>
         <div class="kpi kpi--dark">
             <div class="kpi__num"><?php echo array_sum(array_column($porArea, 'secciones')); ?></div>
             <div class="kpi__label">Secciones</div>
-            <div class="kpi__sub"><?php echo $porArea['Arte']['secciones']; ?> + <?php echo $porArea['Literatura']['secciones']; ?> + <?php echo $porArea['Poesía']['secciones']; ?> por área</div>
+            <div class="kpi__sub"><?php echo $porArea['Arte']['secciones']; ?> + <?php echo $porArea['Literatura']['secciones']; ?> + <?php echo $porArea['Poesía']['secciones']; ?> + <?php echo $porArea['Música']['secciones']; ?> por área</div>
         </div>
     </section>
 
@@ -93,7 +95,13 @@ include __DIR__ . '/components/header.php';
                         <span class="bar__name"><?php echo $nombre; ?></span>
                         <span class="bar__val"><?php echo $d['obras']; ?> obras · <?php echo $d['secciones']; ?> secciones</span>
                     </div>
-                    <div class="bar__track"><div class="bar__fill bar__fill--<?php echo strtolower($nombre) === 'arte' ? 'red' : (strtolower($nombre) === 'literatura' ? 'gold' : 'green'); ?>" style="width: <?php echo round($d['obras'] / $maxObrasArea * 100); ?>%"></div></div>
+                    <div class="bar__track"><div class="bar__fill <?php
+                        $nombreL = strtolower($nombre);
+                        if ($nombreL === 'arte') echo 'bar__fill--red';
+                        elseif ($nombreL === 'literatura') echo 'bar__fill--gold';
+                        elseif ($nombreL === 'poesía' || $nombreL === 'poesia') echo 'bar__fill--green';
+                        else echo 'bar__fill--blue';
+                    ?>" style="width: <?php echo round($d['obras'] / $maxObrasArea * 100); ?>%"></div></div>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -138,6 +146,12 @@ include __DIR__ . '/components/header.php';
                 <div class="pill"><span><?php echo htmlspecialchars($s['titulo']); ?></span><span class="pill__n"><?php echo $s['c']; ?></span></div>
             <?php endforeach; ?>
         </div>
+        <div class="card">
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Colecciones de música</h2>
+            <?php foreach ($seccionesResumen['Música'] as $s): ?>
+                <div class="pill"><span><?php echo htmlspecialchars($s['titulo']); ?></span><span class="pill__n"><?php echo $s['c']; ?></span></div>
+            <?php endforeach; ?>
+        </div>
     </section>
 
     <section class="row">
@@ -147,7 +161,12 @@ include __DIR__ . '/components/header.php';
                 <ul class="feed pag" data-per="5" id="pagFeed">
                     <?php foreach ($recientes as $r): ?>
                         <li>
-                            <span class="feed__dot feed__dot--<?php echo $r['area'] === 'Arte' ? 'red' : ($r['area'] === 'Literatura' ? 'gold' : 'green'); ?>"></span>
+                            <span class="feed__dot <?php
+                                if ($r['area'] === 'Arte') echo 'feed__dot--red';
+                                elseif ($r['area'] === 'Literatura') echo 'feed__dot--gold';
+                                elseif ($r['area'] === 'Poesía') echo 'feed__dot--green';
+                                else echo 'feed__dot--blue';
+                            ?>"></span>
                             <span class="feed__area"><?php echo $r['area']; ?></span>
                             <span class="feed__titulo"><?php echo htmlspecialchars($r['titulo']); ?></span>
                             <span class="feed__fecha"><?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?></span>
@@ -256,6 +275,7 @@ include __DIR__ . '/components/header.php';
     .bar__fill--red { background: #C6372E; }
     .bar__fill--gold { background: #c9a94f; }
     .bar__fill--green { background: #0f9c60; }
+    .bar__fill--blue { background: #2a6fdb; }
 
     .pill {
         display: flex;
@@ -284,6 +304,7 @@ include __DIR__ . '/components/header.php';
     .feed__dot--red { background: #C6372E; }
     .feed__dot--gold { background: #c9a94f; }
     .feed__dot--green { background: #0f9c60; }
+    .feed__dot--blue { background: #2a6fdb; }
     .feed__area { font-weight: 700; opacity: 0.85; min-width: 74px; }
     .feed__titulo { flex: 1; min-width: 0; }
     .feed__fecha { opacity: 0.6; font-size: 12px; }

@@ -165,6 +165,7 @@ $current = basename($_SERVER['PHP_SELF']);
             <a href="arte.php" class="header__link"><img src="../../assets/arte.svg" alt="Arte">Arte</a>
             <a href="literatura.php" class="header__link"><img src="../../assets/literatura.svg" alt="Literatura">Literatura</a>
             <a href="poesia.php" class="header__link"><img src="../../assets/literatura.svg" alt="Poesía">Poesía</a>
+            <a href="musica.php" class="header__link"><img src="../../assets/musica.svg" alt="Música">Música</a>
             <a href="#" class="header__link"><img src="../../assets/nosotros.svg" alt="Usuarios">Usuarios</a>
         </nav>
     </header>

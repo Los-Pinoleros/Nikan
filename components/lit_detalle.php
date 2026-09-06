@@ -8,7 +8,7 @@ require_once __DIR__ . '/../config/config.php';
 $obra_id = (int)($_GET['obra_id'] ?? 0);
 
 function lit_area_label($area) {
-    return ['arte' => 'Arte', 'lit' => 'Literatura', 'poe' => 'Poesía'][$area] ?? $area;
+    return ['arte' => 'Arte', 'lit' => 'Literatura', 'poe' => 'Poesía', 'mus' => 'Música'][$area] ?? $area;
 }
 
 try {
@@ -36,7 +36,7 @@ try {
 
     $otras_obras = [];
     if ($autor) {
-        $areas = ['arte' => 'arte_obras', 'lit' => 'lit_obras', 'poe' => 'poe_obras'];
+        $areas = ['arte' => 'arte_obras', 'lit' => 'lit_obras', 'poe' => 'poe_obras', 'mus' => 'musica_obras'];
         foreach ($areas as $area => $tabla) {
             $imgCol = $area === 'lit' ? 'NULL' : 'imagen';
             $excluir = $area === 'lit' ? " AND id<>?" : '';
@@ -160,7 +160,9 @@ try {
                             ? '?page=arte_detalle&obra_id=' . (int)$o['id']
                             : ($o['area'] === 'lit'
                                 ? '?page=lit_detalle&obra_id=' . (int)$o['id']
-                                : '?page=poe_detalle&obra_id=' . (int)$o['id']);
+                                : ($o['area'] === 'poe'
+                                    ? '?page=poe_detalle&obra_id=' . (int)$o['id']
+                                    : '?page=musica_detalle&obra_id=' . (int)$o['id']));
                         ?>
                         <a class="detl-mini" href="<?php echo $href; ?>">
                             <?php if (($o['area'] === 'arte' || $o['area'] === 'poe') && !empty($o['imagen'])): ?>
@@ -363,7 +365,7 @@ try {
 .detl-autor-datos { font-size: 14px; color: #6a5a38; margin: 0 0 10px; }
 .detl-autor-bio { font-size: 15px; line-height: 1.6; color: #4a3b22; margin: 0 0 12px; }
 .detl-autor-link { color: #0a7a4b; font-weight: 700; font-size: 14px; text-decoration: none; }
-.detl-autor-link:hover { text-decoration: underline; }
+.detl-autor-link:hover { text-decoration: none; }
 
 /* Otras obras */
 .detl-otras {

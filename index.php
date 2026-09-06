@@ -13,6 +13,9 @@ switch ($page) {
     case 'poesia':
         include __DIR__ . '/components/poesia.php';
         break;
+    case 'musica':
+        include __DIR__ . '/components/musica.php';
+        break;
     case 'autores':
         include __DIR__ . '/components/autores.php';
         break;
@@ -27,6 +30,9 @@ switch ($page) {
         break;
     case 'poe_detalle':
         include __DIR__ . '/components/poe_detalle.php';
+        break;
+    case 'musica_detalle':
+        include __DIR__ . '/components/musica_detalle.php';
         break;
     default:
         include __DIR__ . '/components/podios.php';
