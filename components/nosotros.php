@@ -146,6 +146,7 @@
         filter: invert(1) brightness(0);
     }
     .nos-texto h1 {
+        font-family: 'Rustica', serif;
         font-size: 82px;
         color: #C6372E;
         margin: 0 0 24px;
@@ -225,6 +226,7 @@
         margin-bottom: 10px;
     }
     .nos-seccion-titulo h2 {
+        font-family: 'Rustica', serif;
         font-size: 40px;
         color: #3a2d18;
         margin: 0;

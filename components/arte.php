@@ -96,8 +96,8 @@ try {
 
 <style>
 @font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
+    font-family: 'Nikan Felthgothic';
+    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
 }
 
 .arte-section {
@@ -106,7 +106,7 @@ try {
         radial-gradient(ellipse at 75% 45%, rgba(255, 244, 222, 0.7), transparent 55%),
         linear-gradient(135deg, #f6efe3 0%, #efe4d0 45%, #e7d8bd 100%);
     padding: 80px 80px 0;
-    font-family: 'Felthgothic Bold', 'Felthgothic', 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -159,6 +159,7 @@ try {
 }
 
 .arte-texto h1 {
+    font-family: 'Rustica', serif;
     font-size: 82px;
     color: #C6372E;
     margin: 0 0 24px;
@@ -286,14 +287,14 @@ try {
 }
 
 .artec-num {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 42px;
     color: #c9a94f;
     text-shadow: 0 1px 0 rgba(255,255,255,0.4);
 }
 
 .artec-cabecera h2 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 40px;
     color: #C6372E;
     letter-spacing: 1px;
@@ -390,7 +391,7 @@ try {
 }
 
 .artec-card-body h3 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 24px;
     color: #C6372E;
     margin-bottom: 8px;

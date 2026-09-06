@@ -40,6 +40,10 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             font-weight: bold;
             font-style: italic;
         }
+        @font-face {
+            font-family: 'Rustica';
+            src: url('../fonts/rustica-plains.regular.ttf') format('truetype');
+        }
         :root {
             --nikan-bg: #C6372E;
             --nikan-bg-rgb: 195, 55, 46;
@@ -77,7 +81,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             padding: 28px 48px;
         }
         .header__logo {
-            font: oblique bold 120% 'Felthgothic', cursive;
+            font-family: 'Rustica', serif;
             font-size: 48px;
             letter-spacing: 2px;
             color: #fff;

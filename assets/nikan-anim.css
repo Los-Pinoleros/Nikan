@@ -19,7 +19,7 @@ section[id^="det"] { scroll-margin-top: 130px; }
 }
 #nikan-loader.done { opacity: 0; visibility: hidden; }
 #nikan-loader .nikan-loader-word {
-    font: oblique bold 120% 'Felthgothic', cursive;
+    font-family: 'Rustica', serif;
     font-size: 84px;
     letter-spacing: 8px;
     color: #fff;

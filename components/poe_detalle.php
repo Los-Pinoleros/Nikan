@@ -203,8 +203,8 @@ try {
 
 <style>
 @font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
+    font-family: 'Nikan Felthgothic';
+    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
 }
 
 .detp-section {
@@ -229,7 +229,7 @@ try {
     margin-bottom: 28px;
     font-size: 15px;
 }
-.detp-back:hover { text-decoration: underline; }
+.detp-back:hover { text-decoration: none; }
 
 .detp-hero {
     display: grid;
@@ -263,7 +263,7 @@ try {
     justify-content: center;
 }
 .detp-marco-letra {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 120px;
     color: #C6372E;
     line-height: 1;
@@ -283,7 +283,7 @@ try {
     margin-bottom: 14px;
 }
 .detp-info h1 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 46px;
     color: #C6372E;
     line-height: 1.1;
@@ -321,7 +321,7 @@ try {
     border-top: 2px solid #c9a94f;
 }
 .detp-bloque h2 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 30px;
     color: #C6372E;
     margin: 0 0 18px;
@@ -334,7 +334,7 @@ try {
 }
 
 .detp-poema {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 20px;
     line-height: 2;
     color: #4a3b22;
@@ -367,8 +367,8 @@ try {
     justify-content: center;
 }
 .detp-autor-retrato img { width: 100%; height: 100%; object-fit: cover; }
-.detp-autor-ph { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
-.detp-autor-cuerpo h3 { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
+.detp-autor-ph { font-family: 'Nikan Felthgothic', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
+.detp-autor-cuerpo h3 { font-family: 'Rustica', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
 .detp-autor-datos { font-size: 14px; color: #6a5a38; margin: 0 0 10px; }
 .detp-autor-bio { font-size: 15px; line-height: 1.6; color: #4a3b22; margin: 0 0 12px; }
 .detp-autor-link { color: #0a7a4b; font-weight: 700; font-size: 14px; text-decoration: none; }
@@ -394,7 +394,7 @@ try {
 .detp-mini-img { aspect-ratio: 4/3; background: #fff8e8; overflow: hidden; }
 .detp-mini-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .detp-mini-img--txt { display: flex; align-items: center; justify-content: center; }
-.detp-mini-area { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 22px; color: #b9a06a; }
+.detp-mini-area { font-family: 'Montserrat', sans-serif; font-size: 22px; color: #b9a06a; }
 .detp-mini-titulo { padding: 10px 12px 2px; font-size: 14px; font-weight: 700; color: #4a3b22; }
 .detp-mini-area-label { padding: 0 12px 12px; font-size: 11px; color: #0a7a4b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 

@@ -216,8 +216,8 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
 
 <style>
 @font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
+    font-family: 'Nikan Felthgothic';
+    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
 }
 
 .det-section {
@@ -245,7 +245,7 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
     margin-bottom: 28px;
     font-size: 15px;
 }
-.det-back:hover { text-decoration: underline; }
+.det-back:hover { text-decoration: none; }
 
 .det-hero {
     display: grid;
@@ -292,7 +292,7 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
     margin-bottom: 14px;
 }
 .det-info h1 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 46px;
     color: #C6372E;
     line-height: 1.1;
@@ -327,7 +327,7 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
     border-top: 2px solid #c9a94f;
 }
 .det-bloque h2 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 30px;
     color: #C6372E;
     margin: 0 0 18px;
@@ -414,7 +414,7 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
     color: #0a7a4b;
 }
 .det-reproducir-titulo {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 22px;
     color: #4a3b22;
     overflow: hidden;
@@ -446,8 +446,8 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
     justify-content: center;
 }
 .det-autor-retrato img { width: 100%; height: 100%; object-fit: cover; }
-.det-autor-ph { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
-.det-autor-cuerpo h3 { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
+.det-autor-ph { font-family: 'Nikan Felthgothic', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
+.det-autor-cuerpo h3 { font-family: 'Rustica', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
 .det-autor-datos { font-size: 14px; color: #6a5a38; margin: 0 0 10px; }
 .det-autor-bio { font-size: 15px; line-height: 1.6; color: #4a3b22; margin: 0 0 12px; }
 .det-autor-link { color: #0a7a4b; font-weight: 700; font-size: 14px; text-decoration: none; }
@@ -473,7 +473,7 @@ if (!empty($obra['audio_file']) && file_exists(__DIR__ . '/../' . $obra['audio_f
 .det-mini-img { aspect-ratio: 4/3; background: #fff8e8; overflow: hidden; }
 .det-mini-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .det-mini-img--txt { display: flex; align-items: center; justify-content: center; }
-.det-mini-area { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 22px; color: #b9a06a; }
+.det-mini-area { font-family: 'Montserrat', sans-serif; font-size: 22px; color: #b9a06a; }
 .det-mini-titulo { padding: 10px 12px 2px; font-size: 14px; font-weight: 700; color: #4a3b22; }
 .det-mini-area-label { padding: 0 12px 12px; font-size: 11px; color: #0a7a4b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 

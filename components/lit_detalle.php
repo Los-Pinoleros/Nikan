@@ -187,8 +187,8 @@ try {
 
 <style>
 @font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
+    font-family: 'Nikan Felthgothic';
+    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
 }
 
 .detl-section {
@@ -213,7 +213,7 @@ try {
     margin-bottom: 28px;
     font-size: 15px;
 }
-.detl-back:hover { text-decoration: underline; }
+.detl-back:hover { text-decoration: none; }
 
 .detl-hero {
     display: grid;
@@ -248,13 +248,13 @@ try {
     padding: 20px;
 }
 .detl-portada-letra {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 90px;
     color: #C6372E;
     line-height: 1;
 }
 .detl-portada-titulo {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 22px;
     color: #5a4720;
     margin-top: 6px;
@@ -280,7 +280,7 @@ try {
     margin-bottom: 14px;
 }
 .detl-info h1 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 46px;
     color: #C6372E;
     line-height: 1.1;
@@ -313,7 +313,7 @@ try {
     border-top: 2px solid #c9a94f;
 }
 .detl-bloque h2 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 30px;
     color: #C6372E;
     margin: 0 0 18px;
@@ -330,7 +330,7 @@ try {
     padding: 22px 26px;
     background: rgba(201, 169, 79, 0.14);
     border-left: 4px solid #c9a94f;
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 20px;
     line-height: 1.6;
     color: #5a4720;
@@ -360,8 +360,8 @@ try {
     justify-content: center;
 }
 .detl-autor-retrato img { width: 100%; height: 100%; object-fit: cover; }
-.detl-autor-ph { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
-.detl-autor-cuerpo h3 { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
+.detl-autor-ph { font-family: 'Nikan Felthgothic', 'Felthgothic', serif; font-size: 40px; color: #C6372E; }
+.detl-autor-cuerpo h3 { font-family: 'Rustica', serif; font-size: 26px; color: #C6372E; margin: 0 0 4px; }
 .detl-autor-datos { font-size: 14px; color: #6a5a38; margin: 0 0 10px; }
 .detl-autor-bio { font-size: 15px; line-height: 1.6; color: #4a3b22; margin: 0 0 12px; }
 .detl-autor-link { color: #0a7a4b; font-weight: 700; font-size: 14px; text-decoration: none; }
@@ -387,7 +387,7 @@ try {
 .detl-mini-img { aspect-ratio: 4/3; background: #fff8e8; overflow: hidden; }
 .detl-mini-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .detl-mini-img--txt { display: flex; align-items: center; justify-content: center; }
-.detl-mini-area { font-family: 'Felthgothic Bold', 'Felthgothic', serif; font-size: 22px; color: #b9a06a; }
+.detl-mini-area { font-family: 'Montserrat', sans-serif; font-size: 22px; color: #b9a06a; }
 .detl-mini-titulo { padding: 10px 12px 2px; font-size: 14px; font-weight: 700; color: #4a3b22; }
 .detl-mini-area-label { padding: 0 12px 12px; font-size: 11px; color: #0a7a4b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 

@@ -188,8 +188,8 @@ try {
 
 <style>
 @font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
+    font-family: 'Nikan Felthgothic';
+    src: url('../fonts/Nikan-Felthgothic.otf') format('opentype');
 }
 
 .aut-section {
@@ -198,7 +198,7 @@ try {
         radial-gradient(ellipse at 75% 45%, rgba(255, 244, 222, 0.7), transparent 55%),
         linear-gradient(135deg, #f6efe3 0%, #efe4d0 45%, #e7d8bd 100%);
     padding: 80px 80px 0;
-    font-family: 'Felthgothic Bold', 'Felthgothic', 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -251,6 +251,7 @@ try {
 }
 
 .aut-texto h1 {
+    font-family: 'Rustica', serif;
     font-size: 72px;
     color: #C6372E;
     margin: 0 0 24px;
@@ -392,7 +393,7 @@ try {
 }
 .aut-retrato img { width: 100%; height: 100%; object-fit: cover; }
 .aut-retrato-ph {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 32px;
     color: #C6372E;
 }
@@ -400,7 +401,7 @@ try {
 .aut-card-info { flex: 1; min-width: 0; }
 .aut-card-nombre {
     display: block;
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 22px;
     color: #C6372E;
 }
@@ -466,7 +467,7 @@ try {
 }
 .aut-ficha-retrato img { width: 100%; height: 100%; object-fit: cover; }
 .aut-ficha-head h2 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 34px;
     color: #C6372E;
     margin: 0 0 4px;
@@ -490,7 +491,7 @@ try {
     border-top: 1px dashed rgba(120, 90, 40, 0.3);
 }
 .aut-ficha-bloque h3 {
-    font-family: 'Felthgothic Bold', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 20px;
     color: #C6372E;
     margin-bottom: 8px;
