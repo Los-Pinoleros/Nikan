@@ -56,7 +56,7 @@ include __DIR__ . '/components/header.php';
                 </div>
                 <button class="btn btn-green" onclick="obraEditar()">+ Nueva obra</button>
             </div>
-            <div id="obraList" class="admin-list">
+            <div id="obraList" class="admin-list" data-per="4">
                 <?php foreach ($obras as $o): ?>
                     <div class="admin-item obra-item" data-seccion="<?php echo $o['seccion_id']; ?>">
                         <div class="item-main">
@@ -69,6 +69,11 @@ include __DIR__ . '/components/header.php';
                         </div>
                     </div>
                 <?php endforeach; ?>
+            </div>
+            <div class="pag-nav" data-target="obraList">
+                <button type="button" class="pag-btn pag-prev">‹ Anterior</button>
+                <span class="pag-info">Página 1 de 1</span>
+                <button type="button" class="pag-btn pag-next">Siguiente ›</button>
             </div>
         </div>
     </div>
@@ -251,6 +256,11 @@ include __DIR__ . '/components/header.php';
     }
     .modal-box .btn-green:hover { background: #f2f2f2; }
     .obra-item { flex-wrap: wrap; }
+    .pag-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 18px; }
+    .pag-btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); color: #fff; border-radius: 8px; padding: 7px 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .pag-btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
+    .pag-btn:disabled { opacity: 0.4; cursor: default; }
+    .pag-info { font-size: 12px; opacity: 0.85; }
     @media (max-width: 800px) { .admin-layout { grid-template-columns: 1fr; } }
 </style>
 
@@ -320,10 +330,38 @@ function llenarSelectAutores() {
 }
 
 function filtrarObras() {
+    obraCurrentPage = 0;
+    renderObras();
+}
+
+let obraCurrentPage = 0;
+function renderObras() {
     const f = document.getElementById('selectSeccion').value;
-    document.querySelectorAll('.obra-item').forEach(el => {
-        el.style.display = (f === '' || el.dataset.seccion == f) ? '' : 'none';
-    });
+    const list = document.getElementById('obraList');
+    const items = Array.prototype.slice.call(list.children);
+    const visible = items.filter(el => f === '' || el.dataset.seccion == f);
+    const per = 4;
+    const pages = Math.max(1, Math.ceil(visible.length / per));
+    if (obraCurrentPage >= pages) obraCurrentPage = pages - 1;
+
+    items.forEach(el => { el.style.display = 'none'; });
+    visible.slice(obraCurrentPage * per, obraCurrentPage * per + per).forEach(el => { el.style.display = ''; });
+
+    const nav = document.querySelector('.pag-nav[data-target="obraList"]');
+    if (!nav) return;
+    const info = nav.querySelector('.pag-info');
+    const prev = nav.querySelector('.pag-prev');
+    const next = nav.querySelector('.pag-next');
+    info.textContent = 'Página ' + (obraCurrentPage + 1) + ' de ' + pages;
+    prev.disabled = obraCurrentPage === 0;
+    next.disabled = obraCurrentPage === pages - 1;
+
+    function jump(delta) {
+        obraCurrentPage = Math.min(pages - 1, Math.max(0, obraCurrentPage + delta));
+        renderObras();
+    }
+    prev.onclick = function () { jump(-1); };
+    next.onclick = function () { jump(1); };
 }
 
 function obraEditar(id) {
@@ -368,6 +406,8 @@ async function obraEliminar(id) {
     const r = await postForm('poe_actions.php', fd);
     if (r.ok) location.reload(); else alert(r.msg);
 }
+
+renderObras();
 </script>
 
 </body>

@@ -86,7 +86,7 @@ include __DIR__ . '/components/header.php';
 
     <section class="row">
         <div class="card">
-            <h2 class="card__title">Distribución por área</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Distribución por área</h2>
             <?php foreach ($porArea as $nombre => $d): ?>
                 <div class="bar">
                     <div class="bar__top">
@@ -99,7 +99,7 @@ include __DIR__ . '/components/header.php';
         </div>
 
         <div class="card">
-            <h2 class="card__title">Autores con más obras</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Autores con más obras</h2>
             <div class="pag" data-per="5" id="pagAutores">
             <?php foreach ($topAutores as $a): ?>
                 <div class="bar">
@@ -121,19 +121,19 @@ include __DIR__ . '/components/header.php';
 
     <section class="row">
         <div class="card">
-            <h2 class="card__title">Colecciones de arte</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Colecciones de arte</h2>
             <?php foreach ($seccionesResumen['Arte'] as $s): ?>
                 <div class="pill"><span><?php echo htmlspecialchars($s['titulo']); ?></span><span class="pill__n"><?php echo $s['c']; ?></span></div>
             <?php endforeach; ?>
         </div>
         <div class="card">
-            <h2 class="card__title">Colecciones de literatura</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Colecciones de literatura</h2>
             <?php foreach ($seccionesResumen['Literatura'] as $s): ?>
                 <div class="pill"><span><?php echo htmlspecialchars($s['titulo']); ?></span><span class="pill__n"><?php echo $s['c']; ?></span></div>
             <?php endforeach; ?>
         </div>
         <div class="card">
-            <h2 class="card__title">Colecciones de poesía</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Colecciones de poesía</h2>
             <?php foreach ($seccionesResumen['Poesía'] as $s): ?>
                 <div class="pill"><span><?php echo htmlspecialchars($s['titulo']); ?></span><span class="pill__n"><?php echo $s['c']; ?></span></div>
             <?php endforeach; ?>
@@ -142,7 +142,7 @@ include __DIR__ . '/components/header.php';
 
     <section class="row">
         <div class="card card--wide">
-            <h2 class="card__title">Actividad reciente</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Actividad reciente</h2>
             <?php if ($recientes): ?>
                 <ul class="feed pag" data-per="5" id="pagFeed">
                     <?php foreach ($recientes as $r): ?>
@@ -164,7 +164,7 @@ include __DIR__ . '/components/header.php';
             <?php endif; ?>
         </div>
         <div class="card">
-            <h2 class="card__title">Usuarios del sistema</h2>
+            <h2 class="card__title"><img class="card__fav" src="../assets/leon.svg" alt="NIKAN"> Usuarios del sistema</h2>
             <?php foreach ($usuariosLista as $u): ?>
                 <div class="user-item">
                     <div class="user-item__avatar"><?php echo strtoupper(substr($u['username'], 0, 1)); ?></div>
@@ -241,7 +241,8 @@ include __DIR__ . '/components/header.php';
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         color: #fff;
     }
-    .card__title { font: oblique bold 100% 'Felthgothic', cursive; font-size: 22px; margin-bottom: 16px; }
+    .card__title { font: oblique bold 100% 'Felthgothic', cursive; font-size: 22px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .card__fav { width: 26px; height: 26px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.9; flex-shrink: 0; }
     .card__empty { font-size: 13px; opacity: 0.8; }
     .card--wide { grid-column: span 2; }
 

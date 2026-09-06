@@ -5,12 +5,29 @@ if (session_status() === PHP_SESSION_NONE) {
 $current = basename($_SERVER['PHP_SELF']);
 $loggedIn = isset($_SESSION['user_id']);
 $role = $_SESSION['role'] ?? null;
+
+$page = isset($_GET['page']) ? $_GET['page'] : 'inicio';
+$titulos = [
+    'inicio' => 'NIKAN · Museo',
+    'arte' => 'Arte · NIKAN',
+    'literatura' => 'Literatura · NIKAN',
+    'poesia' => 'Poesía · NIKAN',
+    'autores' => 'Autores · NIKAN',
+    'musica' => 'Música · NIKAN',
+    'nosotros' => 'Nosotros · NIKAN',
+    'arte_detalle' => 'Obra de Arte · NIKAN',
+    'lit_detalle' => 'Obra Literaria · NIKAN',
+    'poe_detalle' => 'Poema · NIKAN',
+];
+$pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $pageTitle; ?></title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">

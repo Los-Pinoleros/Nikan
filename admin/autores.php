@@ -22,25 +22,50 @@ include __DIR__ . '/components/header.php';
 
     <button class="btn btn-green" style="margin-bottom:20px;" onclick="autorEditar()">+ Nuevo autor</button>
 
-    <div class="autor-grid" id="autorGrid">
+    <div class="autor-grid pag" id="autorGrid" data-per="6">
         <?php foreach ($autores as $a): ?>
             <div class="autor-card">
-                <div class="autor-retrato">
-                    <?php if ($a['retrato']): ?>
-                        <img src="../<?php echo htmlspecialchars($a['retrato']); ?>" alt="Retrato de <?php echo htmlspecialchars($a['nombre']); ?>">
-                    <?php else: ?>
-                        <span>Sin retrato</span>
+                <div class="autor-head">
+                    <div class="autor-retrato">
+                        <?php if ($a['retrato']): ?>
+                            <img src="../<?php echo htmlspecialchars($a['retrato']); ?>" alt="Retrato de <?php echo htmlspecialchars($a['nombre']); ?>">
+                        <?php else: ?>
+                            <span>Sin retrato</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="autor-head-info">
+                        <strong class="autor-nombre"><?php echo htmlspecialchars($a['nombre']); ?></strong>
+                        <?php if (!empty($a['epoca'])): ?>
+                            <span class="autor-epoca"><?php echo htmlspecialchars($a['epoca']); ?></span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="autor-fichas">
+                    <?php if (!empty($a['lugar'])): ?>
+                        <div class="autor-ficha">
+                            <span class="autor-ficha-label">Lugar</span>
+                            <span class="autor-ficha-valor"><?php echo htmlspecialchars($a['lugar']); ?></span>
+                        </div>
                     <?php endif; ?>
+                    <?php if (!empty($a['nacimiento']) || !empty($a['fallecimiento'])): ?>
+                        <div class="autor-ficha">
+                            <span class="autor-ficha-label">Vida</span>
+                            <span class="autor-ficha-valor">
+                                <?php
+                                echo htmlspecialchars($a['nacimiento'] ?: '¿?');
+                                if (!empty($a['fallecimiento'])) echo ' – ' . htmlspecialchars($a['fallecimiento']);
+                                ?>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+                    <div class="autor-ficha autor-ficha--obras">
+                        <span class="autor-ficha-label">Obras ligadas</span>
+                        <span class="autor-ficha-valor autor-ficha-valor--badge"><?php echo $counts[$a['id']] ?? 0; ?></span>
+                    </div>
                 </div>
-                <div class="autor-info">
-                    <strong class="autor-nombre"><?php echo htmlspecialchars($a['nombre']); ?></strong>
-                    <span class="autor-sub">
-                        <?php echo htmlspecialchars($a['lugar']); ?>
-                        <?php if (!empty($a['nacimiento'])): ?> · <?php echo htmlspecialchars($a['nacimiento']); ?><?php if (!empty($a['fallecimiento'])): ?>–<?php echo htmlspecialchars($a['fallecimiento']); ?><?php endif; ?><?php endif; ?>
-                    </span>
-                    <span class="autor-sub">Obras ligadas: <?php echo $counts[$a['id']] ?? 0; ?></span>
-                </div>
-                <div class="item-actions">
+
+                <div class="autor-acciones">
                     <button class="btn btn-small" onclick="autorEditar(<?php echo $a['id']; ?>)">Editar</button>
                     <button class="btn btn-small btn-red" onclick="autorEliminar(<?php echo $a['id']; ?>)">Eliminar</button>
                 </div>
@@ -49,6 +74,11 @@ include __DIR__ . '/components/header.php';
         <?php if (!$autores): ?>
             <p style="color:#fff;opacity:0.8;">Aún no hay autores registrados.</p>
         <?php endif; ?>
+    </div>
+    <div class="pag-nav" data-target="autorGrid">
+        <button type="button" class="pag-btn pag-prev">‹ Anterior</button>
+        <span class="pag-info">Página 1 de 1</span>
+        <button type="button" class="pag-btn pag-next">Siguiente ›</button>
     </div>
 </div>
 
@@ -141,17 +171,52 @@ include __DIR__ . '/components/header.php';
         background: rgba(20, 20, 20, 0.75);
         border-radius: 14px;
         padding: 18px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         display: flex;
+        flex-direction: column;
         gap: 14px;
-        align-items: center;
-        flex-wrap: wrap;
+        transition: transform .2s, box-shadow .2s;
     }
-    .autor-retrato { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; }
+    .autor-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45); }
+    .autor-head { display: flex; align-items: center; gap: 14px; }
+    .autor-retrato { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; }
     .autor-retrato img { width: 100%; height: 100%; object-fit: cover; }
-    .autor-info { flex: 1; min-width: 0; }
-    .autor-nombre { display: block; font-size: 16px; }
-    .autor-sub { display: block; font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .autor-head-info { flex: 1; min-width: 0; }
+    .autor-nombre { display: block; font-size: 16px; line-height: 1.3; }
+    .autor-epoca {
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #fff;
+        background: #c9a94f;
+        border-radius: 999px;
+        padding: 2px 10px;
+    }
+    .autor-fichas { display: flex; flex-direction: column; gap: 8px; }
+    .autor-ficha {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 8px;
+        padding: 7px 12px;
+    }
+    .autor-ficha-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.65; font-weight: 700; }
+    .autor-ficha-valor { font-size: 13px; font-weight: 600; text-align: right; }
+    .autor-ficha-valor--badge {
+        background: rgb(var(--nikan-bg-rgb));
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 800;
+        padding: 1px 12px;
+        min-width: 28px;
+        text-align: center;
+    }
+    .autor-acciones { display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 12px; }
     .btn { border: none; border-radius: 0; padding: 10px 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; background: rgba(255,255,255,0.2); color: #fff; }
     .btn:hover { background: rgba(255,255,255,0.3); }
     .btn-green { background: #2e8b57; }
@@ -202,6 +267,11 @@ include __DIR__ . '/components/header.php';
     .modal-box .btn:hover { background: rgba(255, 255, 255, 0.35); }
     .modal-box .btn-green { background: #fff; color: var(--nikan-bg); font-weight: 800; letter-spacing: 1px; }
     .modal-box .btn-green:hover { background: #f2f2f2; }
+    .pag-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
+    .pag-btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); color: #fff; border-radius: 8px; padding: 7px 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .pag-btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
+    .pag-btn:disabled { opacity: 0.4; cursor: default; }
+    .pag-info { font-size: 12px; opacity: 0.85; }
 </style>
 
 <script>
@@ -260,6 +330,35 @@ async function autorEliminar(id) {
     const r = await postForm('autor_actions.php', fd);
     if (r.ok) location.reload(); else alert(r.msg);
 }
+
+(function () {
+    document.querySelectorAll('.pag').forEach(function (list) {
+        var per = parseInt(list.getAttribute('data-per') || 6, 10);
+        var items = Array.prototype.slice.call(list.children);
+        var pages = Math.ceil(items.length / per);
+        var nav = document.querySelector('.pag-nav[data-target="' + list.id + '"]');
+        if (!nav) return;
+        var info = nav.querySelector('.pag-info');
+        var prev = nav.querySelector('.pag-prev');
+        var next = nav.querySelector('.pag-next');
+        var page = 0;
+
+        if (pages <= 1) { nav.style.display = 'none'; return; }
+
+        function render() {
+            items.forEach(function (it, i) {
+                it.style.display = (i >= page * per && i < page * per + per) ? '' : 'none';
+            });
+            info.textContent = 'Página ' + (page + 1) + ' de ' + pages;
+            prev.disabled = page === 0;
+            next.disabled = page === pages - 1;
+        }
+
+        prev.addEventListener('click', function () { if (page > 0) { page--; render(); } });
+        next.addEventListener('click', function () { if (page < pages - 1) { page++; render(); } });
+        render();
+    });
+})();
 </script>
 
 </body>
