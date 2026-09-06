@@ -33,13 +33,12 @@
         var loader = document.createElement('div');
         loader.id = 'nikan-loader';
         loader.innerHTML =
-            '<div class="nikan-loader-word">NIKAN</div>' +
-            '<div class="nikan-loader-bar"></div>';
+            '<video class="nikan-loader-video" src="assets/anima.mp4" autoplay muted playsinline></video>';
         document.body.insertBefore(loader, document.body.firstChild);
         setTimeout(function () {
             loader.classList.add('done');
             setTimeout(function () { loader.remove(); }, 800);
-        }, 1150);
+        }, 4000);
     })();
 
     /* ---------- Auroras de fondo ---------- */

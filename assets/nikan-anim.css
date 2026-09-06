@@ -18,30 +18,11 @@ section[id^="det"] { scroll-margin-top: 130px; }
     transition: opacity 0.7s ease, visibility 0.7s;
 }
 #nikan-loader.done { opacity: 0; visibility: hidden; }
-#nikan-loader .nikan-loader-word {
-    font-family: 'Rustica', serif;
-    font-size: 84px;
-    letter-spacing: 8px;
-    color: #fff;
-    opacity: 0;
-    transform: scale(0.7);
-    animation: nikanLoaderWord 1.4s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
-}
-#nikan-loader .nikan-loader-bar {
-    width: 160px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
-    overflow: hidden;
-}
-#nikan-loader .nikan-loader-bar::after {
-    content: "";
+#nikan-loader .nikan-loader-video {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
     display: block;
-    height: 100%;
-    width: 40%;
-    background: #fff;
-    border-radius: 4px;
-    animation: nikanLoaderBar 1.1s ease-in-out infinite;
 }
 @keyframes nikanLoaderWord {
     0%   { opacity: 0; transform: scale(0.7); letter-spacing: 20px; filter: blur(6px); }

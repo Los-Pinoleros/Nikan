@@ -53,7 +53,7 @@ try {
 
         <div class="poe-imagen">
             <div class="poe-marco-deco"></div>
-            <img src="assets/literatura.svg" alt="Poesía" class="poe-emblema">
+            <img src="assets/poemas.svg" alt="Poesía" class="poe-emblema">
             <span class="poe-sombras"></span>
         </div>
     </div>
@@ -188,6 +188,7 @@ try {
 }
 
 .poe-texto p {
+    font-family: 'Rustica', serif;
     font-size: 22px;
     color: #4a3b22;
     line-height: 1.7;
@@ -199,7 +200,7 @@ try {
     position: relative;
     text-align: center;
     align-self: flex-end;
-    margin-bottom: -80px;
+    margin-bottom: -140px;
     transform: translateY(-60px);
     padding: 24px;
 }
@@ -208,7 +209,7 @@ try {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 66%;
+    width: 76%;
     height: 88%;
     transform: translate(-50%, -52%);
     border: 2px solid #c9a94f;
@@ -243,7 +244,7 @@ try {
 }
 
 .poe-emblema {
-    width: 340px;
+    width: 560px;
     height: auto;
     display: block;
     position: relative;

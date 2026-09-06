@@ -20,7 +20,7 @@
         </div>
         <div class="nos-imagen">
             <div class="nos-marco-deco"></div>
-            <img src="assets/nosotros.svg" alt="Nosotros" class="nos-emblema">
+            <img src="assets/nosotross.svg" alt="Nosotros" class="nos-emblema">
             <span class="nos-sombras"></span>
         </div>
     </div>
@@ -155,6 +155,7 @@
         text-shadow: 0 2px 2px rgba(90, 60, 20, 0.25);
     }
     .nos-texto p {
+        font-family: 'Rustica', serif;
         font-size: 22px;
         color: #4a3b22;
         line-height: 1.7;
@@ -165,6 +166,7 @@
         position: relative;
         text-align: center;
         align-self: flex-end;
+        margin-bottom: -140px;
         transform: translateY(-60px);
         padding: 24px;
     }
@@ -175,15 +177,15 @@
         width: 76%;
         height: 88%;
         transform: translate(-50%, -52%);
-        border: 2px solid #c9a94f;
+        border: none;
         border-radius: 8px;
     }
     .nos-emblema {
         position: relative;
         z-index: 1;
-        width: 300px;
-        max-width: 34vw;
-        filter: drop-shadow(0 10px 16px rgba(90, 60, 20, 0.25));
+        width: 560px;
+        height: auto;
+        display: block;
     }
     .nos-sombras {
         position: absolute;

@@ -42,7 +42,7 @@ try {
 
         <div class="mus-imagen">
             <span class="mus-marco-dorado"></span>
-            <img src="assets/musica.svg" alt="Música tradicional" class="mus-emblema">
+            <img src="assets/musicas.svg" alt="Música tradicional" class="mus-emblema">
             <span class="mus-sombra"></span>
         </div>
     </div>
@@ -168,6 +168,7 @@ try {
 }
 
 .mus-texto p {
+    font-family: 'Rustica', serif;
     font-size: 22px;
     color: #4a3b22;
     line-height: 1.7;
@@ -179,7 +180,8 @@ try {
     position: relative;
     text-align: center;
     align-self: flex-end;
-    transform: translateY(20px);
+    margin-bottom: -140px;
+    transform: translateY(-60px);
     padding: 24px;
 }
 
@@ -203,9 +205,9 @@ try {
 .mus-emblema {
     position: relative;
     z-index: 2;
-    width: 460px;
-    max-width: 40vw;
-    filter: drop-shadow(0 10px 16px rgba(90, 60, 20, 0.25));
+    width: 560px;
+    height: auto;
+    display: block;
 }
 
 .mus-sombra {
