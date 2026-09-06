@@ -27,6 +27,11 @@
 </section>
 
 <section class="nos-seccion">
+    <div class="nos-seccion-titulo">
+        <span>Una plataforma con alma</span>
+        <h2>La identidad de Nikan</h2>
+        <div class="nos-linea"></div>
+    </div>
     <div class="nos-inner">
         <article class="nos-card nos-mision">
             <div class="nos-card-etiqueta"><span>MISIÓN</span></div>
@@ -39,7 +44,7 @@
         </article>
 
         <article class="nos-card nos-vision">
-            <div class="nos-card-etiqueta nos-card-etiqueta--vision"><span>VISIÓN</span></div>
+            <div class="nos-card-etiqueta"><span>VISIÓN</span></div>
             <h2>Hacia dónde vamos</h2>
             <p>
                 Convertirse en la primera plataforma digital de referencia nacional para
@@ -49,7 +54,7 @@
         </article>
 
         <article class="nos-card nos-concepto">
-            <div class="nos-card-etiqueta nos-card-etiqueta--concepto"><span>CONCEPTO CENTRAL</span></div>
+            <div class="nos-card-etiqueta"><span>CONCEPTO CENTRAL</span></div>
             <h2>"Hacer visible lo que nos hace únicos"</h2>
             <p>
                 Nikan nace para hacer visible la riqueza cultural de nuestro país, ya que esta
@@ -60,7 +65,7 @@
         </article>
 
         <article class="nos-card nos-arquetipo">
-            <div class="nos-card-etiqueta nos-card-etiqueta--arquetipo"><span>ARQUETIPO</span></div>
+            <div class="nos-card-etiqueta"><span>ARQUETIPO</span></div>
             <h2>“El explorador”</h2>
             <p>
                 Porque Nikan, y la mascota de Nikan, invitan a los usuarios a ir más allá de lo
@@ -70,7 +75,7 @@
         </article>
 
         <article class="nos-card nos-personalidad">
-            <div class="nos-card-etiqueta nos-card-etiqueta--personalidad"><span>PERSONALIDAD</span></div>
+            <div class="nos-card-etiqueta"><span>PERSONALIDAD</span></div>
             <h2>Cómo es Nikan</h2>
             <div class="nos-rasgos">
                 <div class="nos-rasgo">
@@ -191,107 +196,171 @@
     }
 
     .nos-seccion {
-        background: linear-gradient(135deg, #e7d8bd 0%, #d9c6a4 100%);
-        padding: 60px 24px;
+        background:
+            linear-gradient(180deg, #e7d8bd 0%, #d9c6a4 100%);
+        padding: 80px 24px 100px;
         position: relative;
         z-index: 2;
     }
+    .nos-seccion::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #C6372E 0%, #c9a94f 35%, #0a7a4b 70%, #7c3e2e 100%);
+    }
+    .nos-seccion-titulo {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+    .nos-seccion-titulo span {
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 6px;
+        color: #7c3e2e;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+    .nos-seccion-titulo h2 {
+        font-size: 40px;
+        color: #3a2d18;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+    .nos-seccion-titulo .nos-linea {
+        width: 90px;
+        height: 3px;
+        background: #c9a94f;
+        margin: 16px auto 0;
+    }
     .nos-inner {
-        max-width: 900px;
+        max-width: 1100px;
         margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px;
     }
     .nos-card {
-        background: #f6efe3;
-        border-radius: 16px;
-        padding: 32px 36px;
-        box-shadow: 0 10px 30px rgba(90, 60, 20, 0.18);
-        border-left: 6px solid #C6372E;
-        transition: transform .3s ease;
+        position: relative;
+        background: #f8f1e4;
+        border: 1px solid rgba(150, 110, 60, 0.4);
+        box-shadow: 0 0 0 4px #e2d3b4, 0 16px 40px rgba(90, 60, 20, 0.14);
+        padding: 42px 44px;
+        transition: transform .4s ease, box-shadow .4s ease;
+        overflow: hidden;
     }
-    .nos-card:hover { transform: translateY(-4px); }
-    .nos-vision { border-left-color: #0a7a4b; }
-    .nos-concepto { border-left-color: #c9a94f; }
-    .nos-arquetipo { border-left-color: #7c3e2e; }
+    .nos-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 0;
+        background: linear-gradient(90deg, var(--accent, #C6372E), #c9a94f);
+        transition: width .45s ease;
+    }
+    .nos-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent, #C6372E);
+        opacity: 0.85;
+    }
+    .nos-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 0 0 4px #c9a94f, 0 26px 55px rgba(90, 60, 20, 0.24);
+    }
+    .nos-card:hover::before { width: 100%; }
+    .nos-mision { --accent: #C6372E; }
+    .nos-vision { --accent: #0a7a4b; }
+    .nos-concepto { --accent: #c9a94f; }
+    .nos-arquetipo { --accent: #7c3e2e; }
+    .nos-personalidad { --accent: #C6372E; grid-column: 1 / -1; }
     .nos-card-etiqueta {
         display: inline-block;
-        margin-bottom: 14px;
-        background: #C6372E;
+        margin-bottom: 20px;
+        background: var(--accent, #C6372E);
         color: #fff;
         font-size: 12px;
         font-weight: 800;
-        letter-spacing: 3px;
-        padding: 6px 16px;
-        border-radius: 999px;
+        letter-spacing: 4px;
+        padding: 8px 20px;
+        border-radius: 0;
+        box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.22);
     }
-    .nos-card-etiqueta--vision {
-        background: #0a7a4b;
+    .nos-card h2 {
+        font-size: 30px;
+        color: #3a2d18;
+        margin: 0 0 16px;
+        letter-spacing: 1px;
     }
-    .nos-card-etiqueta--concepto {
-        background: #c9a94f;
+    .nos-card h2::after {
+        content: "";
+        display: block;
+        width: 56px;
+        height: 2px;
+        background: var(--accent, #C6372E);
+        margin-top: 12px;
     }
-    .nos-card-etiqueta--arquetipo {
-        background: #7c3e2e;
+    .nos-card p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: #5a4a2f;
+        margin: 0;
+        text-align: justify;
     }
-    .nos-card-etiqueta--personalidad {
-        background: #C6372E;
-    }
-    .nos-personalidad { border-left-color: #C6372E; }
     .nos-rasgos {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 14px;
-        margin-top: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-top: 12px;
     }
     .nos-rasgo {
-        background: #fff;
-        border-radius: 12px;
-        padding: 18px 20px;
-        box-shadow: 0 4px 12px rgba(90, 60, 20, 0.1);
-        border-bottom: 3px solid #e7d8bd;
-        transition: transform .3s ease, box-shadow .3s ease;
+        position: relative;
+        background: #fffdf8;
+        border: 1px solid rgba(150, 110, 60, 0.35);
+        border-top: 3px solid var(--accent, #C6372E);
+        border-radius: 0;
+        padding: 20px 22px;
+        transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
     }
     .nos-rasgo:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(90, 60, 20, 0.16);
+        transform: translateY(-5px);
+        border-top-color: #c9a94f;
+        box-shadow: 0 12px 26px rgba(90, 60, 20, 0.18);
     }
     .nos-rasgo-titulo {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
     .nos-rasgo-titulo span:first-child {
         font-size: 20px;
         font-weight: 900;
-        color: #4a3b22;
+        color: #3a2d18;
         letter-spacing: 1px;
     }
     .nos-rasgo-num {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 900;
-        color: #C6372E;
+        color: #fff;
+        background: var(--accent, #C6372E);
+        padding: 3px 10px;
+        letter-spacing: 1px;
     }
     .nos-rasgo p {
         font-size: 15px;
-        line-height: 1.6;
+        line-height: 1.65;
         color: #5a4a2f;
         margin: 0;
-    }
-    .nos-card h2 {
-        font-size: 30px;
-        color: #4a3b22;
-        margin: 0 0 12px;
-    }
-    .nos-card p {
-        font-size: 18px;
-        line-height: 1.75;
-        color: #5a4a2f;
-        margin: 0;
-        text-align: justify;
     }
 
     @media (max-width: 900px) {
@@ -300,5 +369,9 @@
         .nos-imagen { transform: none; align-self: center; margin-bottom: -40px; }
         .nos-texto h1 { font-size: 48px; }
         .nos-texto p { font-size: 17px; }
+        .nos-inner { grid-template-columns: 1fr; gap: 24px; }
+        .nos-personalidad { grid-column: auto; }
+        .nos-card { padding: 32px 28px; }
+        .nos-seccion-titulo h2 { font-size: 30px; }
     }
 </style>
