@@ -55,7 +55,7 @@ try {
         </div>
         <div class="aut-imagen">
             <div class="aut-marco-deco"></div>
-            <img src="assets/nosotros.svg" alt="Autores" class="aut-emblema">
+            <img src="assets/autores.svg" alt="Autores" class="aut-emblema">
             <span class="aut-sombras"></span>
         </div>
     </div>
@@ -272,7 +272,7 @@ try {
     position: relative;
     text-align: center;
     align-self: flex-end;
-    margin-bottom: -80px;
+    margin-bottom: -140px;
     transform: translateY(-60px);
     padding: 24px;
 }
@@ -281,7 +281,7 @@ try {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 66%;
+    width: 76%;
     height: 88%;
     transform: translate(-50%, -52%);
     border: 2px solid #c9a94f;
@@ -316,7 +316,7 @@ try {
 }
 
 .aut-emblema {
-    width: 340px;
+    width: 560px;
     height: auto;
     display: block;
     position: relative;
