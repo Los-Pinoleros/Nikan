@@ -24,22 +24,37 @@
         })();
     })();
 
-    /* La portada (inicio) queda sin animaciones: se muestra tal cual era. */
-    var page = new URLSearchParams(location.search).get('page') || 'inicio';
-    if (page === 'inicio') return;
-
-    /* ---------- Preloader ---------- */
-    (function () {
+    /* ---------- Transición del header ---------- */
+    function playHeaderTransition(destination) {
         var loader = document.createElement('div');
         loader.id = 'nikan-loader';
         loader.innerHTML =
             '<video class="nikan-loader-video" src="assets/anima.mp4" autoplay muted playsinline></video>';
         document.body.insertBefore(loader, document.body.firstChild);
-        setTimeout(function () {
+
+        var video = loader.querySelector('video');
+        var navigated = false;
+        var navigate = function () {
+            if (navigated) return;
+            navigated = true;
             loader.classList.add('done');
-            setTimeout(function () { loader.remove(); }, 800);
-        }, 4000);
-    })();
+            setTimeout(function () { location.href = destination; }, 650);
+        };
+        video.addEventListener('ended', navigate, { once: true });
+        setTimeout(navigate, 4000);
+    }
+
+    document.querySelectorAll('.header__link').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target === '_blank') return;
+            event.preventDefault();
+            playHeaderTransition(link.href);
+        });
+    });
+
+    /* La portada (inicio) queda sin animaciones automáticas. */
+    var page = new URLSearchParams(location.search).get('page') || 'inicio';
+    if (page === 'inicio') return;
 
     /* ---------- Auroras de fondo ---------- */
     var auroras = [

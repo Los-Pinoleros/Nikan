@@ -1,157 +1,202 @@
 # NIKAN — Museo Virtual Precolombino
 
-Sitio web de un museo virtual tema NIKAN construido con **PHP plano** (sin frameworks) y **SVG**. Presenta un header fijo de navegación y secciones que se cargan según el parámetro `?page=` de la URL.
+NIKAN es un museo virtual sobre la cultura nicaragüense. La aplicación usa PHP del lado del servidor, MySQL/MariaDB para el catálogo administrable y una interfaz visual basada en SVG, CSS y JavaScript vanilla.
 
----
-
-## 1. Stack tecnológico
+## 1. Tecnologías y requisitos
 
 | Tecnología | Uso |
-|------------|-----|
-| **PHP** (7.x) | Servidor / renderizado de componentes por inclusión |
-| **HTML5 + CSS3** | Estructura y estilos (CSS embebido en `<style>` por componente) |
-| **JavaScript** (vanilla) | Lógica del carrusel (rotación automática) |
-| **SVG** | Todos los recursos gráficos (fondos, iconos, objetos, estatuas) |
-| **Fuentes (OTF/TTF)** | Tipografías locales en `fonts/` (via `@font-face`) |
-| **Google Fonts** | Fuentes auxiliares (Montserrat, Dancing Script) |
+|---|---|
+| PHP 7.x o superior | Renderizado del sitio, autenticación y panel administrativo |
+| MySQL/MariaDB | Usuarios, autores, secciones y obras |
+| PDO MySQL | Conexión parametrizada a la base de datos |
+| HTML5 + CSS3 | Estructura, diseño y estilos por componente |
+| JavaScript vanilla | Carruseles, búsqueda, modales, animaciones y peticiones `fetch` |
+| SVG, WebP, MP3/OGG y MP4 | Recursos gráficos, imágenes, audio y transiciones |
+| GD de PHP | Conversión de imágenes cargadas a WebP |
+| Google Fonts | Alegreya, Dancing Script y Montserrat |
 
-No hay build system, npm, compositor ni dependencias de terceros en el frontend. Solo se requiere un servidor con PHP (p. ej. Laragon).
+No hay `npm`, Composer ni un proceso de compilación. El proyecto se ejecuta directamente desde un servidor PHP, por ejemplo Laragon o Apache.
 
----
+## 2. Estructura del proyecto
 
-## 2. Estructura de carpetas
-
-```
+```text
 www/
-├── index.php              # Punto de entrada: enruta según ?page=
-├── assets/                # Recursos gráficos (todos SVG)
-│   ├── *.svg              # Iconos del header (blancos) e imágenes de la escena
-├── components/            # Componentes PHP (cada uno con su <style> y <script>)
-│   ├── header.php         # <!DOCTYPE>, <head>, <body> y <header> de navegación
-│   ├── podios.php         # Escena de inicio: podios + carrusel / spotlight
-│   ├── carrusel.php       # Carrusel de 3 objetos (versión standalone)
-│   ├── arte.php           # Vista "La Vida Precolombina" (sección Arte)
-│   └── foother.php        # Placeholder de pie de página (vacío)
-└── fonts/                 # Tipografías locales
-    ├── Felthgothic Bold Italic.otf
-    ├── Felthgothic Bold.otf
-    └── rustica-plains.regular.ttf
+├── index.php                  # Entrada pública y enrutamiento por ?page=
+├── buscar.php                 # Endpoint JSON de búsqueda global
+├── webhook.php                # Webhook de despliegue desde GitHub
+├── .env                       # Configuración local; no debe publicarse
+├── assets/                    # SVG, animaciones, favicon, MP4 y JS/CSS globales
+├── components/                # Vistas públicas PHP
+├── admin/                     # Panel protegido y acciones CRUD
+├── auth/                      # Inicio y cierre de sesión
+├── config/
+│   ├── env.php                # Carga de variables desde .env
+│   └── config.php             # PDO, respuestas JSON y carga de archivos
+├── database/
+│   ├── install.php            # Instalación inicial de usuarios y base de datos
+│   └── setup.sql              # SQL base para la tabla users
+├── fonts/                     # Tipografías locales
+└── uploads/                   # Imágenes y audio administrables (ignorado por Git)
 ```
 
----
+## 3. Configuración local
 
-## 3. Flujo de navegación
+1. Instala PHP con PDO MySQL y, si se cargarán imágenes, habilita la extensión GD.
+2. Inicia MySQL/MariaDB y el servidor web.
+3. Copia o crea `.env` en la raíz del proyecto. Como mínimo puede contener:
 
-`index.php` incluye siempre `header.php` y luego decide qué sección mostrar según `$_GET['page']`:
-
-```php
-$page = isset($_GET['page']) ? $_GET['page'] : 'inicio';
-
-switch ($page) {
-    case 'arte':
-        include __DIR__ . '/components/arte.php';
-        break;
-    default:
-        include __DIR__ . '/components/podios.php';
-        break;
-}
+```dotenv
+DB_HOST=localhost
+DB_NAME=nikannicaragua
+DB_USER=root
+DB_PASS=
+ADMIN_USER=admin
+ADMIN_EMAIL=admin@nikan.com
+ADMIN_PASSWORD=cambia-esta-contraseña
 ```
 
-- El valor por defecto (o cualquier valor no reconocido) muestra `podios.php` (escena de inicio).
-- Para añadir una vista nueva (ej. `literatura`), agrega un `case` en el `switch` y crea el componente correspondiente en `components/`.
+`config/env.php` acepta líneas `CLAVE=valor`, valores entre comillas, comentarios con `#` y líneas vacías. Las variables de entorno del sistema tienen prioridad sobre los valores del archivo.
 
-Las rutas de navegación viven en `header.php` y siguen el patrón `?page=<seccion>` (inicio, arte, literatura, música, nosotros).
+No publiques `.env`, contraseñas, hashes ni contenido de `uploads/`. El repositorio ya excluye `.env` y `uploads/` mediante `.gitignore`.
 
----
+## 4. Instalación de la base de datos
 
-## 4. Componentes
+Con MySQL/MariaDB en ejecución, desde la raíz del proyecto:
 
-### 4.1 `header.php`
-Genera el documento raíz completo (`<!DOCTYPE html>`, `<head>`, `<body>`) y la barra de navegación fija superior.
-
-- **Fondo** corporal: `assets/fondo.svg` con overlay oscuro (`rgba(0,0,0,0.45)`).
-- **Variables** CSS en `:root`:
-  - `--nikan-bg: #C6372E` (rojo NIKAN)
-  - `--nikan-bg-rgb: 195, 55, 46`
-- **Logo NIKAN** y enlaces del nav usan la fuente `Felthgothic` (Bold Italic).
-- Iconos del header son **SVG blancos** (inicio, arte, literatura, música, nosotros) + `leon.svg`.
-
-### 4.2 `podios.php` (inicio)
-Escena principal de exhibición:
-- Fondo `podios.svg` con efecto de **spotlight triangular** descendente desde el header.
-- 4 podios estáticos (`pod1`–`pod4`) posicionados absolutamente.
-- **Carrusel** de 3 objetos (`tazon1`, `tazon2`, `estatua1`) que rota cada **6 segundos**; el objeto central resalta (más grande, a plena luz) y los laterales se atenúan.
-
-### 4.3 `arte.php` (vista Arte)
-Sección "La Vida Precolombina" con estética de museo:
-- Fondo beige/crema cálido con degradados radiales y textura sutil.
-- Título con color del header (`#C6372E`) y fuente `Felthgothic Bold`.
-- Imagen `estatuaarte1.svg` con:
-  - **Marco orla dorado** con esquinas ornamentales.
-  - **Spotlight** (halo de luz cálida) sobre la estatua.
-  - **Sombra proyectada** en el piso (pie de estatua).
-- Botón **VER MÁS ↓** centrado abajo.
-
-### 4.4 `carrusel.php`
-Versión autónoma del carrusel (misma mecánica que el de `podios.php`): 3 objetos, rotación cada 6 s, con resaltado del objeto central.
-
-**Mecánica del carrusel**: Las clases `--izq`, `--centro` y `--dcha` se asignan por JS en cada ciclo; los `z-index` (1, 2, 3) controlan el apilamiento, y las transiciones CSS (`transform`, `opacity`, `filter`, `top`) animan el movimiento.
-
-### 4.5 `foother.php`
-Archivo vacío, reservado como placeholder para el pie de página.
-
----
-
-## 5. Recursos gráficos (assets)
-
-| Archivo | Descripción |
-|---------|-------------|
-| `fondo.svg` | Fondo del cuerpo de la página |
-| `leon.svg` | León (icono del header, blanco) |
-| `inicio.svg`, `arte.svg`, `literatura.svg`, `musica.svg`, `nosotros.svg` | Iconos de navegación (blanco) |
-| `podios.svg` | Escena base de podios |
-| `pod1.svg`–`pod4.svg` | Podios individuales |
-| `tazon1.svg`, `tazon2.svg` | Piezas de cerámica (carrusel) |
-| `estatua1.svg` | Estatua (carrusel) |
-| `estatuaarte1.svg` | Estatua de la vista Arte |
-
-**Nota**: Los iconos del header comenzaron como `.ico` y fueron **convertidos a SVG blancos** para poder colorearlos vía CSS. Si necesitas un icono de otro color (ej. negro), aplica un filtro como `filter: invert(1) brightness(0)`.
-
----
-
-## 6. Tipografías
-
-| Archivo | Nombre de familia | Uso |
-|---------|-------------------|-----|
-| `fonts/Felthgothic Bold Italic.otf` | `Felthgothic` | Header (logo y navegación) |
-| `fonts/Felthgothic Bold.otf` | `Felthgothic Bold` | Vista Arte |
-| `fonts/rustica-plains.regular.ttf` | `Rustica Plains` | (disponible, no en uso activo) |
-
-Declaración `@font-face` de ejemplo (rutas relativas desde `components/`):
-
-```css
-@font-face {
-    font-family: 'Felthgothic Bold';
-    src: url('../fonts/Felthgothic Bold.otf') format('opentype');
-}
+```bash
+php database/install.php
 ```
 
----
+El instalador:
 
-## 7. Cómo ejecutar
+- crea la base de datos configurada si no existe;
+- crea la tabla `users`;
+- genera el hash de la contraseña mediante `password_hash`;
+- crea o actualiza el usuario administrador definido en `.env`.
 
-1. Tener un servidor con **PHP** (recomendado: [Laragon](https://laragon.org)).
-2. Colocar el proyecto en la raíz web (p. ej. `C:\laragon\www`).
-3. Abrir en el navegador:
-   - **Inicio**: `http://localhost/`
-   - **Arte**: `http://localhost/?page=arte`
+El archivo `database/setup.sql` contiene la estructura mínima de `users`. El catálogo que consume la aplicación está organizado por áreas y requiere las tablas de secciones y obras usadas por el panel:
 
----
+- `autores`;
+- `arte_secciones` y `arte_obras`;
+- `lit_secciones` y `lit_obras`;
+- `poe_secciones` y `poe_obras`;
+- `musica_secciones` y `musica_obras`.
 
-## 8. Posibles mejoras pendientes
+Estas tablas incluyen, según el área, títulos, descripciones, autores, orden, metadatos, imágenes y audio. Si se utiliza una base existente o un volcado de producción, debe incluirlas antes de abrir las vistas del catálogo.
 
-- Implementar las vistas restantes: **literatura**, **música** y **nosotros**.
-- Completar el pie de página (`foother.php`).
-- Extraer el CSS embebido a hojas de estilo externas si el proyecto crece.
-- Agregar diseño **responsive** para pantallas móviles (el CSS actual usa medidas fijas en px/vw/vh).
-- Gestión de estado/deep-linking más robusta (si se desea navegación sin recargar).
+## 5. Ejecución
+
+Con Laragon, coloca el proyecto en `C:\laragon\www` y abre:
+
+- Sitio público: `http://localhost/`
+- Arte: `http://localhost/?page=arte`
+- Literatura: `http://localhost/?page=literatura`
+- Poesía: `http://localhost/?page=poesia`
+- Música: `http://localhost/?page=musica`
+- Autores: `http://localhost/?page=autores`
+- Nosotros: `http://localhost/?page=nosotros`
+- Inicio de sesión: `http://localhost/auth/login.php`
+
+También puede iniciarse con el servidor integrado de PHP:
+
+```bash
+php -S localhost:8000
+```
+
+En ese caso, usa `http://localhost:8000/`.
+
+## 6. Enrutamiento público
+
+`index.php` incluye siempre `components/header.php`, selecciona la vista mediante `$_GET['page']` y añade `components/foother.php` al final. Las rutas disponibles son:
+
+| `page` | Componente |
+|---|---|
+| `inicio` o valor desconocido | `components/podios.php` |
+| `arte` | `components/arte.php` |
+| `literatura` | `components/literatura.php` |
+| `poesia` | `components/poesia.php` |
+| `musica` | `components/musica.php` |
+| `autores` | `components/autores.php` |
+| `nosotros` | `components/nosotros.php` |
+| `arte_detalle` | `components/arte_detalle.php` |
+| `lit_detalle` | `components/lit_detalle.php` |
+| `poe_detalle` | `components/poe_detalle.php` |
+| `musica_detalle` | `components/musica_detalle.php` |
+| `autor_detalle` | `components/autor_detalle.php` |
+
+Las vistas de catálogo consultan la base de datos y agrupan las obras por sección. Las fichas de detalle reciben `obra_id` o `autor_id`.
+
+## 7. Catálogo y funcionalidades públicas
+
+- **Arte:** colecciones y obras visuales precolombinas.
+- **Literatura:** secciones, género, año, sinopsis y fragmentos.
+- **Poesía:** poemas organizados por sección, tema, año y autor.
+- **Música:** piezas con imagen, autor, género, descripción y audio.
+- **Autores:** ficha modal y detalle con biografía, trayectoria, época, línea de tiempo y obras vinculadas.
+- **Búsqueda global:** `buscar.php?q=...` responde JSON y busca autores y obras de las cuatro áreas. Requiere al menos dos caracteres y limita la respuesta a diez resultados.
+- **Diseño visual:** `assets/nikan-anim.css` y `assets/nikan-anim.js` gestionan el preloader de video, partículas doradas, auroras, cursor luminoso, transición entre páginas, revelado al hacer scroll y soporte para `prefers-reduced-motion`.
+
+## 8. Autenticación y panel administrativo
+
+`auth/login.php` autentica por usuario o correo electrónico usando `password_verify`, regenera el ID de sesión al iniciar correctamente y redirige según el rol. `auth/logout.php` destruye la sesión.
+
+El panel está en `admin/` y todos sus módulos pasan por `admin/auth.php`, que exige una sesión con `role = admin`. Incluye:
+
+- `dashboard.php`: métricas de usuarios, autores, obras, secciones y actividad reciente;
+- `arte.php`, `literatura.php`, `poesia.php` y `musica.php`: gestión de secciones y obras;
+- `autores.php`: gestión de autores y retratos;
+- acciones `*_actions.php`: endpoints POST usados por los formularios mediante `fetch`.
+
+Las respuestas de los endpoints administrativos son JSON. `config/config.php` centraliza la conexión PDO, desactiva la emulación de prepared statements y proporciona manejo de errores para que warnings, excepciones y errores fatales no rompan la respuesta JSON.
+
+## 9. Archivos y cargas multimedia
+
+Las cargas se guardan en `uploads/`:
+
+- imágenes JPEG, PNG, GIF y WebP se convierten a WebP mediante GD;
+- SVG se conserva como SVG;
+- audio permitido: MP3 y OGG, dentro de `uploads/audio/`;
+- los nombres generados incluyen prefijo, timestamp y un identificador aleatorio.
+
+Si GD no está habilitada, el panel informa que no puede procesar imágenes en lugar de generar un error fatal. Asegura permisos de escritura para `uploads/` en el servidor.
+
+## 10. Despliegue y webhook
+
+`webhook.php` valida la firma `X-Hub-Signature-256` y, si es correcta, ejecuta `git pull origin main` en la ruta configurada del servidor y registra la salida en `webhook.log`.
+
+Antes de habilitarlo en producción:
+
+1. mueve el secreto de firma a una variable de entorno o a una configuración fuera del repositorio;
+2. sustituye la ruta fija de despliegue por una configuración del entorno;
+3. limita el acceso del endpoint y verifica que el usuario del servidor tenga permisos mínimos;
+4. configura rotación y permisos restrictivos para `webhook.log`.
+
+## 11. Recursos y tipografías
+
+Los recursos principales están en `assets/`: fondos, iconos de navegación, emblemas de cada área, podios, piezas del carrusel, `anima.mp4`, `favicon.ico`, `nikan-anim.css` y `nikan-anim.js`.
+
+Las tipografías locales están en `fonts/`:
+
+| Familia | Archivo | Uso |
+|---|---|---|
+| Rustica | `rustica-plains.regular.ttf` | Logotipo y textos decorativos |
+| Felthgothic | `Felthgothic Bold Italic.otf` | Identidad y encabezados |
+| Nikan Felthgothic | `Felthgothic Bold.ttf` | Títulos de las salas |
+
+La interfaz también carga Alegreya, Dancing Script y Montserrat desde Google Fonts.
+
+## 12. Convenciones de mantenimiento
+
+- Reutiliza `getDB()` y las funciones de `config/config.php`; no abras conexiones PDO nuevas en cada componente.
+- Usa consultas preparadas para valores recibidos del usuario y escapa la salida HTML con `htmlspecialchars`.
+- Para nuevas áreas, añade el componente público, la ruta en `index.php`, el título en `components/header.php`, el módulo administrativo y las tablas correspondientes.
+- Mantén las rutas de recursos relativas al contexto actual: las vistas públicas usan `assets/` y el panel usa `../assets/`.
+- No versiones `.env`, archivos subidos ni logs.
+
+## 13. Pendientes técnicos
+
+- Extraer los estilos embebidos de los componentes a hojas reutilizables si el catálogo continúa creciendo.
+- Completar una migración versionada para todas las tablas del catálogo; actualmente `database/install.php` cubre principalmente `users`.
+- Añadir pruebas automatizadas para autenticación, búsqueda, CRUD administrativo y cargas multimedia.
+- Revisar la configuración del webhook para eliminar secretos y rutas codificadas en el archivo.
+- Validar y ajustar el diseño responsive en dispositivos móviles.
