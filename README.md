@@ -51,8 +51,9 @@ DB_NAME=nikannicaragua
 DB_USER=root
 DB_PASS=
 ADMIN_USER=admin
+NORMAL USER=USER
 ADMIN_EMAIL=admin@nikan.com
-ADMIN_PASSWORD=cambia-esta-contraseña
+ADMIN_PASSWORD=
 ```
 
 `config/env.php` acepta líneas `CLAVE=valor`, valores entre comillas, comentarios con `#` y líneas vacías. Las variables de entorno del sistema tienen prioridad sobre los valores del archivo.
