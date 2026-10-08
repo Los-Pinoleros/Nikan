@@ -262,7 +262,13 @@ function abrir(id) { document.getElementById(id).style.display = 'flex'; }
 
 async function postForm(url, formData) {
     const res = await fetch(url, { method: 'POST', body: formData });
-    return res.json();
+    const txt = await res.text();
+    try {
+        return JSON.parse(txt);
+    } catch (e) {
+        console.error('Respuesta no válida de ' + url + ':', txt);
+        return { ok: false, msg: 'El servidor devolvió una respuesta no válida. Abre la consola (F12) para ver el detalle.' };
+    }
 }
 
 /* Secciones */

@@ -13,6 +13,7 @@ $titulos = [
     'literatura' => 'Literatura · NIKAN',
     'poesia' => 'Poesía · NIKAN',
     'autores' => 'Autores · NIKAN',
+    'autor_detalle' => 'Ficha de autor · NIKAN',
     'musica' => 'Música · NIKAN',
     'musica_detalle' => 'Pieza Musical · NIKAN',
     'nosotros' => 'Nosotros · NIKAN',
@@ -155,6 +156,105 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             margin: 0 auto;
             width: max-content;
             max-width: 100%;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+        .header__search {
+            position: absolute;
+            left: 220px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .header__search.open { width: min(340px, calc(100vw - 250px)); }
+        .header__search-button {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.25s ease, transform 0.25s ease;
+        }
+        .header__search-button:hover,
+        .header__search.open .header__search-button {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.08);
+        }
+        .header__search-button svg { width: 22px; height: 22px; }
+        .header__search-input {
+            width: 0;
+            min-width: 0;
+            height: 42px;
+            margin-left: 8px;
+            padding: 0;
+            border: 0;
+            border-radius: 21px;
+            outline: 0;
+            color: #38251f;
+            background: #fff;
+            font: 600 14px 'Montserrat', sans-serif;
+            opacity: 0;
+            transition: width 0.45s ease, opacity 0.25s ease, padding 0.45s ease;
+        }
+        .header__search.open .header__search-input {
+            width: calc(100% - 56px);
+            padding: 0 16px;
+            opacity: 1;
+        }
+        .header__search-results {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            width: min(390px, calc(100vw - 32px));
+            max-height: 390px;
+            overflow-y: auto;
+            padding: 8px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+        }
+        .header__search-results.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .header__search-result {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: #38251f;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .header__search-result:hover { background: #f5e8d8; transform: translateX(4px); }
+        .header__search-result-type {
+            display: block;
+            color: var(--nikan-bg);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header__search-result-title { display: block; font-size: 14px; font-weight: 800; }
+        .header__search-result-author { display: block; color: #76675e; font-size: 12px; margin-top: 2px; }
+        .header__search-empty { padding: 14px 12px; color: #76675e; font-size: 13px; }
+        .header.search-open .header__nav {
+            transform: translateX(150px);
+            opacity: 0.35;
+            pointer-events: none;
         }
         .header__link {
             font: oblique bold 120% 'Felthgothic', cursive;
@@ -174,11 +274,39 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         .header__link:hover {
             opacity: 0.8;
         }
+        @media (max-width: 900px) {
+            .header { padding: 20px 24px; }
+            .header__logo { font-size: 38px; }
+            .header__search { left: 180px; }
+            .header__nav { gap: 14px; }
+            .header__link { font-size: 15px; gap: 3px; }
+            .header__link img { width: 30px; height: 30px; }
+            .header.search-open .header__nav { transform: translateX(100px); }
+        }
+        @media (max-width: 680px) {
+            .header { padding: 16px 18px; }
+            .header__logo { font-size: 32px; }
+            .header__leon { right: 18px; height: 44px; }
+            .header__search { left: 132px; }
+            .header__search.open { width: calc(100vw - 150px); }
+            .header__nav { display: none; }
+            .header__search-results { left: -114px; }
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <a href="/" class="header__logo">NIKAN</a>
+        <div class="header__search" id="siteSearch">
+            <button type="button" class="header__search-button" id="siteSearchButton" aria-label="Buscar obras o autores" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                    <path d="m16 16 5 5"></path>
+                </svg>
+            </button>
+            <input type="search" class="header__search-input" id="siteSearchInput" placeholder="Buscar obra o autor..." autocomplete="off" aria-label="Buscar obra o autor">
+            <div class="header__search-results" id="siteSearchResults" role="listbox"></div>
+        </div>
         <?php if ($loggedIn): ?>
             <button type="button" class="header__leon-btn" onclick="document.getElementById('userMenu').classList.toggle('open')" style="background:none;border:none;padding:0;">
                 <img src="assets/leon-verde.svg" alt="León" class="header__leon">
@@ -206,10 +334,66 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         </nav>
     </header>
     <script>
-    document.addEventListener('click', function (e) {
-        var menu = document.getElementById('userMenu');
-        if (menu && !e.target.closest('.header__leon-btn') && !e.target.closest('.header__user')) {
-            menu.classList.remove('open');
+    (function () {
+        var header = document.querySelector('.header');
+        var search = document.getElementById('siteSearch');
+        var button = document.getElementById('siteSearchButton');
+        var input = document.getElementById('siteSearchInput');
+        var results = document.getElementById('siteSearchResults');
+        var timer;
+
+        function showResults(items, message) {
+            if (!items.length) {
+                results.innerHTML = '<div class="header__search-empty">' + message + '</div>';
+            } else {
+                results.innerHTML = items.map(function (item) {
+                    return '<a class="header__search-result" href="' + item.url + '">' +
+                        '<span class="header__search-result-type">' + item.type + '</span>' +
+                        '<span class="header__search-result-title">' + item.title + '</span>' +
+                        (item.author ? '<span class="header__search-result-author">' + item.author + '</span>' : '') +
+                        '</a>';
+                }).join('');
+            }
+            results.classList.add('open');
         }
-    });
+
+        button.addEventListener('click', function () {
+            var isOpen = search.classList.toggle('open');
+            header.classList.toggle('search-open', isOpen);
+            button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (isOpen) input.focus();
+            else results.classList.remove('open');
+        });
+        input.addEventListener('input', function () {
+            var query = input.value.trim();
+            clearTimeout(timer);
+            if (query.length < 2) {
+                results.classList.remove('open');
+                return;
+            }
+            showResults([], 'Buscando...');
+            timer = setTimeout(function () {
+                fetch('buscar.php?q=' + encodeURIComponent(query), { headers: { 'Accept': 'application/json' } })
+                    .then(function (response) {
+                        if (!response.ok) throw new Error('search_failed');
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        showResults(data.ok ? data.results : [], data.message || 'No se encontraron coincidencias.');
+                    })
+                    .catch(function () {
+                        showResults([], 'No se pudo realizar la búsqueda.');
+                    });
+            }, 220);
+        });
+        document.addEventListener('click', function (e) {
+            var menu = document.getElementById('userMenu');
+            if (menu && !e.target.closest('.header__leon-btn') && !e.target.closest('.header__user')) {
+                menu.classList.remove('open');
+            }
+            if (!e.target.closest('.header__search')) {
+                results.classList.remove('open');
+            }
+        });
+    })();
     </script>

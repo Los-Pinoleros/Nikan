@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ . '/auth.php';
 require_admin();
+json_safe_start();
 
 $pdo = getDB();
 
 function json_out_lit($ok, $msg = '', $data = null) {
+    json_safe_flush();
     header('Content-Type: application/json');
     echo json_encode(['ok' => $ok, 'msg' => $msg, 'data' => $data]);
     exit;
@@ -60,7 +62,7 @@ switch ($action) {
         // Manejo de subida de imagen
         if (isset($_FILES['imagen_file']) && $_FILES['imagen_file']['error'] === UPLOAD_ERR_OK) {
             $img = subir_imagen_webp($_FILES['imagen_file'], 'obra');
-            if ($img === false) json_out_lit(false, 'Imagen inválida.');
+            if ($img === false) json_out_lit(false, mensaje_error_imagen());
             $imagen = $img;
         } elseif (isset($_FILES['imagen_file']) && $_FILES['imagen_file']['error'] !== UPLOAD_ERR_NO_FILE) {
             json_out_lit(false, 'Error subiendo la imagen.');
