@@ -26,6 +26,7 @@ www/
 ├── webhook.php                # Webhook de despliegue desde GitHub
 ├── .env                       # Configuración local; no debe publicarse
 ├── assets/                    # SVG, animaciones, favicon, MP4 y JS/CSS globales
+├── 3dmodels/                  # Modelos GLB para el visor inmersivo
 ├── components/                # Vistas públicas PHP
 ├── admin/                     # Panel protegido y acciones CRUD
 ├── auth/                      # Inicio y cierre de sesión
@@ -118,6 +119,7 @@ En ese caso, usa `http://localhost:8000/`.
 | `musica` | `components/musica.php` |
 | `autores` | `components/autores.php` |
 | `nosotros` | `components/nosotros.php` |
+| `vr` | `components/vr.php` |
 | `arte_detalle` | `components/arte_detalle.php` |
 | `lit_detalle` | `components/lit_detalle.php` |
 | `poe_detalle` | `components/poe_detalle.php` |
@@ -134,6 +136,10 @@ Las vistas de catálogo consultan la base de datos y agrupan las obras por secci
 - **Música:** piezas con imagen, autor, género, descripción y audio.
 - **Autores:** ficha modal y detalle con biografía, trayectoria, época, línea de tiempo y obras vinculadas.
 - **Búsqueda global:** `buscar.php?q=...` responde JSON y busca autores y obras de las cuatro áreas. Requiere al menos dos caracteres y limita la respuesta a diez resultados.
+- **Recorrido inmersivo:** `?page=vr` carga `3dmodels/MuseoManagua.glb` con Three.js y GLTFLoader. El usuario comienza en la entrada, puede caminar con WASD o flechas, mirar con el ratón, reiniciar la posición y usar controles táctiles en móvil. La colisión horizontal evita atravesar la geometría del museo.
+- **Pantalla completa del recorrido:** el botón `Pantalla completa` o el primer toque/clic sobre el visor solicita Fullscreen API para ampliar la experiencia. El navegador puede exigir una interacción explícita del usuario y permisos de pantalla completa.
+- **Carga del modelo 3D:** la vista muestra el porcentaje de carga y solo presenta el aviso de error si falla realmente `GLTFLoader`. El estilo global `[hidden] { display: none !important; }` evita que el mensaje oculto aparezca mientras el modelo se está cargando correctamente.
+- **Controles del recorrido:** en escritorio, `W`/`↑` avanza, `S`/`↓` retrocede, `A`/`D` se desplaza lateralmente, el ratón permite mirar y `ESC` libera el modo de recorrido. En móvil se muestran controles táctiles.
 - **Diseño visual:** `assets/nikan-anim.css` y `assets/nikan-anim.js` gestionan el preloader de video, partículas doradas, auroras, cursor luminoso, transición entre páginas, revelado al hacer scroll y soporte para `prefers-reduced-motion`.
 
 ## 8. Autenticación y panel administrativo
@@ -173,7 +179,7 @@ Antes de habilitarlo en producción:
 
 ## 11. Recursos y tipografías
 
-Los recursos principales están en `assets/`: fondos, iconos de navegación, emblemas de cada área, podios, piezas del carrusel, `anima.mp4`, `favicon.ico`, `nikan-anim.css` y `nikan-anim.js`.
+Los recursos principales están en `assets/`: fondos, iconos de navegación —incluido `vr.svg`—, emblemas de cada área, podios, piezas del carrusel, `anima.mp4`, `favicon.ico`, `nikan-anim.css` y `nikan-anim.js`. El modelo inmersivo se encuentra en `3dmodels/MuseoManagua.glb`.
 
 Las tipografías locales están en `fonts/`:
 

@@ -25,6 +25,9 @@ switch ($page) {
     case 'nosotros':
         include __DIR__ . '/components/nosotros.php';
         break;
+    case 'vr':
+        include __DIR__ . '/components/vr.php';
+        break;
     case 'arte_detalle':
         include __DIR__ . '/components/arte_detalle.php';
         break;

@@ -17,6 +17,7 @@ $titulos = [
     'musica' => 'Música · NIKAN',
     'musica_detalle' => 'Pieza Musical · NIKAN',
     'nosotros' => 'Nosotros · NIKAN',
+    'vr' => 'Museo en VR · NIKAN',
     'arte_detalle' => 'Obra de Arte · NIKAN',
     'lit_detalle' => 'Obra Literaria · NIKAN',
     'poe_detalle' => 'Poema · NIKAN',
@@ -274,6 +275,13 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         .header__link:hover {
             opacity: 0.8;
         }
+        .header__link--vr {
+            color: #ffe08a;
+        }
+        .header__link--vr img {
+            width: 42px;
+            height: 42px;
+        }
         @media (max-width: 900px) {
             .header { padding: 20px 24px; }
             .header__logo { font-size: 38px; }
@@ -331,6 +339,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             <a href="?page=poesia" class="header__link"><img src="assets/literatura.svg" alt="Poesía">Poesía</a>
             <a href="?page=musica" class="header__link"><img src="assets/musica.svg" alt="Música">Música</a>
             <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
+            <a href="?page=vr" class="header__link header__link--vr"><img src="assets/vr.svg" alt="VR">VR</a>
         </nav>
     </header>
     <script>
