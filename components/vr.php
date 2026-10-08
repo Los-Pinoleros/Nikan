@@ -8,23 +8,34 @@
 
 <main class="vr-page">
     <section class="vr-intro">
-        <span class="vr-kicker">RECORRIDO INMERSIVO</span>
-        <h1>Camina por el Museo Managua</h1>
-        <p>
-            Haz clic dentro del museo para comenzar. Usa <strong>WASD</strong> o las flechas
-            para caminar y mueve el ratón para mirar, como en un recorrido virtual.
-        </p>
-        <p class="vr-note">En móvil, gira la vista deslizando y utiliza los controles de pantalla para desplazarte.</p>
+        <div class="vr-intro__eyebrow"><span>01</span><i></i> SALA DIGITAL NIKAN</div>
+        <div class="vr-intro__layout">
+            <div>
+                <span class="vr-kicker">RECORRIDO INMERSIVO</span>
+                <h1>Entra.<br><em>Explora.</em></h1>
+            </div>
+            <div class="vr-intro__copy">
+                <p>Un recorrido libre por el Museo Managua. Comienza en la entrada y descubre el espacio a tu propio ritmo.</p>
+                <p class="vr-note">Haz clic en la escena para caminar · La visita se abre en pantalla completa</p>
+            </div>
+        </div>
     </section>
 
     <section class="vr-viewer-wrap" aria-label="Recorrido 3D del Museo Managua">
+        <div class="vr-scene-label">
+            <span class="vr-scene-label__mark">N</span>
+            <span><strong>MUSEO MANAGUA</strong><small>RECORRIDO VIRTUAL</small></span>
+        </div>
+        <div class="vr-entrance-mark">ENTRADA <span></span></div>
         <canvas id="vrCanvas" class="vr-canvas"></canvas>
         <div id="vrLoading" class="vr-loading">Cargando el museo…</div>
         <div id="vrError" class="vr-error" hidden>No se pudo cargar el modelo 3D.</div>
         <div class="vr-hud">
-            <span id="vrStatus">Haz clic para entrar</span>
-            <button id="vrFullscreen" type="button">Pantalla completa</button>
-            <button id="vrReset" type="button">Volver a la entrada</button>
+            <span id="vrStatus">Haz clic para comenzar el recorrido</span>
+            <div class="vr-hud__actions">
+                <button id="vrFullscreen" type="button"><b>⛶</b> Pantalla completa</button>
+                <button id="vrReset" type="button">↺ Entrada</button>
+            </div>
         </div>
         <div class="vr-mobile-controls" aria-label="Controles de movimiento">
             <button type="button" data-key="ArrowUp" aria-label="Avanzar">▲</button>
@@ -214,28 +225,56 @@ animate();
 <style>
     .vr-page {
         min-height: 100vh;
-        padding: 150px 6vw 70px;
+        padding: 142px 6vw 72px;
         position: relative;
         z-index: 2;
         color: #fff;
-        background: linear-gradient(135deg, rgba(36, 27, 24, .97), rgba(72, 35, 31, .94));
+        background:
+            radial-gradient(circle at 12% 20%, rgba(201,169,79,.16), transparent 28%),
+            linear-gradient(112deg, #211a18 0%, #3b2924 52%, #1e1917 100%);
         font-family: 'Montserrat', sans-serif;
     }
-    .vr-intro { max-width: 780px; margin: 0 auto 30px; text-align: center; }
-    .vr-kicker { color: #ffe08a; font-size: 13px; font-weight: 800; letter-spacing: 3px; }
+    .vr-page::before {
+        content: "NIKAN";
+        position: absolute;
+        top: 115px;
+        right: 5vw;
+        color: rgba(255,224,138,.08);
+        font: 800 clamp(80px, 15vw, 220px)/.8 'Nikan Felthgothic', serif;
+        pointer-events: none;
+    }
+    .vr-intro { max-width: 1200px; margin: 0 auto 28px; }
+    .vr-intro__eyebrow {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+        color: rgba(255,255,255,.58); font-size: 10px; font-weight: 800; letter-spacing: 3px;
+    }
+    .vr-intro__eyebrow span { color: #ffe08a; font-family: 'Alegreya', serif; font-size: 18px; letter-spacing: 0; }
+    .vr-intro__eyebrow i { width: 52px; height: 1px; background: #c9a94f; }
+    .vr-intro__layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 9vw; align-items: end; }
+    .vr-kicker { color: #ffe08a; font-size: 11px; font-weight: 800; letter-spacing: 4px; }
     .vr-intro h1 {
-        margin: 12px 0 14px; color: #fff2cd;
+        margin: 10px 0 0; color: #fff2cd;
         font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
-        font-size: clamp(38px, 6vw, 76px); line-height: 1;
+        font-size: clamp(48px, 7vw, 98px); line-height: .88; letter-spacing: 1px;
     }
-    .vr-intro p { max-width: 650px; margin: 0 auto; color: rgba(255,255,255,.86); line-height: 1.7; }
-    .vr-note { margin-top: 12px !important; color: rgba(255,224,138,.82) !important; font-size: 12px; }
+    .vr-intro h1 em { color: #c9a94f; font-style: normal; }
+    .vr-intro__copy { border-left: 1px solid rgba(255,224,138,.45); padding: 6px 0 4px 28px; }
+    .vr-intro p { max-width: 430px; margin: 0; color: rgba(255,255,255,.82); line-height: 1.7; font-size: 14px; }
+    .vr-note { margin-top: 14px !important; color: rgba(255,224,138,.82) !important; font-size: 10px !important; letter-spacing: .4px; }
     .vr-viewer-wrap {
-        width: min(1200px, 100%); height: min(68vh, 720px); min-height: 420px;
+        width: min(1200px, 100%); height: min(67vh, 720px); min-height: 420px;
         margin: 0 auto; overflow: hidden; position: relative;
-        border: 1px solid rgba(255,224,138,.45); border-radius: 22px;
-        background: #332720; box-shadow: 0 24px 70px rgba(0,0,0,.4);
+        border: 1px solid rgba(255,224,138,.55); border-radius: 4px;
+        background: #332720; box-shadow: 0 30px 80px rgba(0,0,0,.5);
     }
+    .vr-viewer-wrap::after { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(255,255,255,.13); pointer-events: none; }
+    .vr-scene-label { position: absolute; top: 30px; left: 30px; z-index: 3; display: flex; align-items: center; gap: 10px; color: #fff; pointer-events: none; }
+    .vr-scene-label__mark { display: grid; place-items: center; width: 30px; height: 30px; color: #3b2920; background: #ffe08a; font: 800 17px 'Nikan Felthgothic', serif; }
+    .vr-scene-label strong, .vr-scene-label small { display: block; }
+    .vr-scene-label strong { font-size: 10px; letter-spacing: 2px; }
+    .vr-scene-label small { margin-top: 3px; color: #ffe08a; font-size: 8px; letter-spacing: 2px; }
+    .vr-entrance-mark { position: absolute; top: 35px; right: 35px; z-index: 3; color: rgba(255,255,255,.7); font-size: 9px; letter-spacing: 2px; writing-mode: vertical-rl; pointer-events: none; }
+    .vr-entrance-mark span { display: block; width: 1px; height: 34px; margin: 8px auto 0; background: #ffe08a; }
     .vr-canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     [hidden] { display: none !important; }
     .vr-loading, .vr-error {
@@ -244,21 +283,30 @@ animate();
     }
     .vr-error { color: #fff; background: rgba(50, 30, 25, .8); }
     .vr-hud {
-        position: absolute; left: 18px; right: 18px; bottom: 18px;
+        position: absolute; left: 30px; right: 30px; bottom: 30px; z-index: 4;
         display: flex; align-items: center; justify-content: space-between;
         pointer-events: none;
     }
     .vr-hud span, .vr-hud button {
-        border: 0; border-radius: 999px; padding: 10px 14px;
-        color: #3b2920; background: rgba(255,240,190,.92);
-        font: 800 11px 'Montserrat', sans-serif;
+        border: 1px solid rgba(255,224,138,.6); border-radius: 0; padding: 11px 15px;
+        color: #fff2cd; background: rgba(31,23,20,.82);
+        font: 800 10px 'Montserrat', sans-serif; letter-spacing: .5px;
     }
-    .vr-hud button { pointer-events: auto; cursor: pointer; }
+    .vr-hud__actions { display: flex; gap: 8px; }
+    .vr-hud button { pointer-events: auto; cursor: pointer; transition: background .2s, color .2s; }
+    .vr-hud button:hover { color: #3b2920; background: #ffe08a; }
+    .vr-hud button b { font-size: 17px; font-weight: 400; vertical-align: -2px; }
     .vr-mobile-controls { display: none; }
     @media (max-width: 680px) {
         .vr-page { padding: 112px 18px 35px; }
-        .vr-viewer-wrap { min-height: 55vh; height: 62vh; border-radius: 14px; }
-        .vr-hud { bottom: 12px; left: 12px; right: 12px; }
+        .vr-intro__layout { display: block; }
+        .vr-intro__copy { margin-top: 24px; padding: 0 0 0 16px; }
+        .vr-intro h1 { font-size: clamp(54px, 17vw, 78px); }
+        .vr-viewer-wrap { min-height: 55vh; height: 62vh; }
+        .vr-scene-label { top: 25px; left: 25px; }
+        .vr-hud { bottom: 25px; left: 25px; right: 25px; display: block; }
+        .vr-hud__actions { margin-top: 8px; }
+        .vr-hud__actions button { padding: 9px 10px; font-size: 9px; }
         .vr-mobile-controls { display: block; position: absolute; left: 14px; bottom: 12px; }
         .vr-mobile-controls button {
             width: 38px; height: 34px; margin: 2px; border: 0; border-radius: 8px;
