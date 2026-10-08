@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ . '/auth.php';
 require_admin();
+json_safe_start();
 
 $pdo = getDB();
 
 function json_out_autor($ok, $msg = '', $data = null) {
+    json_safe_flush();
     header('Content-Type: application/json');
     echo json_encode(['ok' => $ok, 'msg' => $msg, 'data' => $data]);
     exit;
@@ -40,7 +42,7 @@ switch ($action) {
             $uploadKey = $field === 'retrato' ? 'retrato_file' : 'obra_rep_file';
             if (isset($_FILES[$uploadKey]) && $_FILES[$uploadKey]['error'] !== UPLOAD_ERR_NO_FILE) {
                 $r = subir_imagen_webp($_FILES[$uploadKey], $field === 'retrato' ? 'retrato' : 'obra');
-                if ($r === false) json_out_autor(false, 'Imagen inválida.');
+                if ($r === false) json_out_autor(false, mensaje_error_imagen());
                 if ($r !== '') {
                     if ($field === 'retrato') {
                         if ($id) {
