@@ -211,6 +211,7 @@ try {
     align-items: center;
     gap: 12px;
     color: #0a7a4b;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 30px;
     letter-spacing: 4px;
     margin-bottom: 24px;
@@ -225,9 +226,10 @@ try {
 }
 
 .lite-texto h1 {
-    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 78px;
     color: #C6372E;
+    text-transform: uppercase;
     margin: 0 0 24px;
     line-height: 1.05;
     letter-spacing: 3px;
@@ -240,7 +242,7 @@ try {
 }
 
 .lite-texto p {
-    font-family: 'Rustica', serif;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 22px;
     color: #4a3b22;
     line-height: 1.7;
@@ -475,5 +477,87 @@ try {
     color: #8a7a58;
     font-style: italic;
     font-size: 16px;
+}
+
+@media (max-width: 1100px) {
+    .lite-section { padding: 110px 5vw 0; }
+    .lite-container { gap: 24px; }
+    .lite-texto { max-width: 48%; padding-bottom: 70px; }
+    .lite-texto h1 { font-size: clamp(52px, 7vw, 74px); }
+    .lite-texto p { font-size: clamp(17px, 2vw, 21px); }
+    .lite-imagen { max-width: 52%; margin-bottom: -80px; transform: translateY(-25px); }
+    .lite-emblema { width: min(560px, 100%); }
+    .lite-seccion { padding: 70px 5vw; }
+}
+
+@media (max-width: 760px) {
+    .lite-section {
+        min-height: auto;
+        padding: 110px 22px 36px;
+    }
+    .lite-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+    .lite-texto {
+        max-width: none;
+        padding-bottom: 0;
+        text-align: center;
+    }
+    .lite-tag {
+        justify-content: center;
+        margin-bottom: 14px;
+        font-size: 22px;
+        letter-spacing: 3px;
+    }
+    .lite-texto h1 {
+        font-size: clamp(40px, 11vw, 66px);
+        line-height: 1;
+        letter-spacing: 1px;
+        margin-bottom: 18px;
+    }
+    .lite-texto p {
+        max-width: 620px;
+        margin: 0 auto;
+        font-size: 17px;
+        line-height: 1.5;
+    }
+    .lite-imagen {
+        align-self: center;
+        width: min(100%, 480px);
+        max-width: 100%;
+        margin: 0 auto -45px;
+        padding: 12px;
+        transform: none;
+    }
+    .lite-emblema { width: 100%; }
+    .lite-seccion {
+        padding: 62px 22px;
+        border-top-width: 2px;
+    }
+    .lite-cabecera { gap: 10px; margin-bottom: 10px; }
+    .lite-num { font-size: 30px; }
+    .lite-cabecera h2 { font-size: clamp(28px, 8vw, 40px); line-height: 1.05; }
+    .lite-desc { font-size: 16px; margin-bottom: 22px; }
+    .lite-grid { grid-template-columns: 1fr; gap: 20px; }
+    .lite-card { padding: 18px 17px 20px; }
+    .lite-card-head h3 { font-size: 22px; }
+    .lite-sinopsis { font-size: 14px; }
+    .lite-cita { font-size: 15px; }
+    .lite-subsection { margin-top: 25px; }
+    .lite-subsection > h3 { font-size: 27px; }
+}
+
+@media (max-width: 420px) {
+    .lite-section { padding-right: 16px; padding-left: 16px; }
+    .lite-texto h1 { font-size: clamp(36px, 12vw, 52px); }
+    .lite-texto p { font-size: 15px; }
+    .lite-imagen { margin-bottom: -28px; }
+    .lite-seccion { padding: 48px 16px; }
+    .lite-cabecera h2 { font-size: 28px; }
+    .lite-desc { font-size: 15px; }
+    .lite-card { padding-right: 14px; padding-left: 14px; }
+    .lite-card--poesia { min-height: 290px; }
 }
 </style>

@@ -29,6 +29,7 @@ try {
     <div class="arte-container">
         <div class="arte-texto">
             <div class="arte-tag">
+                <img src="assets/arte.svg" alt="Arte" class="icono">
                 <span>ARTE</span>
             </div>
             <h1 aria-label="La vida precolombina.">La<span class="arte-titulo-espacio" aria-hidden="true"></span>vida<br>precolombina.</h1>
@@ -144,6 +145,7 @@ try {
     align-items: center;
     gap: 12px;
     color: #0a7a4b;
+    font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
     font-size: 30px;
     letter-spacing: 4px;
     margin-bottom: 24px;
@@ -158,9 +160,10 @@ try {
 }
 
 .arte-texto h1 {
-    font-family: 'Felthgothic', serif;
+    font-family: 'Rustica', serif;
     font-size: 82px;
     color: #C6372E;
+    text-transform: uppercase;
     margin: 0 0 24px;
     line-height: 1.05;
     letter-spacing: 3px;
@@ -173,7 +176,7 @@ try {
 }
 
 .arte-texto p {
-    font-family: 'Rustica', serif;
+    font-family: 'Felthgothic', serif;
     font-size: 22px;
     color: #4a3b22;
     line-height: 1.7;

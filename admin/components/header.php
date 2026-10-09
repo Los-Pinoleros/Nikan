@@ -217,10 +217,20 @@ $current = basename($_SERVER['PHP_SELF']);
             .header__logo { font-size: 38px; }
         }
         @media (max-width: 680px) {
-            .header { padding: 16px 18px 16px 76px; min-height: 70px; }
+            .header {
+                padding: 16px 18px 16px 76px;
+                min-height: 70px;
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+            }
             .header__logo { font-size: 32px; }
             .header__leon { right: 18px; height: 44px; }
-            .header__menu-button { display: block; transform: translateY(-50%); }
+            .header__menu-button {
+                display: block;
+                position: fixed;
+                top: 13px;
+                transform: none;
+            }
             .header__nav {
                 display: flex;
                 flex-direction: column;
@@ -240,7 +250,7 @@ $current = basename($_SERVER['PHP_SELF']);
                 transform: translateX(-105%);
                 box-shadow: 12px 0 30px rgba(0,0,0,.3);
                 transition: transform .45s cubic-bezier(.16,1,.3,1);
-                z-index: 100;
+                z-index: 101;
             }
             .header__nav.open { transform: translateX(0); }
             .header__nav .header__link {

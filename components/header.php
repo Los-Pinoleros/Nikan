@@ -34,7 +34,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;0,800;1,500&family=Dancing+Script:wght@600;800&family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/nikan-anim.css?v=20261009">
+    <link rel="stylesheet" href="assets/nikan-anim.css?v=20261010">
     <style>
         @font-face {
             font-family: 'Felthgothic';
@@ -202,21 +202,20 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             width: 48px;
             height: 48px;
             flex: 0 0 48px;
-            border: 2px solid rgba(255, 255, 255, 0.75);
-            border-radius: 50%;
+            border: 0;
+            border-radius: 0;
             background: transparent;
-            color: #fff;
             cursor: pointer;
             display: grid;
             place-items: center;
-            transition: background 0.25s ease, transform 0.25s ease;
+            transition: transform 0.25s ease, opacity 0.25s ease;
         }
         .header__search-button:hover,
         .header__search.open .header__search-button {
-            background: rgba(255, 255, 255, 0.16);
             transform: scale(1.08);
+            opacity: .82;
         }
-        .header__search-button svg { width: 22px; height: 22px; }
+        .header__search-button img { width: 34px; height: 34px; object-fit: contain; }
         .header__search-input {
             width: 0;
             min-width: 0;
@@ -224,7 +223,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             margin-left: 8px;
             padding: 0;
             border: 0;
-            border-radius: 21px;
+            border-radius: 8px;
             outline: 0;
             color: #38251f;
             background: #fff;
@@ -329,9 +328,9 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             left: 50%;
             min-width: 190px;
             padding: 8px;
-            border: 1px solid rgba(255, 224, 138, .55);
-            background: rgba(48, 31, 27, .98);
-            box-shadow: 0 14px 30px rgba(0, 0, 0, .32);
+            border: 1px solid rgba(198, 55, 46, .28);
+            background: #fff;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
             opacity: 0;
             visibility: hidden;
             transform: translate(-50%, -8px);
@@ -348,7 +347,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             align-items: center;
             gap: 9px;
             padding: 11px 14px;
-            color: #fff2cd;
+            color: #C6372E;
             font: oblique bold 16px 'Felthgothic', cursive;
             text-decoration: none;
             text-transform: uppercase;
@@ -356,13 +355,11 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         }
         .header__dropdown-link:hover {
             padding-left: 19px;
-            color: #03d437;
-            background: rgba(255, 255, 255, .08);
+            color: #a72e27;
+            background: rgba(198, 55, 46, .08);
         }
         .header__dropdown-link img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
+            display: none;
         }
         @media (max-width: 900px) {
             .header { padding: 20px 24px; }
@@ -375,11 +372,21 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             .header.search-open .header__nav { transform: translateX(100px); }
         }
         @media (max-width: 680px) {
-            .header { min-height: 76px; padding: 16px 18px 16px 76px; }
+            .header {
+                min-height: 76px;
+                padding: 16px 18px 16px 76px;
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+            }
             .header__logo { font-size: 32px; }
             .header__leon { right: 18px; height: 44px; }
             .header__search { display: none; }
-            .header__menu-button { display: block; transform: translateY(-50%); }
+            .header__menu-button {
+                display: block;
+                position: fixed;
+                top: 16px;
+                transform: none;
+            }
             .header__nav {
                 display: flex;
                 flex-direction: column;
@@ -400,7 +407,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
                 opacity: 1;
                 box-shadow: 12px 0 30px rgba(0,0,0,.3);
                 transition: transform .45s cubic-bezier(.16,1,.3,1);
-                z-index: 100;
+                z-index: 101;
             }
             .header__nav.open { transform: translateX(0); }
             .header__nav .header__link {
@@ -414,14 +421,17 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             .header__dropdown-menu {
                 position: static;
                 min-width: 0;
-                padding: 0 0 0 18px;
+                padding: 4px 0 4px 18px;
                 border: 0;
-                background: transparent;
+                background: #fff;
                 box-shadow: none;
                 transform: none;
             }
             .header__dropdown.open .header__dropdown-menu { transform: none; }
-            .header__dropdown-link { font-size: 15px; }
+            .header__dropdown-link {
+                color: #C6372E;
+                font-size: 15px;
+            }
             .header__menu-backdrop {
                 display: block;
                 position: fixed;
@@ -442,13 +452,10 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         <button type="button" class="header__menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
-        <a href="/" class="header__logo">NIKANO</a>
+        <a href="/" class="header__logo">NIKAN</a>
         <div class="header__search" id="siteSearch">
             <button type="button" class="header__search-button" id="siteSearchButton" aria-label="Buscar obras o autores" aria-expanded="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true">
-                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
-                    <path d="m16 16 5 5"></path>
-                </svg>
+                <img src="assets/lipa.svg" alt="" aria-hidden="true">
             </button>
             <input type="search" class="header__search-input" id="siteSearchInput" placeholder="Buscar obra o autor..." autocomplete="off" aria-label="Buscar obra o autor">
             <div class="header__search-results" id="siteSearchResults" role="listbox"></div>
