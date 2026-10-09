@@ -85,6 +85,6 @@
     }
 </style>
 
-<script src="assets/nikan-anim.js"></script>
+<script src="assets/nikan-anim.js?v=20261009"></script>
 </body>
 </html>

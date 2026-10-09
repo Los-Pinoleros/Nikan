@@ -52,6 +52,14 @@
         });
     });
 
+    /* Biblioteca es un control de menú, no un enlace de navegación. */
+    document.querySelectorAll('.header__dropdown-button').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+    });
+
     /* La portada (inicio) queda sin animaciones automáticas. */
     var page = new URLSearchParams(location.search).get('page') || 'inicio';
     if (page === 'inicio') return;
