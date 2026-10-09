@@ -39,7 +39,7 @@ include __DIR__ . '/components/header.php';
                 <div><strong><?php echo htmlspecialchars($producto['titulo']); ?></strong><p><?php echo htmlspecialchars($producto['descripcion']); ?></p><small>WhatsApp: <?php echo htmlspecialchars($producto['whatsapp']); ?></small></div>
                 <div class="item-actions">
                     <button class="btn btn-small" type="button" onclick='editarProducto(<?php echo json_encode($producto, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>)'>Editar</button>
-                    <a class="btn btn-small btn-red" href="tienda_actions.php?action=delete&id=<?php echo (int)$producto['id']; ?>" onclick="return confirm('¿Eliminar este producto?')">Eliminar</a>
+                    <a class="btn btn-small btn-red" href="tienda_actions.php?action=delete&id=<?php echo (int)$producto['id']; ?>" onclick='abrirEliminarTienda(<?php echo (int)$producto['id']; ?>, <?php echo json_encode($producto['titulo'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>); return false;'>Eliminar</a>
                 </div>
             </article>
         <?php endforeach; ?>
@@ -47,6 +47,17 @@ include __DIR__ . '/components/header.php';
     </section>
 </div>
 <div id="tiendaEditModal" class="modal" style="display:none;"><div class="modal-box"><h2 class="admin-h2">Editar producto</h2><form id="tiendaEditForm" method="post" action="tienda_actions.php" enctype="multipart/form-data"><input type="hidden" name="action" value="save"><input type="hidden" name="id" id="edit_id"><label class="admin-label">Título</label><input class="admin-input" name="titulo" id="edit_titulo" required><label class="admin-label">Descripción corta</label><textarea class="admin-input" name="descripcion" id="edit_descripcion" required></textarea><label class="admin-label">WhatsApp</label><input class="admin-input" name="whatsapp" id="edit_whatsapp" required><label class="admin-label">Nueva imagen (opcional)</label><input class="admin-input" type="file" name="imagen_file" accept="image/*"><div class="modal-actions"><button type="button" class="btn" onclick="cerrarTiendaModal()">Cancelar</button><button class="btn btn-green" type="submit">Guardar</button></div></form></div></div>
+<div id="tiendaDeleteModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="tiendaDeleteTitle">
+    <div class="modal-box tienda-delete-box">
+        <span class="tienda-delete-icon">!</span>
+        <h2 id="tiendaDeleteTitle" class="admin-h2">¿Eliminar producto?</h2>
+        <p>Esta acción eliminará <strong id="tiendaDeleteName"></strong> de la tienda y no se puede deshacer.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn" onclick="cerrarEliminarTienda()">Cancelar</button>
+            <a id="tiendaDeleteConfirm" class="btn btn-red" href="#">Sí, eliminar</a>
+        </div>
+    </div>
+</div>
 <style>
 .tienda-admin { max-width:1100px; }
 .admin-head-row { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:24px; }
@@ -334,7 +345,446 @@ body:has(.tienda-admin) {
     .tienda-list { padding: 18px; }
 }
 </style>
+<style>
+/* Presentacion limpia y moderna del formulario. */
+.tienda-form-panel {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(15,23,42,.08);
+}
+.tienda-form-panel .tienda-form-heading {
+    justify-content: space-between;
+    padding: 26px 32px;
+    text-align: left;
+    background: #fff;
+    border-bottom: 1px solid #eef2f7;
+}
+.tienda-form-panel .tienda-form-heading > div {
+    justify-items: start;
+}
+.tienda-form-panel .tienda-form-kicker {
+    color: #64748b;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+.tienda-form-panel .tienda-form-heading .admin-h2 {
+    margin-top: 7px;
+    color: #172033;
+    font-size: 26px;
+    font-weight: 700;
+}
+.tienda-form-panel .tienda-form-mark {
+    display: grid;
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #dbe4ef;
+    border-radius: 9px;
+    color: #2563eb;
+    background: #eff6ff;
+    font-size: 23px;
+}
+.tienda-form-panel .tienda-form-intro {
+    max-width: none;
+    padding: 24px 32px 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: left;
+}
+.tienda-form-panel .tienda-form {
+    padding: 24px 32px 32px;
+    gap: 20px 22px;
+}
+.tienda-form-panel .tienda-form .admin-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-align: left;
+}
+.tienda-form-panel .tienda-field .admin-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 14px;
+    text-align: left;
+}
+.tienda-form-panel .tienda-field textarea.admin-input {
+    min-height: 118px;
+    resize: vertical;
+}
+.tienda-form-panel .tienda-form .admin-input:focus {
+    border-color: #2563eb;
+    outline: 0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+.tienda-form-panel .tienda-help {
+    margin-top: 7px;
+    color: #64748b;
+    text-align: left;
+}
+.tienda-form-panel .tienda-file {
+    padding: 8px;
+    border: 1px dashed #b8c5d6;
+    border-radius: 7px;
+    background: #f8fafc;
+}
+.tienda-form-panel .tienda-file .admin-input {
+    min-height: 38px;
+    padding: 7px;
+    border: 0;
+    background: transparent;
+}
+.tienda-form-panel .tienda-file span {
+    margin-left: 7px;
+    color: #64748b;
+    text-align: left;
+}
+.tienda-form-panel .tienda-submit {
+    min-height: 46px;
+    margin-top: 2px;
+    border-radius: 7px;
+    background: #2563eb;
+    box-shadow: 0 6px 14px rgba(37,99,235,.2);
+    font-size: 12px;
+}
+.tienda-form-panel .tienda-submit:hover {
+    background: #1d4ed8;
+}
+body:has(.tienda-admin) {
+    background: #f1f5f9;
+}
+.tienda-admin .admin-eyebrow {
+    color: #2563eb;
+}
+.tienda-admin .admin-title {
+    color: #172033;
+    text-shadow: none;
+}
+.tienda-admin .admin-sub {
+    color: #64748b;
+}
+.tienda-admin .admin-count {
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+.tienda-admin .admin-alert {
+    border-color: #bbf7d0;
+    border-left-color: #16a34a;
+    color: #166534;
+    background: #f0fdf4;
+}
+.tienda-list {
+    border-color: #e2e8f0;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(15,23,42,.06);
+}
+.tienda-list > .admin-h2 {
+    color: #172033;
+}
+.tienda-admin-row {
+    border-top-color: #e2e8f0;
+}
+.tienda-admin-row strong {
+    color: #1e293b;
+}
+.tienda-admin-row p {
+    color: #64748b;
+}
+.tienda-admin-row small {
+    color: #2563eb;
+}
+@media (max-width:700px) {
+    .tienda-form-panel .tienda-form-heading {
+        padding: 22px 20px;
+    }
+    .tienda-form-panel .tienda-form-intro {
+        padding: 19px 20px 0;
+    }
+    .tienda-form-panel .tienda-form {
+        padding: 20px 20px 24px;
+    }
+}
+</style>
+<style>
+/* Misma tipografia y lenguaje visual que Gestion de Musica. */
+body:has(.tienda-admin) {
+    background: var(--nikan-bg, #171717);
+}
+.tienda-admin {
+    position: relative;
+    z-index: 2;
+    width: auto;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 120px 24px 60px;
+    color: #fff;
+}
+.tienda-admin .admin-head-row {
+    display: block;
+    margin: 0 0 24px;
+    text-align: left;
+}
+.tienda-admin .admin-head-row > div {
+    max-width: none;
+    margin: 0;
+}
+.tienda-admin .admin-eyebrow {
+    display: none;
+}
+.tienda-admin .admin-title,
+.tienda-admin .admin-h2 {
+    font-family: 'Felthgothic', cursive;
+    font-style: oblique;
+    font-weight: bold;
+}
+.tienda-admin .admin-title {
+    margin: 0 0 4px;
+    color: #fff;
+    font-size: 40px;
+    line-height: 1.1;
+    text-shadow: none;
+}
+.tienda-admin .admin-sub {
+    max-width: none;
+    margin: 0 0 24px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: normal;
+    opacity: .9;
+}
+.tienda-admin .admin-count {
+    display: inline-block;
+    margin: 0;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    background: rgba(255,255,255,.2);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0;
+    text-transform: none;
+}
+.tienda-admin .admin-alert {
+    max-width: none;
+    margin: 0 0 18px;
+    padding: 12px 15px;
+    border: 0;
+    border-left: 4px solid #2e8b57;
+    border-radius: 0;
+    color: #fff;
+    background: rgba(46,139,87,.35);
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+}
+.tienda-form-panel,
+.tienda-list {
+    width: auto;
+    border: 0;
+    border-radius: 14px;
+    background: rgba(20,20,20,.75);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    color: #fff;
+}
+.tienda-form-panel {
+    padding: 28px 30px 30px !important;
+}
+.tienda-form-panel .tienda-form-heading {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.tienda-form-panel .tienda-form-heading > div {
+    display: block;
+}
+.tienda-form-panel .tienda-form-kicker {
+    display: none;
+}
+.tienda-form-panel .tienda-form-heading .admin-h2 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: 24px;
+}
+.tienda-form-panel .tienda-form-mark {
+    display: none;
+}
+.tienda-form-panel .tienda-form-intro {
+    max-width: none;
+    margin: 0 0 20px;
+    padding: 0;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: normal;
+    opacity: .9;
+    text-align: left;
+}
+.tienda-form-panel .tienda-form {
+    padding: 0;
+    gap: 22px 24px;
+}
+.tienda-form-panel .tienda-form .admin-label {
+    display: block;
+    margin: 14px 0 7px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: left;
+    text-transform: uppercase;
+    opacity: .9;
+}
+.tienda-form-panel .tienda-field .admin-input,
+.tienda-form-panel .tienda-file {
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 8px;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+.tienda-form-panel .tienda-field .admin-input {
+    min-height: 0;
+    padding: 10px 12px;
+    font-size: 14px;
+}
+.tienda-form-panel .tienda-field .admin-input::placeholder {
+    color: rgba(255,255,255,.65);
+}
+.tienda-form-panel .tienda-form .admin-input:focus {
+    border-color: #fff;
+    background: rgba(255,255,255,.2);
+    box-shadow: none;
+}
+.tienda-form-panel .tienda-field textarea.admin-input {
+    min-height: 115px;
+}
+.tienda-form-panel .tienda-help,
+.tienda-form-panel .tienda-file span {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    opacity: .65;
+}
+.tienda-form-panel .tienda-help {
+    text-align: left;
+}
+.tienda-form-panel .tienda-file {
+    padding: 8px;
+}
+.tienda-form-panel .tienda-file .admin-input {
+    border: 0;
+    background: transparent;
+}
+.tienda-form-panel .tienda-file span {
+    margin: 5px 4px 0;
+    text-align: left;
+}
+.tienda-form-panel .tienda-submit {
+    min-height: 0;
+    margin-top: 20px;
+    border-radius: 0;
+    background: #2e8b57;
+    box-shadow: none;
+    font-family: 'Montserrat', sans-serif;
+}
+.tienda-form-panel .tienda-submit:hover {
+    background: #37a86a;
+}
+.tienda-list {
+    margin-top: 24px;
+    padding: 28px 30px 30px;
+}
+.tienda-list > .admin-h2 {
+    justify-content: initial;
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: 24px;
+    text-align: left;
+}
+.tienda-admin-row {
+    gap: 20px;
+    padding: 18px 4px;
+    border-top-color: rgba(255,255,255,.13);
+}
+.tienda-admin-row strong {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+.tienda-admin-row p,
+.tienda-admin-row small {
+    font-family: 'Montserrat', sans-serif;
+}
+.tienda-admin-row p {
+    color: #fff;
+    opacity: .7;
+}
+.tienda-admin-row small {
+    color: #ffe9b3;
+}
+.tienda-delete-box {
+    text-align: center;
+}
+.tienda-delete-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 14px;
+    border: 1px solid rgba(192,57,43,.6);
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(192,57,43,.25);
+    font-size: 25px;
+    font-weight: 700;
+}
+.tienda-delete-box .admin-h2 {
+    margin-bottom: 10px;
+}
+.tienda-delete-box p {
+    margin: 0;
+    color: rgba(255,255,255,.78);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.tienda-delete-box p strong {
+    color: #fff;
+}
+.tienda-delete-box .modal-actions {
+    justify-content: center;
+    margin-top: 24px;
+}
+.tienda-delete-box .btn {
+    border-radius: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+@media (max-width:700px) {
+    .tienda-admin {
+        width: auto;
+        padding: 120px 12px 60px;
+    }
+    .tienda-form-panel,
+    .tienda-list {
+        padding: 22px 20px 24px !important;
+    }
+}
+</style>
 <script>
 function editarProducto(producto) { document.getElementById('edit_id').value=producto.id; document.getElementById('edit_titulo').value=producto.titulo; document.getElementById('edit_descripcion').value=producto.descripcion; document.getElementById('edit_whatsapp').value=producto.whatsapp; document.getElementById('tiendaEditModal').style.display='grid'; }
 function cerrarTiendaModal() { document.getElementById('tiendaEditModal').style.display='none'; }
+function abrirEliminarTienda(id, titulo) { document.getElementById('tiendaDeleteName').textContent = titulo; document.getElementById('tiendaDeleteConfirm').href = 'tienda_actions.php?action=delete&id=' + encodeURIComponent(id); document.getElementById('tiendaDeleteModal').style.display = 'flex'; }
+function cerrarEliminarTienda() { document.getElementById('tiendaDeleteModal').style.display='none'; document.getElementById('tiendaDeleteConfirm').removeAttribute('href'); }
 </script>
