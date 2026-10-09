@@ -41,7 +41,10 @@ switch ($page) {
         include __DIR__ . '/components/autor_detalle.php';
         break;
     case 'nosotros':
-        include __DIR__ . '/components/nosotros.php';
+        include __DIR__ . '/components/tienda.php';
+        break;
+    case 'tienda':
+        include __DIR__ . '/components/tienda.php';
         break;
     case 'vr':
         include __DIR__ . '/components/vr.php';

@@ -297,6 +297,7 @@ $current = basename($_SERVER['PHP_SELF']);
             <a href="literatura.php" class="header__link"><img src="../../assets/literatura.svg" alt="Literatura">Literatura</a>
             <a href="musica.php" class="header__link"><img src="../../assets/musica.svg" alt="Música">Música</a>
             <a href="virtuales.php" class="header__link"><img src="../../assets/vr.svg" alt="Museos virtuales">Museos virtuales</a>
+            <a href="tienda.php" class="header__link"><img src="../../assets/nosotros.svg" alt="Tienda Cultural">Tienda Cultural</a>
             <a href="#" class="header__link"><img src="../../assets/nosotros.svg" alt="Usuarios">Usuarios</a>
         </nav>
         <div class="header__menu-backdrop" id="mobileMenuBackdrop"></div>

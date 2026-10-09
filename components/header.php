@@ -16,7 +16,8 @@ $titulos = [
     'autor_detalle' => 'Ficha de autor · NIKAN',
     'musica' => 'Música · NIKAN',
     'musica_detalle' => 'Pieza Musical · NIKAN',
-    'nosotros' => 'Nosotros · NIKAN',
+    'nosotros' => 'Tienda Cultural · NIKAN',
+    'tienda' => 'Tienda Cultural · NIKAN',
     'vr' => 'Museo en VR · NIKAN',
     'arte_detalle' => 'Obra de Arte · NIKAN',
     'lit_detalle' => 'Obra Literaria · NIKAN',
@@ -489,7 +490,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
                     <a href="?page=musica" class="header__dropdown-link"><img src="assets/musica.svg" alt="">Música</a>
                 </div>
             </div>
-            <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
+            <a href="?page=tienda" class="header__link"><img src="assets/nosotros.svg" alt="Tienda Cultural">Tienda Cultural</a>
         </nav>
         <div class="header__menu-backdrop" id="mobileMenuBackdrop"></div>
     </header>

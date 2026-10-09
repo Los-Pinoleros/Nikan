@@ -40,5 +40,17 @@ CREATE TABLE IF NOT EXISTS museos_virtuales (
     INDEX idx_museos_virtuales_ubicacion (latitud, longitud)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS tienda_productos (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(180) NOT NULL,
+    imagen VARCHAR(255) NOT NULL,
+    descripcion VARCHAR(500) NOT NULL,
+    whatsapp VARCHAR(30) NOT NULL,
+    orden INT NOT NULL DEFAULT 0,
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_tienda_productos_orden (orden, creado_en)
+) ENGINE=InnoDB;
+
 -- Si ya ejecutaste esto antes, actualiza el hash con el correcto:
 --UPDATE users SET password = '$2y$10$...' WHERE username = 'admin';

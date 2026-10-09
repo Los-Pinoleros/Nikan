@@ -64,6 +64,18 @@ try {
         INDEX idx_museos_virtuales_ubicacion (latitud, longitud)
     ) ENGINE=InnoDB");
 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS tienda_productos (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        titulo VARCHAR(180) NOT NULL,
+        imagen VARCHAR(255) NOT NULL,
+        descripcion VARCHAR(500) NOT NULL,
+        whatsapp VARCHAR(30) NOT NULL,
+        orden INT NOT NULL DEFAULT 0,
+        creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_tienda_productos_orden (orden, creado_en)
+    ) ENGINE=InnoDB");
+
     echo "Base de datos configurada correctamente.\n";
     echo "Usuario admin creado - usuario: " . ADMIN_USER . " | password: " . ADMIN_PASSWORD . "\n";
     echo "Hash generado: " . $hash . "\n";

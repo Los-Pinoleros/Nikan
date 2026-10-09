@@ -119,6 +119,25 @@ function asegurar_tabla_museos_virtuales(PDO $pdo) {
         ) ENGINE=InnoDB");
         $tablaPreparada = true;
     }
+
+}
+
+function asegurar_tabla_tienda_productos(PDO $pdo) {
+    static $tablaPreparada = false;
+    if (!$tablaPreparada) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS tienda_productos (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            titulo VARCHAR(180) NOT NULL,
+            imagen VARCHAR(255) NOT NULL,
+            descripcion VARCHAR(500) NOT NULL,
+            whatsapp VARCHAR(30) NOT NULL,
+            orden INT NOT NULL DEFAULT 0,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_tienda_productos_orden (orden, creado_en)
+        ) ENGINE=InnoDB");
+        $tablaPreparada = true;
+    }
 }
 
 function resolver_autor(PDO $pdo, $autor_id, $autor = '') {
