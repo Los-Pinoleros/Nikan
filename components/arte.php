@@ -429,4 +429,81 @@ try {
     font-style: italic;
     font-size: 16px;
 }
+
+@media (max-width: 1100px) {
+    .arte-section { padding: 110px 5vw 0; }
+    .arte-container { gap: 24px; }
+    .arte-texto { max-width: 48%; padding-bottom: 70px; }
+    .arte-texto h1 { font-size: clamp(54px, 7vw, 76px); }
+    .arte-texto p { font-size: clamp(17px, 2vw, 21px); }
+    .arte-imagen { max-width: 52%; margin-bottom: -80px; transform: translateY(-25px); }
+    .arte-imagen img { width: min(560px, 100%); }
+    .artec-seccion { padding: 70px 5vw; }
+}
+
+@media (max-width: 760px) {
+    .arte-section {
+        min-height: auto;
+        padding: 110px 22px 36px;
+    }
+    .arte-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+    .arte-texto {
+        max-width: none;
+        padding-bottom: 0;
+        text-align: center;
+    }
+    .arte-tag {
+        justify-content: center;
+        margin-bottom: 14px;
+        font-size: 22px;
+        letter-spacing: 3px;
+    }
+    .arte-texto h1 {
+        font-size: clamp(42px, 12vw, 68px);
+        line-height: 1;
+        letter-spacing: 1px;
+        margin-bottom: 18px;
+    }
+    .arte-texto p {
+        max-width: 620px;
+        margin: 0 auto;
+        font-size: 17px;
+        line-height: 1.5;
+    }
+    .arte-imagen {
+        align-self: center;
+        width: min(100%, 480px);
+        max-width: 100%;
+        margin: 0 auto -45px;
+        padding: 12px;
+        transform: none;
+    }
+    .arte-imagen img { width: 100%; }
+    .artec-seccion {
+        padding: 62px 22px;
+        border-top-width: 2px;
+    }
+    .artec-cabecera { gap: 10px; margin-bottom: 10px; }
+    .artec-num { font-size: 30px; }
+    .artec-cabecera h2 { font-size: clamp(28px, 8vw, 40px); line-height: 1.05; }
+    .artec-desc { font-size: 16px; margin-bottom: 22px; }
+    .artec-grid { grid-template-columns: 1fr; gap: 20px; }
+    .artec-card-body { padding: 16px 17px 19px; }
+    .artec-card-body h3 { font-size: 22px; }
+    .artec-obra-desc { text-align: left; }
+}
+
+@media (max-width: 420px) {
+    .arte-section { padding-right: 16px; padding-left: 16px; }
+    .arte-texto h1 { font-size: clamp(38px, 12vw, 52px); }
+    .arte-texto p { font-size: 15px; }
+    .arte-imagen { margin-bottom: -28px; }
+    .artec-seccion { padding: 48px 16px; }
+    .artec-cabecera h2 { font-size: 28px; }
+    .artec-desc { font-size: 15px; }
+}
 </style>
