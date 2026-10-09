@@ -83,6 +83,7 @@ El archivo `database/setup.sql` contiene la estructura mínima de `users`. El ca
 - `lit_secciones` y `lit_obras`;
 - `poe_secciones` y `poe_obras`;
 - `musica_secciones` y `musica_obras`.
+- `tienda_productos`.
 
 Estas tablas incluyen, según el área, títulos, descripciones, autores, orden, metadatos, imágenes y audio. Si se utiliza una base existente o un volcado de producción, debe incluirlas antes de abrir las vistas del catálogo.
 
@@ -96,7 +97,7 @@ Con Laragon, coloca el proyecto en `C:\laragon\www` y abre:
 - Poesía: `http://localhost/?page=poesia`
 - Música: `http://localhost/?page=musica`
 - Autores: `http://localhost/?page=autores`
-- Nosotros: `http://localhost/?page=nosotros`
+- Tienda Cultural: `http://localhost/?page=tienda`
 - Inicio de sesión: `http://localhost/auth/login.php`
 
 También puede iniciarse con el servidor integrado de PHP:
@@ -119,7 +120,7 @@ En ese caso, usa `http://localhost:8000/`.
 | `poesia` | `components/poesia.php` |
 | `musica` | `components/musica.php` |
 | `autores` | `components/autores.php` |
-| `nosotros` | `components/nosotros.php` |
+| `tienda` | `components/tienda.php` |
 | `vr` | `components/vr.php` |
 | `arte_detalle` | `components/arte_detalle.php` |
 | `lit_detalle` | `components/lit_detalle.php` |
@@ -140,6 +141,7 @@ Las vistas de catálogo consultan la base de datos y agrupan las obras por secci
 - **Visitas de obras:** los clics en las tarjetas de Arte, Literatura, Poesía y Música, así como los clics en resultados del buscador, se registran en `obra_visitas` con área, identificador de obra, origen y fecha. El registro se realiza al abrir la ficha mediante `visita=1`.
 - **Portada:** el carrusel de objetos fue sustituido por un top 3 dinámico de obras más consultadas. Cada tarjeta conserva la estética de la escena de podios, muestra su área y contador de visitas, y enlaza a la ficha de la obra.
 - **Museos virtuales:** los administradores pueden publicar museos desde `admin/virtuales.php`, seleccionando latitud/longitud en un mapa, nombre, descripción y un modelo `.glb` o `.gltf`. Los puntos publicados aparecen en el mapa del inicio y su enlace **Ver VR** abre un recorrido dinámico con Three.js, GLTFLoader, navegación en primera persona, colisiones, pantalla completa y controles móviles.
+- **Tienda Cultural:** los administradores gestionan productos desde `admin/tienda.php`. Cada producto incluye título, imagen, descripción corta y número de WhatsApp del vendedor. La vista pública `?page=tienda` muestra el catálogo y genera enlaces `wa.me` para contactar directamente.
 - **Pantalla completa del recorrido:** el botón `Pantalla completa` o el primer toque/clic sobre el visor solicita Fullscreen API para ampliar la experiencia. El navegador puede exigir una interacción explícita del usuario y permisos de pantalla completa.
 - **Carga del modelo 3D:** la vista muestra el porcentaje de carga y solo presenta el aviso de error si falla realmente `GLTFLoader`. El estilo global `[hidden] { display: none !important; }` evita que el mensaje oculto aparezca mientras el modelo se está cargando correctamente.
 - **Controles del recorrido:** en escritorio, `W`/`↑` avanza, `S`/`↓` retrocede, `A`/`D` se desplaza lateralmente, el ratón permite mirar y `ESC` libera el modo de recorrido. En móvil se muestran controles táctiles.
@@ -153,6 +155,7 @@ El panel está en `admin/` y todos sus módulos pasan por `admin/auth.php`, que 
 
 - `dashboard.php`: métricas de usuarios, autores, obras, secciones y actividad reciente;
 - `arte.php`, `literatura.php`, `poesia.php` y `musica.php`: gestión de secciones y obras;
+- `tienda.php`: gestión de productos culturales, imágenes y números de contacto por WhatsApp;
 - `autores.php`: gestión de autores y retratos;
 - acciones `*_actions.php`: endpoints POST usados por los formularios mediante `fetch`.
 

@@ -37,7 +37,7 @@ try {
         GROUP BY catalogo.area, catalogo.obra_id, catalogo.titulo, catalogo.imagen,
                  catalogo.autor, catalogo.descripcion, catalogo.pagina
         ORDER BY visitas DESC, catalogo.titulo ASC
-        LIMIT 5
+        LIMIT 3
     ")->fetchAll();
 } catch (Exception $e) {
     error_log('[NIKAN] No se pudo cargar el ranking de obras: ' . $e->getMessage());
@@ -53,13 +53,35 @@ try {
             SELECT 'Música', id, titulo, imagen, autor, descripcion, 'musica_detalle', 0
             FROM musica_obras
             ORDER BY titulo ASC
-            LIMIT 5
+            LIMIT 3
         ")->fetchAll();
     } catch (Exception $fallbackError) {
         error_log('[NIKAN] Tampoco se pudo cargar obras de portada: ' . $fallbackError->getMessage());
     }
 }
 ?>
+
+<section class="inicio-bienvenida" aria-labelledby="bienvenidaTitulo">
+    <div class="inicio-bienvenida__contenido">
+        <span class="inicio-bienvenida__eyebrow">REDESCUBRE NICARAGUA</span>
+        <h1 id="bienvenidaTitulo">BIENVENIDO</h1>
+        <p>Nikán es una plataforma web que reúne diferentes expresiones de la cultura nicaragüense y las convierte en una experiencia accesible e interactiva.</p>
+        <a class="inicio-bienvenida__cta" href="#coleccion-destacada">EXPLORAR LA COLECCIÓN <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="inicio-bienvenida__visual" aria-hidden="true">
+        <video class="inicio-bienvenida__tigre"
+               autoplay
+               muted
+               playsinline
+               preload="auto"
+               poster="assets/leon-verde.svg"
+               aria-label="Animación de un tigre">
+            <source src="assets/tigre.webm" type="video/webm">
+            <source src="assets/tigre.mp4" type="video/mp4">
+        </video>
+        <span class="inicio-bienvenida__sello">CULTURA<br>NICARAGÜENSE</span>
+    </div>
+</section>
 
 <div class="museo">
     <img src="assets/podios.svg" alt="Exhibición de podios" class="museo__img">
@@ -69,8 +91,8 @@ try {
     <img src="assets/pod4.svg" alt="Pod 4" class="museo__pod4">
 
     <div class="obras-top" aria-label="Obras más consultadas">
-        <div class="obras-top__heading">
-            <span>COLECCIÓN DESTACADA</span>
+        <div class="obras-top__heading" id="coleccion-destacada">
+            <span>TOP 3</span>
             <h1>Las más visitadas</h1>
             <i></i>
         </div>
@@ -133,6 +155,97 @@ try {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
+.inicio-bienvenida {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, .95fr) minmax(340px, 1.05fr);
+    align-items: center;
+    gap: clamp(30px, 7vw, 110px);
+    min-height: min(860px, 100vh);
+    padding: 150px 9vw 90px;
+    overflow: hidden;
+    color: #43261e;
+    background: #f5f0e7;
+}
+.inicio-bienvenida::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .25;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(75, 43, 28, .2) .7px, transparent .7px);
+    background-size: 5px 5px;
+    mix-blend-mode: multiply;
+}
+.inicio-bienvenida__contenido,
+.inicio-bienvenida__visual {
+    position: relative;
+    z-index: 1;
+}
+.inicio-bienvenida__contenido { max-width: 560px; }
+.inicio-bienvenida__eyebrow {
+    display: block;
+    margin: 0 0 18px;
+    color: #00a4ab;
+    font: 500 clamp(20px, 2.3vw, 34px)/1.1 'Nikan Felthgothic', sans-serif;
+    letter-spacing: .5px;
+}
+.inicio-bienvenida h1 {
+    margin: 0 0 18px;
+    color: #397d27;
+    font: 400 clamp(66px, 9vw, 132px)/.84 'Rustica', serif;
+    letter-spacing: 2px;
+}
+.inicio-bienvenida p {
+    max-width: 510px;
+    margin: 0;
+    font: 400 clamp(18px, 1.8vw, 27px)/1.28 'Nikan Felthgothic', sans-serif;
+}
+.inicio-bienvenida__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding: 12px 18px;
+    color: #f5f0e7;
+    background: #c6372e;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+}
+.inicio-bienvenida__cta:hover,
+.inicio-bienvenida__cta:focus-visible {
+    background: #397d27;
+    transform: translateY(-2px);
+}
+.inicio-bienvenida__visual {
+    min-height: 350px;
+    border-bottom: 1px solid rgba(67, 38, 30, .35);
+}
+.inicio-bienvenida__tigre {
+    position: absolute;
+    right: 4%;
+    top: 50%;
+    width: min(92%, 600px);
+    max-height: 310px;
+    object-fit: contain;
+    opacity: .72;
+    filter: sepia(1) saturate(.45) hue-rotate(315deg) brightness(.42);
+    transform: translateY(-50%);
+}
+.inicio-bienvenida__sello {
+    position: absolute;
+    right: 0;
+    bottom: 24px;
+    color: #397d27;
+    font: 400 12px/1.2 'Rustica', serif;
+    letter-spacing: 2px;
+    text-align: right;
+}
+
 .museo {
     position: relative;
     z-index: 2;
@@ -261,7 +374,7 @@ try {
     color: #fff; background: #201a18; font-family: 'Montserrat', sans-serif;
 }
 .museos-virtuales__intro { max-width: 760px; margin: 0 auto 28px; text-align: center; }
-.museos-virtuales__intro > span { color: #03d437; font-size: 10px; font-weight: 800; letter-spacing: 3px; }
+.museos-virtuales__intro > span { color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 3px; }
 .museos-virtuales__intro h2 { margin: 8px 0 12px; color: #fff2cd; font: 800 clamp(32px, 5vw, 62px)/1 'Nikan Felthgothic', serif; }
 .museos-virtuales__intro p { margin: 0 auto; max-width: 560px; color: rgba(255,255,255,.72); line-height: 1.7; }
 .museos-virtuales__map-wrap { position: relative; max-width: 1180px; height: 520px; margin: 0 auto; border: 2px solid #03d437; box-shadow: 0 24px 60px rgba(0,0,0,.38); }
@@ -324,6 +437,8 @@ try {
     overflow: hidden;
 }
 @media (max-width: 900px) {
+    .inicio-bienvenida { padding-right: 6vw; padding-left: 6vw; gap: 35px; }
+    .inicio-bienvenida h1 { font-size: clamp(58px, 10vw, 100px); }
     .obras-top { width: 84vw; }
     .obra-top { min-height: 270px; }
     .obras-top__track { --card-width: min(250px, 28vw); }
@@ -333,6 +448,127 @@ try {
 }
 @media (max-width: 680px) {
     body { overflow-x: hidden; }
+    .inicio-bienvenida {
+        display: block;
+        min-height: 760px;
+        padding: 130px 24px 46px;
+        text-align: center;
+    }
+
+    /* Composición editorial del podio: una pieza central y dos laterales. */
+    .museo {
+        min-height: 680px;
+        background: #382218;
+    }
+    .museo__img {
+        height: 680px;
+        object-position: center;
+        filter: sepia(.35) saturate(.9) brightness(.72);
+    }
+    .museo::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(29,13,8,.5), transparent 28%, transparent 72%, rgba(29,13,8,.5)),
+                    linear-gradient(0deg, rgba(19,9,6,.68), transparent 32%);
+    }
+    .obras-top {
+        top: 58px;
+        width: min(1180px, 90vw);
+    }
+    .obras-top__heading {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 4px;
+        text-align: left;
+    }
+    .obras-top__heading span {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: #fff;
+        font: 400 clamp(28px, 3vw, 47px)/1 'Nikan Felthgothic', sans-serif;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+    .obras-top__heading span img {
+        width: 54px;
+        height: 54px;
+        padding: 5px;
+        object-fit: contain;
+        border: 1px solid rgba(255,255,255,.85);
+        filter: grayscale(1) brightness(0) invert(1);
+    }
+    .obras-top__heading h1 {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+    .obras-top__heading i {
+        flex: 1;
+        width: auto;
+        height: 1px;
+        margin: 0;
+        background: rgba(255,255,255,.85);
+    }
+    .obras-top__carousel { overflow: visible; }
+    .obras-top__track {
+        --card-width: 100%;
+        padding: 22px 0 0;
+        gap: 0;
+        overflow: hidden;
+    }
+    .obra-top {
+        flex-basis: 100%;
+        min-height: 470px;
+        grid-template-columns: minmax(360px, 1fr) minmax(330px, .75fr);
+    }
+    .obra-top__image {
+        height: 420px;
+        padding: 22px 90px;
+    }
+    .obra-top__info {
+        max-width: 510px;
+        padding-right: 25px;
+    }
+    .obra-top h2 {
+        font-size: clamp(37px, 5vw, 68px);
+        text-transform: uppercase;
+    }
+    .obras-top__control { display: none; }
+    .obras-top .obra-top.is-active { border-color: #fff; }
+    .obras-top .obras-top__heading i { background: #fff; }
+    .obras-top .obra-top__area,
+    .obras-top .obra-top__more { color: #fff !important; }
+
+    @media (max-width: 680px) {
+        .museo, .museo__img { min-height: 700px; height: 700px; }
+        .obras-top { top: 52px; width: 88vw; }
+        .obras-top__heading span { font-size: 28px; }
+        .obras-top__heading span img { width: 40px; height: 40px; }
+        .obras-top__track { padding-top: 12px; }
+        .obra-top { min-height: 510px; }
+        .obra-top__image { height: 235px; flex-basis: 235px; padding: 25px 55px 15px; }
+        .obra-top__info { max-width: none; padding: 18px 22px 22px; }
+        .obra-top h2 { font-size: 33px; }
+    }
+    .inicio-bienvenida__contenido { max-width: 620px; margin: 0 auto; }
+    .inicio-bienvenida__eyebrow { font-size: 19px; }
+    .inicio-bienvenida h1 { font-size: clamp(58px, 18vw, 88px); }
+    .inicio-bienvenida p { margin: 0 auto; font-size: 17px; line-height: 1.45; }
+    .inicio-bienvenida__cta { margin-top: 24px; }
+    .inicio-bienvenida__visual {
+        min-height: 270px;
+        margin: 28px auto 0;
+        max-width: 520px;
+    }
+    .inicio-bienvenida__tigre { width: 90%; right: 5%; max-height: 220px; }
+    .inicio-bienvenida__sello { bottom: 12px; right: 5px; font-size: 10px; }
     .museo { min-height: 820px; }
     .museo__img { height: 820px; object-position: center top; }
     .museo__pod1, .museo__pod2, .museo__pod3, .museo__pod4 { display: none; }
@@ -357,6 +593,13 @@ try {
     .museos-virtuales__map-wrap { height: 430px; }
     .museos-virtuales__legend { left: 12px; right: 12px; bottom: 12px; }
     .museos-virtuales__map-wrap { max-width: 100%; }
+}
+
+@media (max-width: 420px) {
+    .inicio-bienvenida { padding-right: 17px; padding-left: 17px; }
+    .inicio-bienvenida h1 { font-size: 56px; }
+    .inicio-bienvenida p { font-size: 15px; }
+    .inicio-bienvenida__visual { min-height: 225px; }
 }
 
 /* Presentación editorial de una obra destacada por turno. */
@@ -399,7 +642,7 @@ try {
 .obra-top__description { display: -webkit-box; margin: 0; overflow: hidden; color: rgba(255,255,255,.83); font-size: clamp(13px, 1.2vw, 17px); line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
 .obra-top__stats { display: flex; align-items: center; gap: 22px; margin-top: 25px; }
 .obra-top__visitas { color: #fff2cd; font-size: 12px; letter-spacing: 1px; }
-.obra-top__more { color: #03d437; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+.obra-top__more { color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
 @media (max-width: 680px) {
     .obra-top { min-height: 390px; display: flex; flex-direction: column; }
     .obra-top__image { width: 100%; height: 190px; flex: 0 0 190px; padding: 25px 60px 15px; border-radius: 24px 24px 0 0; }
@@ -411,6 +654,16 @@ try {
 }
 </style>
 <script>
+(function () {
+    var tigre = document.querySelector('.inicio-bienvenida__tigre');
+    if (tigre) {
+        tigre.addEventListener('ended', function () {
+            tigre.pause();
+            tigre.currentTime = tigre.duration;
+        });
+    }
+})();
+
 (function () {
     var track = document.getElementById('obrasTopTrack');
     if (track) {
