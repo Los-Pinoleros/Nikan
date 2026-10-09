@@ -53,5 +53,5 @@ try {
 } catch (Exception $e) {
     error_log('[NIKAN] Error en buscador: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['ok' => false, 'results' => [], 'message' => 'No se pudo realizar la búsqueda.']);
+    echo json_encode(['ok' => false, 'results' => [], 'message' => 'No se pudo realizar la búsqueda, lo siento.']);
 }
