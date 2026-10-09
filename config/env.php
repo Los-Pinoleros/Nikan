@@ -1,12 +1,4 @@
 <?php
-/**
- * Cargador de variables de entorno (.env)
- * El archivo .env vive en la raíz del proyecto. Soporta:
- *   CLAVE=valor
- *   CLAVE="valor con espacios"
- *   # comentarios
- *   lineas vacías
- */
 function load_env($file = null) {
     if ($file === null) {
         $file = dirname(__DIR__) . '/.env';
@@ -44,9 +36,7 @@ function load_env($file = null) {
 
 load_env();
 
-/**
- * Lectura segura de variable de entorno con valor por defecto.
- */
+
 function env($key, $default = '') {
     $val = getenv($key);
     if ($val === false) {

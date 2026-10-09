@@ -1,7 +1,22 @@
 <?php
+require_once __DIR__ . '/config/config.php';
 include __DIR__ . '/components/header.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'inicio';
+
+$paginasVisita = [
+    'arte_detalle' => 'arte',
+    'lit_detalle' => 'literatura',
+    'poe_detalle' => 'poesia',
+    'musica_detalle' => 'musica',
+];
+if (isset($_GET['visita']) && $_GET['visita'] === '1' && isset($paginasVisita[$page])) {
+    try {
+        registrar_visita_obra(getDB(), $paginasVisita[$page], (int)($_GET['obra_id'] ?? 0), $_GET['origen'] ?? 'catalogo');
+    } catch (Exception $e) {
+        error_log('[NIKAN] No se pudo registrar la visita de la obra: ' . $e->getMessage());
+    }
+}
 
 switch ($page) {
     case 'arte':

@@ -15,6 +15,7 @@
                 <h1>Entra.<br><em>Explora.</em></h1>
             </div>
             <div class="vr-intro__copy">
+                <span class="vr-copy-brand">NIKAN</span>
                 <p>Un recorrido libre por el Museo Managua. Comienza en la entrada y descubre el espacio a tu propio ritmo.</p>
                 <p class="vr-note">Haz clic en la escena para caminar · La visita se abre en pantalla completa</p>
             </div>
@@ -87,6 +88,10 @@ let walkHeight = 1.7;
 let walkSpeed = 2.8;
 let collisionRadius = 0.55;
 let ready = false;
+let sprintUntil = 0;
+let lastForwardTap = 0;
+const sprintWindow = 360;
+const sprintDuration = 1200;
 
 function resize() {
     const width = container.clientWidth;
@@ -151,7 +156,8 @@ async function enterFullscreen() {
 function move(delta) {
     const mobile = window.innerWidth <= 680;
     if (!ready || (!controls.isLocked && !mobile)) return;
-    const distance = walkSpeed * delta;
+    const sprinting = performance.now() < sprintUntil;
+    const distance = walkSpeed * (sprinting ? 1.75 : 1) * delta;
     const previous = camera.position.clone();
     if (keys.KeyW || keys.ArrowUp) controls.moveForward(distance);
     if (keys.KeyS || keys.ArrowDown) controls.moveForward(-distance);
@@ -165,7 +171,7 @@ function move(delta) {
 
 const loader = new GLTFLoader();
 loader.load(
-    '3dmodels/MuseoManagua.glb',
+    new URL('3dmodels/MuseoManagua.glb', document.baseURI).href,
     (gltf) => {
         model = gltf.scene;
         model.traverse((object) => {
@@ -197,9 +203,19 @@ canvas.addEventListener('click', async () => {
     await enterFullscreen();
     if (!controls.isLocked) controls.lock();
 });
-controls.addEventListener('lock', () => { status.textContent = 'WASD/flechas para caminar · ESC para salir'; });
+controls.addEventListener('lock', () => { status.textContent = 'WASD/flechas para caminar · doble toque para correr'; });
 controls.addEventListener('unlock', () => { status.textContent = 'Haz clic para continuar'; });
-window.addEventListener('keydown', (event) => { keys[event.code] = true; });
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat && (event.code === 'KeyW' || event.code === 'ArrowUp')) {
+        const now = performance.now();
+        if (now - lastForwardTap <= sprintWindow) {
+            sprintUntil = now + sprintDuration;
+            status.textContent = 'Corriendo';
+        }
+        lastForwardTap = now;
+    }
+    keys[event.code] = true;
+});
 window.addEventListener('keyup', (event) => { keys[event.code] = false; });
 resetButton.addEventListener('click', resetPosition);
 fullscreenButton.addEventListener('click', enterFullscreen);
@@ -234,52 +250,51 @@ animate();
             linear-gradient(112deg, #211a18 0%, #3b2924 52%, #1e1917 100%);
         font-family: 'Montserrat', sans-serif;
     }
-    .vr-page::before {
-        content: "NIKAN";
-        position: absolute;
-        top: 115px;
-        right: 5vw;
-        color: rgba(255,224,138,.08);
-        font: 800 clamp(80px, 15vw, 220px)/.8 'Nikan Felthgothic', serif;
-        pointer-events: none;
-    }
     .vr-intro { max-width: 1200px; margin: 0 auto 28px; }
     .vr-intro__eyebrow {
         display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
         color: rgba(255,255,255,.58); font-size: 10px; font-weight: 800; letter-spacing: 3px;
     }
-    .vr-intro__eyebrow span { color: #ffe08a; font-family: 'Alegreya', serif; font-size: 18px; letter-spacing: 0; }
-    .vr-intro__eyebrow i { width: 52px; height: 1px; background: #c9a94f; }
+    .vr-intro__eyebrow span { color: #2fded6; font-family: 'Alegreya', serif; font-size: 18px; letter-spacing: 0; }
+    .vr-intro__eyebrow i { width: 52px; height: 1px; background: #2fded6; }
     .vr-intro__layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 9vw; align-items: end; }
-    .vr-kicker { color: #ffe08a; font-size: 11px; font-weight: 800; letter-spacing: 4px; }
+    .vr-kicker { color: #2fded6; font-size: 11px; font-weight: 800; letter-spacing: 4px; }
     .vr-intro h1 {
-        margin: 10px 0 0; color: #fff2cd;
+        margin: 10px 0 0; color: #f0f4f1;
         font-family: 'Nikan Felthgothic', 'Felthgothic', serif;
         font-size: clamp(48px, 7vw, 98px); line-height: .88; letter-spacing: 1px;
     }
-    .vr-intro h1 em { color: #c9a94f; font-style: normal; }
+    .vr-intro h1 em { color: #2fded6; font-style: normal; }
     .vr-intro__copy { border-left: 1px solid rgba(255,224,138,.45); padding: 6px 0 4px 28px; }
+    .vr-copy-brand {
+        display: block;
+        margin-bottom: 10px;
+        color: #03d437;
+        font: 800 24px/1 'Nikan Felthgothic', 'Felthgothic', serif;
+        letter-spacing: 5px;
+        text-align: center;
+    }
     .vr-intro p { max-width: 430px; margin: 0; color: rgba(255,255,255,.82); line-height: 1.7; font-size: 14px; }
-    .vr-note { margin-top: 14px !important; color: rgba(255,224,138,.82) !important; font-size: 10px !important; letter-spacing: .4px; }
+    .vr-note { margin-top: 14px !important; color: #2fded6 !important; font-size: 10px !important; letter-spacing: .4px; }
     .vr-viewer-wrap {
         width: min(1200px, 100%); height: min(67vh, 720px); min-height: 420px;
         margin: 0 auto; overflow: hidden; position: relative;
-        border: 1px solid rgba(255,224,138,.55); border-radius: 4px;
+        border: 2px solid #07531a; border-radius: 4px;
         background: #332720; box-shadow: 0 30px 80px rgba(0,0,0,.5);
     }
-    .vr-viewer-wrap::after { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(255,255,255,.13); pointer-events: none; }
+    .vr-viewer-wrap::after { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(3,212,55,.32); pointer-events: none; }
     .vr-scene-label { position: absolute; top: 30px; left: 30px; z-index: 3; display: flex; align-items: center; gap: 10px; color: #fff; pointer-events: none; }
-    .vr-scene-label__mark { display: grid; place-items: center; width: 30px; height: 30px; color: #3b2920; background: #ffe08a; font: 800 17px 'Nikan Felthgothic', serif; }
+    .vr-scene-label__mark { display: grid; place-items: center; width: 30px; height: 30px; color: #3b2920; background: #2fded6; font: 800 17px 'Nikan Felthgothic', serif; }
     .vr-scene-label strong, .vr-scene-label small { display: block; }
     .vr-scene-label strong { font-size: 10px; letter-spacing: 2px; }
-    .vr-scene-label small { margin-top: 3px; color: #ffe08a; font-size: 8px; letter-spacing: 2px; }
+    .vr-scene-label small { margin-top: 3px; color: #2fded6; font-size: 8px; letter-spacing: 2px; }
     .vr-entrance-mark { position: absolute; top: 35px; right: 35px; z-index: 3; color: rgba(255,255,255,.7); font-size: 9px; letter-spacing: 2px; writing-mode: vertical-rl; pointer-events: none; }
-    .vr-entrance-mark span { display: block; width: 1px; height: 34px; margin: 8px auto 0; background: #ffe08a; }
+    .vr-entrance-mark span { display: block; width: 1px; height: 34px; margin: 8px auto 0; background: #2fded6; }
     .vr-canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     [hidden] { display: none !important; }
     .vr-loading, .vr-error {
         position: absolute; inset: 0; display: grid; place-items: center;
-        color: #ffe08a; font-weight: 700; pointer-events: none;
+        color: #2fded6; font-weight: 700; pointer-events: none;
     }
     .vr-error { color: #fff; background: rgba(50, 30, 25, .8); }
     .vr-hud {
@@ -288,13 +303,13 @@ animate();
         pointer-events: none;
     }
     .vr-hud span, .vr-hud button {
-        border: 1px solid rgba(255,224,138,.6); border-radius: 0; padding: 11px 15px;
-        color: #fff2cd; background: rgba(31,23,20,.82);
+        border: 1px solid rgba(27, 132, 6, 0.6); border-radius: 0; padding: 11px 15px;
+        color: #1f9103; background: rgba(31,23,20,.82);
         font: 800 10px 'Montserrat', sans-serif; letter-spacing: .5px;
     }
     .vr-hud__actions { display: flex; gap: 8px; }
     .vr-hud button { pointer-events: auto; cursor: pointer; transition: background .2s, color .2s; }
-    .vr-hud button:hover { color: #3b2920; background: #ffe08a; }
+    .vr-hud button:hover { color: #3b2920; background: #2fded6; }
     .vr-hud button b { font-size: 17px; font-weight: 400; vertical-align: -2px; }
     .vr-mobile-controls { display: none; }
     @media (max-width: 680px) {
@@ -310,7 +325,7 @@ animate();
         .vr-mobile-controls { display: block; position: absolute; left: 14px; bottom: 12px; }
         .vr-mobile-controls button {
             width: 38px; height: 34px; margin: 2px; border: 0; border-radius: 8px;
-            color: #3b2920; background: rgba(255,240,190,.86); font-weight: 800;
+            color: #3b2920; background: #2fded6; font-weight: 800;
         }
     }
 </style>

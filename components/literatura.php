@@ -62,7 +62,7 @@ try {
         <?php if ($lista): ?>
             <div class="lite-grid">
                 <?php foreach ($lista as $obra): ?>
-                    <a href="?page=lit_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="lite-card">
+                    <a href="?page=lit_detalle&obra_id=<?php echo (int)$obra['id']; ?>&visita=1" class="lite-card">
                         <div class="lite-card-head">
                             <h3><?php echo htmlspecialchars($obra['titulo']); ?></h3>
                             <?php if (!empty($obra['autor'])): ?>

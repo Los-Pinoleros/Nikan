@@ -275,6 +275,69 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         .header__link:hover {
             opacity: 0.8;
         }
+        .header__dropdown {
+            position: relative;
+        }
+        .header__dropdown-button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .header__dropdown-button::after {
+            content: "";
+            width: 7px;
+            height: 7px;
+            margin: -4px 0 0 2px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform .2s ease;
+        }
+        .header__dropdown.open .header__dropdown-button::after {
+            transform: rotate(225deg);
+            margin-top: 4px;
+        }
+        .header__dropdown-menu {
+            position: absolute;
+            top: calc(100% + 18px);
+            left: 50%;
+            min-width: 190px;
+            padding: 8px;
+            border: 1px solid rgba(255, 224, 138, .55);
+            background: rgba(48, 31, 27, .98);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .32);
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -8px);
+            transition: opacity .2s ease, transform .2s ease, visibility .2s;
+            z-index: 160;
+        }
+        .header__dropdown.open .header__dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+        .header__dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 14px;
+            color: #fff2cd;
+            font: oblique bold 16px 'Felthgothic', cursive;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color .2s ease, background .2s ease, padding-left .2s ease;
+        }
+        .header__dropdown-link:hover {
+            padding-left: 19px;
+            color: #03d437;
+            background: rgba(255, 255, 255, .08);
+        }
+        .header__dropdown-link img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
         .header__link--vr {
             color: #ffe08a;
         }
@@ -289,6 +352,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             .header__nav { gap: 14px; }
             .header__link { font-size: 15px; gap: 3px; }
             .header__link img { width: 30px; height: 30px; }
+            .header__dropdown-link { font-size: 14px; }
             .header.search-open .header__nav { transform: translateX(100px); }
         }
         @media (max-width: 680px) {
@@ -334,10 +398,16 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         <?php endif; ?>
         <nav class="header__nav">
             <a href="?page=inicio" class="header__link"><img src="assets/inicio.svg" alt="Inicio">Inicio</a>
-            <a href="?page=arte" class="header__link"><img src="assets/arte.svg" alt="Arte">Arte</a>
-            <a href="?page=literatura" class="header__link"><img src="assets/literatura.svg" alt="Literatura">Literatura</a>
-            <a href="?page=poesia" class="header__link"><img src="assets/literatura.svg" alt="Poesía">Poesía</a>
-            <a href="?page=musica" class="header__link"><img src="assets/musica.svg" alt="Música">Música</a>
+            <div class="header__dropdown" id="museumDropdown">
+                <button type="button" class="header__link header__dropdown-button" id="museumDropdownButton" aria-expanded="false" aria-haspopup="true">
+                    <img src="assets/arte.svg" alt="">Biblioteca
+                </button>
+                <div class="header__dropdown-menu" id="museumDropdownMenu">
+                    <a href="?page=arte" class="header__dropdown-link"><img src="assets/arte.svg" alt="">Arte</a>
+                    <a href="?page=literatura" class="header__dropdown-link"><img src="assets/literatura.svg" alt="">Literatura</a>
+                    <a href="?page=musica" class="header__dropdown-link"><img src="assets/musica.svg" alt="">Música</a>
+                </div>
+            </div>
             <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
             <a href="?page=vr" class="header__link header__link--vr"><img src="assets/vr.svg" alt="VR">VR</a>
         </nav>
@@ -349,6 +419,8 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         var button = document.getElementById('siteSearchButton');
         var input = document.getElementById('siteSearchInput');
         var results = document.getElementById('siteSearchResults');
+        var museumDropdown = document.getElementById('museumDropdown');
+        var museumDropdownButton = document.getElementById('museumDropdownButton');
         var timer;
 
         function showResults(items, message) {
@@ -395,6 +467,12 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
                     });
             }, 220);
         });
+        museumDropdownButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var isOpen = museumDropdown.classList.toggle('open');
+            museumDropdownButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
         document.addEventListener('click', function (e) {
             var menu = document.getElementById('userMenu');
             if (menu && !e.target.closest('.header__leon-btn') && !e.target.closest('.header__user')) {
@@ -402,6 +480,10 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             }
             if (!e.target.closest('.header__search')) {
                 results.classList.remove('open');
+            }
+            if (!e.target.closest('.header__dropdown')) {
+                museumDropdown.classList.remove('open');
+                museumDropdownButton.setAttribute('aria-expanded', 'false');
             }
         });
     })();

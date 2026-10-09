@@ -42,6 +42,16 @@ try {
         ON DUPLICATE KEY UPDATE password = VALUES(password), role = VALUES(role)");
     $stmt->execute([ADMIN_USER, ADMIN_EMAIL, $hash, 'admin']);
 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS obra_visitas (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        area VARCHAR(20) NOT NULL,
+        obra_id INT UNSIGNED NOT NULL,
+        origen VARCHAR(30) NOT NULL DEFAULT 'catalogo',
+        visitado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_obra_visitas_area_obra (area, obra_id),
+        INDEX idx_obra_visitas_fecha (visitado_en)
+    ) ENGINE=InnoDB");
+
     echo "Base de datos configurada correctamente.\n";
     echo "Usuario admin creado - usuario: " . ADMIN_USER . " | password: " . ADMIN_PASSWORD . "\n";
     echo "Hash generado: " . $hash . "\n";

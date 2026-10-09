@@ -44,7 +44,7 @@
         setTimeout(navigate, 4000);
     }
 
-    document.querySelectorAll('.header__link').forEach(function (link) {
+    document.querySelectorAll('a.header__link').forEach(function (link) {
         link.addEventListener('click', function (event) {
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target === '_blank') return;
             event.preventDefault();
@@ -207,7 +207,7 @@
     });
 
     /* ---------- Enlaces magnéticos ---------- */
-    document.querySelectorAll('.header__link, .btn, .det-back, .detl-back, .detp-back').forEach(function (el) {
+    document.querySelectorAll('a.header__link, .btn, .det-back, .detl-back, .detp-back').forEach(function (el) {
         el.classList.add('magnetic');
         el.addEventListener('mousemove', function (e) {
             var r = el.getBoundingClientRect();
