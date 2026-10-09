@@ -335,7 +335,7 @@ try {
     body { overflow-x: hidden; }
     .museo { min-height: 820px; }
     .museo__img { height: 820px; object-position: center top; }
-    .museo__pod1, .museo__pod2, .museo__pod3, .museo__pod4 { opacity: .55; }
+    .museo__pod1, .museo__pod2, .museo__pod3, .museo__pod4 { display: none; }
     .museo__pod1 { right: -36px; top: 34%; width: 135px; }
     .museo__pod2 { right: -30px; top: 74%; width: 125px; }
     .museo__pod3 { left: -32px; top: 34%; width: 120px; }
@@ -352,6 +352,7 @@ try {
     .obras-top__control { width: 34px; height: 34px; font-size: 24px; }
     .obras-top__control--prev { left: -12px; }
     .obras-top__control--next { right: -12px; }
+    .obras-top__control { display: none; }
     .museos-virtuales { padding: 65px 18px 80px; }
     .museos-virtuales__map-wrap { height: 430px; }
     .museos-virtuales__legend { left: 12px; right: 12px; bottom: 12px; }

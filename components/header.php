@@ -378,8 +378,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             .header { min-height: 76px; padding: 16px 18px 16px 76px; }
             .header__logo { font-size: 32px; }
             .header__leon { right: 18px; height: 44px; }
-            .header__search { left: 132px; }
-            .header__search.open { width: calc(100vw - 150px); }
+            .header__search { display: none; }
             .header__menu-button { display: block; transform: translateY(-50%); }
             .header__nav {
                 display: flex;
