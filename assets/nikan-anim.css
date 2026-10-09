@@ -216,3 +216,144 @@ section[id^="det"] { scroll-margin-top: 130px; }
     [data-reveal], .nikan-cascade .nikan-char { opacity: 1 !important; transform: none !important; animation: none !important; }
     .arte-imagen img, .lite-emblema, .poe-emblema, .aut-emblema { animation: none !important; }
 }
+
+@media (max-width: 760px) {
+    .det-section,
+    .detl-section,
+    .detp-section {
+        padding: 112px 16px 48px !important;
+        overflow-x: hidden;
+    }
+    .det-container,
+    .detl-container,
+    .detp-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    .det-hero,
+    .detl-hero,
+    .detp-hero {
+        grid-template-columns: 1fr !important;
+        gap: 24px;
+    }
+    .det-marco,
+    .detl-marco,
+    .detp-marco {
+        min-height: 0;
+        padding: 10px;
+        box-shadow: 0 0 0 3px rgba(201,169,79,.15), 0 10px 24px rgba(60,35,10,.18);
+    }
+    .det-marco img,
+    .detl-marco img,
+    .detp-marco img {
+        max-height: 58vh;
+    }
+    .det-info h1,
+    .detl-info h1,
+    .detp-info h1 {
+        font-size: clamp(32px, 10vw, 46px);
+        overflow-wrap: anywhere;
+    }
+    .det-afil,
+    .detl-afil,
+    .detp-afil {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        font-size: 14px;
+    }
+    .det-afil dt,
+    .detl-afil dt,
+    .detp-afil dt {
+        min-width: 76px;
+    }
+    .det-desc,
+    .detl-sinopsis,
+    .detp-cuerpo,
+    .det-cuerpo,
+    .detl-cuerpo {
+        font-size: 15px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+    }
+    .det-bloque,
+    .detl-bloque,
+    .detp-bloque {
+        margin-top: 32px;
+        padding-top: 24px;
+    }
+    .det-bloque h2,
+    .detl-bloque h2,
+    .detp-bloque h2 {
+        font-size: 25px;
+    }
+    .det-autor-box,
+    .detl-autor-box,
+    .detp-autor-box {
+        flex-direction: column;
+        padding: 17px;
+        gap: 14px;
+    }
+    .det-autor-retrato,
+    .detl-autor-retrato,
+    .detp-autor-retrato {
+        width: 82px;
+        height: 82px;
+    }
+    .det-otras,
+    .detl-otras,
+    .detp-otras {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .det-reproducir {
+        gap: 12px;
+        padding: 15px;
+    }
+    .det-reproducir-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 18px;
+    }
+    .det-reproducir-titulo {
+        font-size: 18px;
+    }
+    .det-player {
+        border-radius: 8px;
+    }
+    .detl-portada-txt { min-height: 220px; padding: 12px; }
+    .detl-portada-letra { font-size: 68px; }
+    .detl-portada-titulo { font-size: 19px; }
+    .detp-marco-letra { font-size: 82px; }
+    .det-fragmento,
+    .detl-fragmento,
+    .detp-poema {
+        padding: 15px 16px;
+        font-size: 17px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 420px) {
+    .det-section,
+    .detl-section,
+    .detp-section {
+        padding-right: 12px !important;
+        padding-left: 12px !important;
+    }
+    .det-back,
+    .detl-back,
+    .detp-back { font-size: 13px; }
+    .det-info h1,
+    .detl-info h1,
+    .detp-info h1 { font-size: 30px; }
+    .det-afil,
+    .detl-afil,
+    .detp-afil { display: block; }
+    .det-afil dt,
+    .detl-afil dt,
+    .detp-afil dt { margin-bottom: 3px; }
+    .det-cuerpo,
+    .detl-cuerpo,
+    .detp-cuerpo { font-size: 14px; }
+}
