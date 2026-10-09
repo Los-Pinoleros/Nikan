@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/config/config.php';
-include __DIR__ . '/components/header.php';
+$embeddedVr = isset($_GET['embed']) && $_GET['embed'] === '1' && ($_GET['page'] ?? '') === 'vr';
+if (!$embeddedVr) {
+    include __DIR__ . '/components/header.php';
+}
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'inicio';
 
@@ -60,5 +63,7 @@ switch ($page) {
         break;
 }
 
-include __DIR__ . '/components/foother.php';
+if (!$embeddedVr) {
+    include __DIR__ . '/components/foother.php';
+}
 ?>

@@ -5,20 +5,26 @@
 require_once __DIR__ . '/../config/config.php';
 
 $obrasDestacadas = [];
+$museosVirtuales = [];
 try {
     $pdo = getDB();
     asegurar_tabla_obra_visitas($pdo);
+    asegurar_tabla_museos_virtuales($pdo);
+    $museosVirtuales = $pdo->query('SELECT id, nombre, descripcion, latitud, longitud FROM museos_virtuales ORDER BY nombre ASC')->fetchAll();
     $obrasDestacadas = $pdo->query("
         SELECT catalogo.area, catalogo.obra_id, catalogo.titulo, catalogo.imagen,
-               catalogo.pagina, COUNT(visitas.id) AS visitas
+               catalogo.autor, catalogo.descripcion, catalogo.pagina, COUNT(visitas.id) AS visitas
         FROM (
-            SELECT 'Arte' AS area, id AS obra_id, titulo, imagen, 'arte_detalle' AS pagina
+            SELECT 'Arte' AS area, id AS obra_id, titulo, imagen, autor,
+                   COALESCE(NULLIF(descripcion, ''), detalle) AS descripcion, 'arte_detalle' AS pagina
             FROM arte_obras
             UNION ALL
-            SELECT 'Literatura', id, titulo, NULL, 'lit_detalle'
+            SELECT 'Literatura', id, titulo, NULL, autor,
+                   COALESCE(NULLIF(sinopsis, ''), fragmento, detalle), 'lit_detalle'
             FROM lit_obras
             UNION ALL
-            SELECT 'Música', id, titulo, imagen, 'musica_detalle'
+            SELECT 'Música', id, titulo, imagen, autor,
+                   COALESCE(NULLIF(descripcion, ''), detalle), 'musica_detalle'
             FROM musica_obras
         ) AS catalogo
         LEFT JOIN obra_visitas AS visitas
@@ -28,7 +34,8 @@ try {
                 ELSE 'musica'
             END
             AND visitas.obra_id = catalogo.obra_id
-        GROUP BY catalogo.area, catalogo.obra_id, catalogo.titulo, catalogo.imagen, catalogo.pagina
+        GROUP BY catalogo.area, catalogo.obra_id, catalogo.titulo, catalogo.imagen,
+                 catalogo.autor, catalogo.descripcion, catalogo.pagina
         ORDER BY visitas DESC, catalogo.titulo ASC
         LIMIT 5
     ")->fetchAll();
@@ -37,13 +44,13 @@ try {
     try {
         $pdo = getDB();
         $obrasDestacadas = $pdo->query("
-            SELECT 'Arte' AS area, id AS obra_id, titulo, imagen, 'arte_detalle' AS pagina, 0 AS visitas
+            SELECT 'Arte' AS area, id AS obra_id, titulo, imagen, autor, descripcion, 'arte_detalle' AS pagina, 0 AS visitas
             FROM arte_obras
             UNION ALL
-            SELECT 'Literatura', id, titulo, NULL, 'lit_detalle', 0
+            SELECT 'Literatura', id, titulo, NULL, autor, COALESCE(NULLIF(sinopsis, ''), fragmento, detalle), 'lit_detalle', 0
             FROM lit_obras
             UNION ALL
-            SELECT 'Música', id, titulo, imagen, 'musica_detalle', 0
+            SELECT 'Música', id, titulo, imagen, autor, descripcion, 'musica_detalle', 0
             FROM musica_obras
             ORDER BY titulo ASC
             LIMIT 5
@@ -87,9 +94,15 @@ try {
                         <div class="obra-top__info">
                             <span class="obra-top__area"><?php echo htmlspecialchars($obra['area'], ENT_QUOTES, 'UTF-8'); ?></span>
                             <h2><?php echo htmlspecialchars($obra['titulo'], ENT_QUOTES, 'UTF-8'); ?></h2>
-                            <span class="obra-top__visitas"><?php echo number_format((int)$obra['visitas'], 0, ',', '.'); ?> visitas</span>
+                            <?php if (!empty($obra['autor'])): ?>
+                                <p class="obra-top__author">Autor: <?php echo htmlspecialchars($obra['autor'], ENT_QUOTES, 'UTF-8'); ?></p>
+                            <?php endif; ?>
+                            <p class="obra-top__description"><?php echo htmlspecialchars($obra['descripcion'] ?? 'Descubre esta obra de la colección NIKAN.', ENT_QUOTES, 'UTF-8'); ?></p>
+                            <div class="obra-top__stats">
+                                <span class="obra-top__visitas">◉ <?php echo number_format((int)$obra['visitas'], 0, ',', '.'); ?> vistas</span>
+                                <span class="obra-top__more">VER MÁS ↗</span>
+                            </div>
                         </div>
-                        <span class="obra-top__arrow">↗</span>
                     </a>
                 <?php endforeach; ?>
                 </div>
@@ -203,7 +216,7 @@ try {
     color: #fff;
     background: linear-gradient(160deg, rgba(48,32,26,.94), rgba(25,21,19,.96));
     text-decoration: none;
-    box-shadow: 0 16px 35px rgba(0,0,0,.32);
+    box-shadow: none;
     filter: blur(3px);
     opacity: .48;
     transform: scale(.86);
@@ -215,11 +228,11 @@ try {
     opacity: 1;
     transform: scale(1.04);
     border-color: #03d437;
-    box-shadow: 0 22px 45px rgba(0,0,0,.48);
+    box-shadow: none;
 }
 .obra-top:first-child { border-color: rgba(255,224,138,.45); transform: scale(.86); }
 .obra-top.is-active:first-child { border-color: #03d437; transform: scale(1.04); }
-.obra-top:hover { z-index: 2; border-color: #03d437; transform: translateY(-16px); box-shadow: 0 22px 45px rgba(0,0,0,.48); }
+.obra-top:hover { z-index: 2; border-color: #03d437; transform: translateY(-16px); box-shadow: none; }
 .obras-top__control {
     position: absolute; top: 50%; z-index: 3; width: 42px; height: 42px;
     border: 1px solid #03d437; border-radius: 50%; color: #fff; background: rgba(25,21,19,.92);
@@ -259,6 +272,57 @@ try {
 .museos-virtuales__legend small { align-self: start; margin-top: 3px; color: #ffe08a; font-size: 10px; }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #30231e; color: #fff; }
 .leaflet-popup-content strong { color: #03d437; }
+.leaflet-popup-content { margin: 16px 18px; min-width: 190px; font-family: 'Montserrat', sans-serif; line-height: 1.5; }
+.leaflet-popup-content strong { display: block; margin-bottom: 5px; font-size: 14px; letter-spacing: .3px; }
+.museum-popup-description { display: block; margin-bottom: 13px; color: rgba(255,255,255,.72); font-size: 11px; line-height: 1.45; }
+.museum-vr-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #03d437;
+    border-radius: 7px;
+    color: #172318 !important;
+    background: #03d437;
+    box-shadow: 0 5px 14px rgba(3,212,55,.24);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.museum-vr-link::before { content: '◉'; font-size: 13px; line-height: 1; }
+.museum-vr-link::after { content: '↗'; font-size: 15px; line-height: 1; }
+.museum-vr-link:hover, .museum-vr-link:focus-visible {
+    color: #fff !important;
+    background: #0f9c60;
+    box-shadow: 0 7px 18px rgba(3,212,55,.35);
+    outline: none;
+    transform: translateY(-2px);
+}
+.museum-vr-link:active { transform: translateY(0); }
+.museum-vr-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #211a18;
+}
+.museum-vr-overlay:fullscreen { width: 100vw; height: 100vh; }
+.nikan-vr-open { overflow: hidden !important; }
+.museum-vr-overlay iframe {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    overflow: hidden;
+}
 @media (max-width: 900px) {
     .obras-top { width: 84vw; }
     .obra-top { min-height: 270px; }
@@ -268,6 +332,14 @@ try {
     .obras-top__control--next { right: -20px; }
 }
 @media (max-width: 680px) {
+    body { overflow-x: hidden; }
+    .museo { min-height: 820px; }
+    .museo__img { height: 820px; object-position: center top; }
+    .museo__pod1, .museo__pod2, .museo__pod3, .museo__pod4 { opacity: .55; }
+    .museo__pod1 { right: -36px; top: 34%; width: 135px; }
+    .museo__pod2 { right: -30px; top: 74%; width: 125px; }
+    .museo__pod3 { left: -32px; top: 34%; width: 120px; }
+    .museo__pod4 { left: -28px; top: 74%; width: 125px; }
     .obras-top { top: 13%; width: 88vw; }
     .obra-top { flex-basis: 100%; min-height: 0; flex-direction: row; transform: scale(.92); }
     .obra-top.is-active { transform: scale(1); }
@@ -282,6 +354,59 @@ try {
     .obras-top__control--next { right: -12px; }
     .museos-virtuales { padding: 65px 18px 80px; }
     .museos-virtuales__map-wrap { height: 430px; }
+    .museos-virtuales__legend { left: 12px; right: 12px; bottom: 12px; }
+    .museos-virtuales__map-wrap { max-width: 100%; }
+}
+
+/* Presentación editorial de una obra destacada por turno. */
+.obras-top__track { --card-width: 100%; gap: 18px; padding: 18px 0 28px; }
+.obra-top {
+    flex-basis: 100%;
+    min-height: 430px;
+    display: grid;
+    grid-template-columns: minmax(360px, 1.15fr) minmax(320px, .85fr);
+    align-items: center;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.obra-top:not(.is-active) { opacity: .14; filter: blur(7px); pointer-events: none; }
+.obra-top.is-active, .obra-top:first-child, .obra-top.is-active:first-child { transform: scale(1); }
+.obra-top__rank { top: 22px; left: 25px; font-size: 30px; }
+.obra-top__image {
+    width: 100%;
+    height: 390px;
+    padding: 22px 76px;
+    border-radius: 0;
+    background: radial-gradient(ellipse at center, rgba(255,230,174,.3), transparent 64%);
+}
+.obra-top__image img { filter: drop-shadow(0 24px 22px rgba(0,0,0,.56)); }
+.obra-top__info {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 480px;
+    padding: 20px 45px 20px 28px;
+    border-top: 0;
+    border-left: 1px solid rgba(255,255,255,.25);
+}
+.obra-top__area { letter-spacing: 3px; }
+.obra-top h2 { margin: 11px 0 5px; font-size: clamp(32px, 4vw, 60px); line-height: .95; }
+.obra-top__author { margin: 0 0 19px; color: #ffe08a; font: 500 clamp(17px, 2vw, 25px)/1.2 'Alegreya', serif; }
+.obra-top__description { display: -webkit-box; margin: 0; overflow: hidden; color: rgba(255,255,255,.83); font-size: clamp(13px, 1.2vw, 17px); line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+.obra-top__stats { display: flex; align-items: center; gap: 22px; margin-top: 25px; }
+.obra-top__visitas { color: #fff2cd; font-size: 12px; letter-spacing: 1px; }
+.obra-top__more { color: #03d437; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+@media (max-width: 680px) {
+    .obra-top { min-height: 390px; display: flex; flex-direction: column; }
+    .obra-top__image { width: 100%; height: 190px; flex: 0 0 190px; padding: 25px 60px 15px; border-radius: 24px 24px 0 0; }
+    .obra-top__info { align-self: auto; width: 100%; padding: 18px 22px 22px; border-left: 0; border-top: 1px solid rgba(255,255,255,.16); }
+    .obra-top h2 { font-size: 32px; }
+    .obra-top__author { margin-bottom: 10px; }
+    .obra-top__description { -webkit-line-clamp: 3; }
+    .obra-top__stats { margin-top: 13px; }
 }
 </style>
 <script>
@@ -335,15 +460,57 @@ try {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    var locations = [
-        ['Museo Managua', 12.1328, -86.2504, 'Recorrido virtual principal de NIKAN.'],
-        ['León cultural', 12.4379, -86.8780, 'Arte, historia y patrimonio colonial.'],
-        ['Granada histórica', 11.9344, -85.9560, 'Arquitectura y memoria de Nicaragua.'],
-        ['Caribe nicaragüense', 12.0069, -83.7635, 'Tradiciones y expresiones del Caribe.']
-    ];
+    var locations = <?php echo json_encode($museosVirtuales, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (character) {
+            return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'}[character];
+        });
+    }
     locations.forEach(function (place) {
-        L.marker([place[1], place[2]]).addTo(map)
-            .bindPopup('<strong>' + place[0] + '</strong><br>' + place[3]);
+        var popup = '<strong>' + escapeHtml(place.nombre) + '</strong>' +
+            '<span class="museum-popup-description">' + escapeHtml(place.descripcion) + '</span>' +
+            '<a href="#" class="museum-vr-link" data-museum-id="' + encodeURIComponent(place.id) + '">Explorar en VR</a>';
+        L.marker([Number(place.latitud), Number(place.longitud)]).addTo(map).bindPopup(popup);
+    });
+    map.on('popupopen', function (event) {
+        var link = event.popup.getElement().querySelector('.museum-vr-link');
+        if (!link) return;
+        link.addEventListener('click', function (clickEvent) {
+            clickEvent.preventDefault();
+            abrirMuseoVR(link.dataset.museumId);
+        });
+    });
+
+    function abrirMuseoVR(museoId) {
+        var overlay = document.createElement('div');
+        overlay.className = 'museum-vr-overlay';
+        overlay.innerHTML = '<iframe tabindex="0" title="Recorrido virtual" allow="fullscreen" src="index.php?page=vr&museo_id=' +
+            encodeURIComponent(museoId) + '&embed=1"></iframe>';
+        document.body.appendChild(overlay);
+        document.body.classList.add('nikan-vr-open');
+        var frame = overlay.querySelector('iframe');
+        frame.addEventListener('load', function () {
+            frame.focus();
+            if (frame.contentWindow) frame.contentWindow.focus();
+        });
+        if (overlay.requestFullscreen) {
+            overlay.requestFullscreen().catch(function () {
+                frame.focus();
+            });
+        }
+    }
+    window.addEventListener('message', function (event) {
+        if (event.origin !== window.location.origin || !event.data || event.data.type !== 'nikan-vr-exit') return;
+        var overlay = document.querySelector('.museum-vr-overlay');
+        if (overlay) overlay.remove();
+        document.body.classList.remove('nikan-vr-open');
+        window.location.href = 'index.php';
+    });
+    document.addEventListener('fullscreenchange', function () {
+        if (document.fullscreenElement || !document.querySelector('.museum-vr-overlay')) return;
+        document.querySelector('.museum-vr-overlay').remove();
+        document.body.classList.remove('nikan-vr-open');
+        window.location.href = 'index.php';
     });
 })();
 </script>

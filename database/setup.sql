@@ -28,5 +28,17 @@ CREATE TABLE IF NOT EXISTS obra_visitas (
     INDEX idx_obra_visitas_fecha (visitado_en)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS museos_virtuales (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT NOT NULL,
+    latitud DECIMAL(10,7) NOT NULL,
+    longitud DECIMAL(10,7) NOT NULL,
+    modelo VARCHAR(255) NOT NULL,
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_museos_virtuales_ubicacion (latitud, longitud)
+) ENGINE=InnoDB;
+
 -- Si ya ejecutaste esto antes, actualiza el hash con el correcto:
 --UPDATE users SET password = '$2y$10$...' WHERE username = 'admin';

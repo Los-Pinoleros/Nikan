@@ -159,6 +159,32 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             max-width: 100%;
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         }
+        .header__menu-button {
+            display: none;
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            z-index: 210;
+            width: 44px;
+            height: 44px;
+            padding: 10px;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .header__menu-button span {
+            display: block;
+            height: 2px;
+            margin: 5px 0;
+            background: #fff;
+            transition: transform .3s ease, opacity .2s ease;
+        }
+        .header__menu-button.open span:first-child { transform: translateY(7px) rotate(45deg); }
+        .header__menu-button.open span:nth-child(2) { opacity: 0; }
+        .header__menu-button.open span:last-child { transform: translateY(-7px) rotate(-45deg); }
+        .header__menu-backdrop {
+            display: none;
+        }
         .header__search {
             position: absolute;
             left: 220px;
@@ -338,13 +364,6 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             height: 28px;
             object-fit: contain;
         }
-        .header__link--vr {
-            color: #ffe08a;
-        }
-        .header__link--vr img {
-            width: 42px;
-            height: 42px;
-        }
         @media (max-width: 900px) {
             .header { padding: 20px 24px; }
             .header__logo { font-size: 38px; }
@@ -356,18 +375,74 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
             .header.search-open .header__nav { transform: translateX(100px); }
         }
         @media (max-width: 680px) {
-            .header { padding: 16px 18px; }
+            .header { min-height: 76px; padding: 16px 18px 16px 76px; }
             .header__logo { font-size: 32px; }
             .header__leon { right: 18px; height: 44px; }
             .header__search { left: 132px; }
             .header__search.open { width: calc(100vw - 150px); }
-            .header__nav { display: none; }
+            .header__menu-button { display: block; transform: translateY(-50%); }
+            .header__nav {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 0;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: min(82vw, 320px);
+                max-width: none;
+                margin: 0;
+                padding: 96px 18px 24px;
+                background: #30201c;
+                overflow-y: auto;
+                transform: translateX(-105%);
+                opacity: 1;
+                box-shadow: 12px 0 30px rgba(0,0,0,.3);
+                transition: transform .45s cubic-bezier(.16,1,.3,1);
+                z-index: 100;
+            }
+            .header__nav.open { transform: translateX(0); }
+            .header__nav .header__link {
+                justify-content: flex-start;
+                width: 100%;
+                padding: 13px 8px;
+                font-size: 18px;
+                border-bottom: 1px solid rgba(255,255,255,.12);
+            }
+            .header__nav .header__link img { width: 34px; height: 34px; }
+            .header__dropdown-menu {
+                position: static;
+                min-width: 0;
+                padding: 0 0 0 18px;
+                border: 0;
+                background: transparent;
+                box-shadow: none;
+                transform: none;
+            }
+            .header__dropdown.open .header__dropdown-menu { transform: none; }
+            .header__dropdown-link { font-size: 15px; }
+            .header__menu-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 90;
+                background: rgba(0,0,0,.48);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .3s ease, visibility .3s ease;
+            }
+            .header__menu-backdrop.open { opacity: 1; visibility: visible; }
             .header__search-results { left: -114px; }
         }
     </style>
 </head>
 <body>
     <header class="header">
+        <button type="button" class="header__menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
         <a href="/" class="header__logo">NIKAN</a>
         <div class="header__search" id="siteSearch">
             <button type="button" class="header__search-button" id="siteSearchButton" aria-label="Buscar obras o autores" aria-expanded="false">
@@ -409,8 +484,8 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
                 </div>
             </div>
             <a href="?page=nosotros" class="header__link"><img src="assets/nosotros.svg" alt="Nosotros">Nosotros</a>
-            <a href="?page=vr" class="header__link header__link--vr"><img src="assets/vr.svg" alt="VR">VR</a>
         </nav>
+        <div class="header__menu-backdrop" id="mobileMenuBackdrop"></div>
     </header>
     <script>
     (function () {
@@ -422,6 +497,21 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         var museumDropdown = document.getElementById('museumDropdown');
         var museumDropdownButton = document.getElementById('museumDropdownButton');
         var timer;
+        var mobileMenuButton = document.getElementById('mobileMenuButton');
+        var mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+        var mobileNav = document.querySelector('.header__nav');
+
+        function toggleMobileMenu(open) {
+            mobileNav.classList.toggle('open', open);
+            mobileMenuButton.classList.toggle('open', open);
+            mobileMenuBackdrop.classList.toggle('open', open);
+            mobileMenuButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+            mobileMenuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+        }
+        mobileMenuButton.addEventListener('click', function () {
+            toggleMobileMenu(!mobileNav.classList.contains('open'));
+        });
+        mobileMenuBackdrop.addEventListener('click', function () { toggleMobileMenu(false); });
 
         function showResults(items, message) {
             if (!items.length) {
@@ -485,6 +575,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
                 museumDropdown.classList.remove('open');
                 museumDropdownButton.setAttribute('aria-expanded', 'false');
             }
+            if (e.target.closest('.header__nav a')) toggleMobileMenu(false);
         });
     })();
     </script>

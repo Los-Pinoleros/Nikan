@@ -103,6 +103,24 @@ function registrar_visita_obra(PDO $pdo, $area, $obra_id, $origen = 'catalogo') 
     ]);
 }
 
+function asegurar_tabla_museos_virtuales(PDO $pdo) {
+    static $tablaPreparada = false;
+    if (!$tablaPreparada) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS museos_virtuales (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(150) NOT NULL,
+            descripcion TEXT NOT NULL,
+            latitud DECIMAL(10,7) NOT NULL,
+            longitud DECIMAL(10,7) NOT NULL,
+            modelo VARCHAR(255) NOT NULL,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_museos_virtuales_ubicacion (latitud, longitud)
+        ) ENGINE=InnoDB");
+        $tablaPreparada = true;
+    }
+}
+
 function resolver_autor(PDO $pdo, $autor_id, $autor = '') {
     $autor_id = (int)$autor_id;
     if ($autor_id > 0) {
