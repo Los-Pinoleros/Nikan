@@ -5,6 +5,17 @@
  */
 require_once __DIR__ . '/../config/config.php';
 
+function poesia_extracto($texto, $limite = 60) {
+    $texto = trim(preg_replace('/\s+/', ' ', strip_tags((string)$texto)));
+    if (function_exists('mb_strlen') && mb_strlen($texto, 'UTF-8') > $limite) {
+        return mb_substr($texto, 0, $limite, 'UTF-8') . '…';
+    }
+    if (strlen($texto) > $limite) {
+        return substr($texto, 0, $limite) . '…';
+    }
+    return $texto;
+}
+
 try {
     $pdo = getDB();
     $secciones = $pdo->query('SELECT * FROM lit_secciones ORDER BY orden ASC')->fetchAll();
@@ -132,9 +143,9 @@ try {
                                         <?php if (!empty($poeObra['anio'])): ?><span class="lite-label">Año: <strong><?php echo htmlspecialchars($poeObra['anio']); ?></strong></span><?php endif; ?>
                                     </div>
                                     <?php if (!empty($poeObra['poema'])): ?>
-                                        <blockquote class="lite-cita"><?php echo nl2br(htmlspecialchars($poeObra['poema'])); ?></blockquote>
+                                        <blockquote class="lite-cita"><?php echo htmlspecialchars(poesia_extracto($poeObra['poema']), ENT_QUOTES, 'UTF-8'); ?></blockquote>
                                     <?php endif; ?>
-                                    <span class="lite-ver">Leer poema →</span>
+                                    <span class="lite-ver">VER MÁS →</span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
@@ -324,7 +335,15 @@ try {
     font: 800 clamp(22px, 3vw, 34px)/1.1 'Nikan Felthgothic', serif;
 }
 .lite-card--poesia .lite-cita {
-    white-space: pre-line;
+    min-height: 76px;
+    max-height: 76px;
+    overflow: hidden;
+}
+.lite-card--poesia {
+    min-height: 310px;
+}
+.lite-card--poesia .lite-ver {
+    margin-top: auto;
 }
 
 .lite-seccion:nth-child(even) {
