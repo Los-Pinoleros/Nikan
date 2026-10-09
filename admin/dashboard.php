@@ -213,6 +213,18 @@ include __DIR__ . '/components/header.php';
         gap: 16px;
         margin-bottom: 24px;
     }
+    .dash-head .admin-title {
+        margin-bottom: 4px;
+        color: #fff;
+        font: oblique bold 100% 'Felthgothic', cursive;
+        font-size: 40px;
+    }
+    .dash-head .admin-sub {
+        margin-bottom: 24px;
+        color: #fff;
+        font-size: 14px;
+        opacity: .9;
+    }
     .dash-user {
         background: rgba(20, 20, 20, 0.75);
         border-radius: 14px;

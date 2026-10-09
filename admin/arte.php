@@ -289,7 +289,7 @@ function seccionEditar(id) {
 async function guardarSeccion() {
     const fd = new FormData(document.getElementById('formSeccion'));
     const r = await postForm('arte_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'success', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 async function seccionEliminar(id) {
@@ -298,7 +298,7 @@ async function seccionEliminar(id) {
     fd.append('action', 'seccion_delete');
     fd.append('id', id);
     const r = await postForm('arte_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'delete', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 /* Obras */
@@ -390,7 +390,7 @@ function obraEditar(id) {
 async function guardarObra() {
     const fd = new FormData(document.getElementById('formObra'));
     const r = await postForm('arte_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'success', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 async function obraEliminar(id) {
@@ -399,7 +399,7 @@ async function obraEliminar(id) {
     fd.append('action', 'obra_delete');
     fd.append('id', id);
     const r = await postForm('arte_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'delete', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 renderObras();
