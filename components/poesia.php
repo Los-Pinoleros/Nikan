@@ -74,7 +74,7 @@ try {
         <?php if ($lista): ?>
             <div class="poe-grid">
                 <?php foreach ($lista as $obra): ?>
-                    <a href="?page=poe_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="poe-card">
+                    <a href="?page=poe_detalle&obra_id=<?php echo (int)$obra['id']; ?>&visita=1" class="poe-card">
                         <?php if (!empty($obra['imagen'])): ?>
                             <div class="poe-img">
                                 <img src="<?php echo htmlspecialchars($obra['imagen']); ?>" alt="<?php echo htmlspecialchars($obra['titulo']); ?>">

@@ -63,7 +63,7 @@ try {
         <?php if ($lista): ?>
             <div class="musc-grid">
                 <?php foreach ($lista as $obra): ?>
-                    <a href="?page=musica_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="musc-card">
+                    <a href="?page=musica_detalle&obra_id=<?php echo (int)$obra['id']; ?>&visita=1" class="musc-card">
                         <div class="musc-img">
                             <?php if ($obra['imagen']): ?>
                                 <img src="<?php echo htmlspecialchars($obra['imagen']); ?>" alt="<?php echo htmlspecialchars($obra['titulo']); ?>">

@@ -6,14 +6,7 @@ define('DB_NAME', env('DB_NAME', 'nuevaguin_nikannicaragua'));
 define('DB_USER', env('DB_USER', 'nuevguin_ea'));
 define('DB_PASS', env('DB_PASS', 'WjarXD2004@2026'));
 
-/**
- * Blindado de los endpoints JSON (los formularios del panel usan fetch + res.json()).
- * - Cualquier warning/notice de PHP se acumula en un buffer: nunca se cuela
- *   dentro de la respuesta JSON.
- * - Un error fatal o una excepción se responden como JSON {ok:false,msg:...}
- *   en vez de una página HTML, para que el navegador no falle con
- *   "Unexpected token '<' ... is not valid JSON".
- */
+
 function json_safe_start() {
     if (defined('JSON_SAFE')) return;
     define('JSON_SAFE', true);
@@ -25,7 +18,6 @@ function json_safe_start() {
     register_shutdown_function('json_safe_shutdown');
 }
 
-/** Descarta (y registra en el log) todo lo que PHP haya impreso antes del JSON. */
 function json_safe_flush() {
     while (ob_get_level() > 0) {
         $out = ob_get_clean();
@@ -80,6 +72,55 @@ function getDB() {
     return $conn;
 }
 
+function asegurar_tabla_obra_visitas(PDO $pdo) {
+    static $tablaPreparada = false;
+    if (!$tablaPreparada) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS obra_visitas (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            area VARCHAR(20) NOT NULL,
+            obra_id INT UNSIGNED NOT NULL,
+            origen VARCHAR(30) NOT NULL DEFAULT 'catalogo',
+            visitado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_obra_visitas_area_obra (area, obra_id),
+            INDEX idx_obra_visitas_fecha (visitado_en)
+        ) ENGINE=InnoDB");
+        $tablaPreparada = true;
+    }
+}
+
+function registrar_visita_obra(PDO $pdo, $area, $obra_id, $origen = 'catalogo') {
+    $areas = ['arte', 'literatura', 'musica', 'poesia'];
+    if (!in_array($area, $areas, true) || (int)$obra_id <= 0) {
+        return;
+    }
+
+    asegurar_tabla_obra_visitas($pdo);
+    $stmt = $pdo->prepare('INSERT INTO obra_visitas (area, obra_id, origen) VALUES (?, ?, ?)');
+    $stmt->execute([
+        $area,
+        (int)$obra_id,
+        in_array($origen, ['catalogo', 'buscador'], true) ? $origen : 'catalogo',
+    ]);
+}
+
+function asegurar_tabla_museos_virtuales(PDO $pdo) {
+    static $tablaPreparada = false;
+    if (!$tablaPreparada) {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS museos_virtuales (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(150) NOT NULL,
+            descripcion TEXT NOT NULL,
+            latitud DECIMAL(10,7) NOT NULL,
+            longitud DECIMAL(10,7) NOT NULL,
+            modelo VARCHAR(255) NOT NULL,
+            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_museos_virtuales_ubicacion (latitud, longitud)
+        ) ENGINE=InnoDB");
+        $tablaPreparada = true;
+    }
+}
+
 function resolver_autor(PDO $pdo, $autor_id, $autor = '') {
     $autor_id = (int)$autor_id;
     if ($autor_id > 0) {
@@ -104,11 +145,7 @@ function mensaje_error_imagen() {
         : 'El servidor no tiene habilitada la extensión GD de PHP (php.ini → extension=gd) y no puede procesar imágenes.';
 }
 
-/**
- * Sube un archivo de imagen y lo convierte a WebP.
- * Devuelve la ruta relativa (uploads/xxx.webp) o false si falla.
- * Tipos soportados: jpeg, png, gif, webp, svg (el SVG se deja igual).
- */
+
 function subir_imagen_webp($file, $prefijo) {
     if ($file['error'] === UPLOAD_ERR_NO_FILE) return '';
     if ($file['error'] !== UPLOAD_ERR_OK) return false;
@@ -117,7 +154,7 @@ function subir_imagen_webp($file, $prefijo) {
     $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
     if (!in_array($mime, $allowed)) return false;
 
-    // El SVG se copia directo (no rasterizable con GD correctamente)
+    
     if ($mime === 'image/svg+xml') {
         $ext = 'svg';
         $filename = $prefijo . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
@@ -127,13 +164,13 @@ function subir_imagen_webp($file, $prefijo) {
         return move_uploaded_file($file['tmp_name'], $dest) ? 'uploads/' . $filename : false;
     }
 
-    // Sin GD no hay forma de convertir a WebP: se avisa en vez de romper con un fatal
+   
     if (!gd_disponible()) {
         error_log('[NIKAN] subir_imagen_webp: la extensión "gd" de PHP no está habilitada.');
         return false;
     }
 
-    // Cargar imagen según tipo
+   
     switch ($mime) {
         case 'image/jpeg': $src = @imagecreatefromjpeg($file['tmp_name']); break;
         case 'image/png':  $src = @imagecreatefrompng($file['tmp_name']); break;
@@ -144,7 +181,7 @@ function subir_imagen_webp($file, $prefijo) {
 
     if (!$src) return false;
 
-    // Preservar transparencia de PNG
+    
     if ($mime === 'image/png' || $mime === 'image/webp') {
         imagealphablending($src, false);
         imagesavealpha($src, true);
@@ -166,10 +203,7 @@ function subir_imagen_webp($file, $prefijo) {
     return false;
 }
 
-/**
- * Sube un archivo de audio (mp3 u ogg).
- * Devuelve la ruta relativa (uploads/audio/xxx.ext) o false si falla.
- */
+
 function subir_audio($file) {
     if ($file['error'] === UPLOAD_ERR_NO_FILE) return '';
     if ($file['error'] !== UPLOAD_ERR_OK) return false;

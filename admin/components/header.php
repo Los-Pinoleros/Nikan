@@ -127,6 +127,30 @@ $current = basename($_SERVER['PHP_SELF']);
             width: max-content;
             max-width: 100%;
         }
+        .header__menu-button {
+            display: none;
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            z-index: 210;
+            width: 44px;
+            height: 44px;
+            padding: 10px;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .header__menu-button span {
+            display: block;
+            height: 2px;
+            margin: 5px 0;
+            background: #fff;
+            transition: transform .3s ease, opacity .2s ease;
+        }
+        .header__menu-button.open span:first-child { transform: translateY(7px) rotate(45deg); }
+        .header__menu-button.open span:nth-child(2) { opacity: 0; }
+        .header__menu-button.open span:last-child { transform: translateY(-7px) rotate(-45deg); }
+        .header__menu-backdrop { display: none; }
         .header__link {
             font: oblique bold 120% 'Felthgothic', cursive;
             font-size: 20px;
@@ -145,10 +169,64 @@ $current = basename($_SERVER['PHP_SELF']);
         .header__link:hover {
             opacity: 0.8;
         }
+        @media (max-width: 900px) {
+            .header { padding: 20px 24px 20px 76px; min-height: 78px; }
+            .header__logo { font-size: 38px; }
+        }
+        @media (max-width: 680px) {
+            .header { padding: 16px 18px 16px 76px; min-height: 70px; }
+            .header__logo { font-size: 32px; }
+            .header__leon { right: 18px; height: 44px; }
+            .header__menu-button { display: block; transform: translateY(-50%); }
+            .header__nav {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 0;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: min(84vw, 330px);
+                max-width: none;
+                margin: 0;
+                padding: 88px 18px 24px;
+                background: #30201c;
+                overflow-y: auto;
+                transform: translateX(-105%);
+                box-shadow: 12px 0 30px rgba(0,0,0,.3);
+                transition: transform .45s cubic-bezier(.16,1,.3,1);
+                z-index: 100;
+            }
+            .header__nav.open { transform: translateX(0); }
+            .header__nav .header__link {
+                justify-content: flex-start;
+                width: 100%;
+                padding: 13px 8px;
+                font-size: 17px;
+                border-bottom: 1px solid rgba(255,255,255,.12);
+            }
+            .header__nav .header__link img { width: 34px; height: 34px; }
+            .header__menu-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 90;
+                background: rgba(0,0,0,.48);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .3s ease, visibility .3s ease;
+            }
+            .header__menu-backdrop.open { opacity: 1; visibility: visible; }
+        }
     </style>
 </head>
 <body>
     <header class="header">
+        <button type="button" class="header__menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
         <a href="../index.php" class="header__logo">NIKAN</a>
         <button type="button" class="header__leon-btn" onclick="document.getElementById('userMenu').classList.toggle('open')" style="background:none;border:none;padding:0;">
             <img src="../../assets/leon-verde.svg" alt="León" class="header__leon">
@@ -166,10 +244,29 @@ $current = basename($_SERVER['PHP_SELF']);
             <a href="literatura.php" class="header__link"><img src="../../assets/literatura.svg" alt="Literatura">Literatura</a>
             <a href="poesia.php" class="header__link"><img src="../../assets/literatura.svg" alt="Poesía">Poesía</a>
             <a href="musica.php" class="header__link"><img src="../../assets/musica.svg" alt="Música">Música</a>
+            <a href="virtuales.php" class="header__link"><img src="../../assets/vr.svg" alt="Museos virtuales">Museos virtuales</a>
             <a href="#" class="header__link"><img src="../../assets/nosotros.svg" alt="Usuarios">Usuarios</a>
         </nav>
+        <div class="header__menu-backdrop" id="mobileMenuBackdrop"></div>
     </header>
     <script>
+    (function () {
+        var button = document.getElementById('mobileMenuButton');
+        var nav = document.querySelector('.header__nav');
+        var backdrop = document.getElementById('mobileMenuBackdrop');
+        function toggleMenu(open) {
+            nav.classList.toggle('open', open);
+            button.classList.toggle('open', open);
+            backdrop.classList.toggle('open', open);
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            button.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+        }
+        button.addEventListener('click', function () { toggleMenu(!nav.classList.contains('open')); });
+        backdrop.addEventListener('click', function () { toggleMenu(false); });
+        nav.addEventListener('click', function (event) {
+            if (event.target.closest('a')) toggleMenu(false);
+        });
+    })();
     document.addEventListener('click', function (e) {
         var menu = document.getElementById('userMenu');
         if (menu && !e.target.closest('.header__leon-btn') && !e.target.closest('.header__user')) {

@@ -63,7 +63,7 @@ try {
         <?php if ($lista): ?>
             <div class="artec-grid">
                 <?php foreach ($lista as $obra): ?>
-                    <a href="?page=arte_detalle&obra_id=<?php echo (int)$obra['id']; ?>" class="artec-card">
+                    <a href="?page=arte_detalle&obra_id=<?php echo (int)$obra['id']; ?>&visita=1" class="artec-card">
                         <div class="artec-img">
                             <?php if ($obra['imagen']): ?>
                                 <img src="<?php echo htmlspecialchars($obra['imagen']); ?>" alt="<?php echo htmlspecialchars($obra['titulo']); ?>">

@@ -40,7 +40,7 @@ try {
                 'type' => $obra['tipo'],
                 'title' => htmlspecialchars($row['titulo'], ENT_QUOTES, 'UTF-8'),
                 'author' => !empty($row['autor']) ? 'Por ' . htmlspecialchars($row['autor'], ENT_QUOTES, 'UTF-8') : '',
-                'url' => '?page=' . $obra['pagina'] . '&obra_id=' . (int)$row['id'],
+                'url' => '?page=' . $obra['pagina'] . '&obra_id=' . (int)$row['id'] . '&visita=1&origen=buscador',
             ];
         }
     }
