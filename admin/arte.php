@@ -17,7 +17,7 @@ include __DIR__ . '/components/header.php';
 ?>
 
 <div class="admin-body">
-    <h1 class="admin-title">Gestión de Arte</h1>
+    <h1 class="admin-title">Gestión de Arteta</h1>
     <p class="admin-sub">Administra las secciones y las obras del área de arte.</p>
 
     <div class="admin-layout">
