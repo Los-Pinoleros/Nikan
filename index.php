@@ -29,7 +29,7 @@ switch ($page) {
         include __DIR__ . '/components/literatura.php';
         break;
     case 'poesia':
-        include __DIR__ . '/components/poesia.php';
+        include __DIR__ . '/components/literatura.php';
         break;
     case 'musica':
         include __DIR__ . '/components/musica.php';

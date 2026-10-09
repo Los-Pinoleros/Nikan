@@ -169,6 +169,49 @@ $current = basename($_SERVER['PHP_SELF']);
         .header__link:hover {
             opacity: 0.8;
         }
+        .admin-feedback {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(0,0,0,.58);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .25s ease, visibility .25s ease;
+        }
+        .admin-feedback.open { opacity: 1; visibility: visible; }
+        .admin-feedback__dialog {
+            width: min(420px, 100%);
+            padding: 28px 26px 24px;
+            border: 1px solid rgba(3,212,55,.75);
+            border-radius: 14px;
+            color: #fff;
+            background: #30201c;
+            box-shadow: 0 20px 55px rgba(0,0,0,.42);
+            text-align: center;
+            transform: translateY(12px) scale(.97);
+            transition: transform .25s ease;
+        }
+        .admin-feedback--delete .admin-feedback__dialog { border-color: rgba(255,224,138,.75); }
+        .admin-feedback--error .admin-feedback__dialog { border-color: rgba(255,99,99,.78); }
+        .admin-feedback.open .admin-feedback__dialog { transform: translateY(0) scale(1); }
+        .admin-feedback__icon { color: #03d437; font-size: 34px; line-height: 1; }
+        .admin-feedback__title { margin: 12px 0 8px; font: oblique bold 26px 'Felthgothic', cursive; }
+        .admin-feedback__message { color: rgba(255,255,255,.78); font-size: 13px; line-height: 1.5; }
+        .admin-feedback__close {
+            margin-top: 20px;
+            padding: 10px 24px;
+            border: 0;
+            border-radius: 7px;
+            color: #172318;
+            background: #03d437;
+            font: 800 11px 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
         @media (max-width: 900px) {
             .header { padding: 20px 24px 20px 76px; min-height: 78px; }
             .header__logo { font-size: 38px; }
@@ -242,14 +285,47 @@ $current = basename($_SERVER['PHP_SELF']);
             <a href="autores.php" class="header__link"><img src="../../assets/nosotros.svg" alt="Autores">Autores</a>
             <a href="arte.php" class="header__link"><img src="../../assets/arte.svg" alt="Arte">Arte</a>
             <a href="literatura.php" class="header__link"><img src="../../assets/literatura.svg" alt="Literatura">Literatura</a>
-            <a href="poesia.php" class="header__link"><img src="../../assets/literatura.svg" alt="Poesía">Poesía</a>
             <a href="musica.php" class="header__link"><img src="../../assets/musica.svg" alt="Música">Música</a>
             <a href="virtuales.php" class="header__link"><img src="../../assets/vr.svg" alt="Museos virtuales">Museos virtuales</a>
             <a href="#" class="header__link"><img src="../../assets/nosotros.svg" alt="Usuarios">Usuarios</a>
         </nav>
         <div class="header__menu-backdrop" id="mobileMenuBackdrop"></div>
     </header>
+    <div class="admin-feedback" id="adminFeedback" role="alertdialog" aria-modal="true" aria-labelledby="adminFeedbackTitle">
+        <div class="admin-feedback__dialog">
+            <div class="admin-feedback__icon" id="adminFeedbackIcon">✓</div>
+            <h2 class="admin-feedback__title" id="adminFeedbackTitle">Operación completada</h2>
+            <p class="admin-feedback__message" id="adminFeedbackMessage"></p>
+            <button class="admin-feedback__close" type="button" id="adminFeedbackClose">Continuar</button>
+        </div>
+    </div>
     <script>
+    window.adminNotify = function (message, type, callback) {
+        var modal = document.getElementById('adminFeedback');
+        if (!modal) {
+            if (callback) callback();
+            return;
+        }
+        var title = document.getElementById('adminFeedbackTitle');
+        var icon = document.getElementById('adminFeedbackIcon');
+        document.getElementById('adminFeedbackMessage').textContent = message || 'La operación se completó correctamente.';
+        title.textContent = type === 'error' ? 'No se pudo completar' : (type === 'delete' ? 'Elemento eliminado' : 'Cambios guardados');
+        icon.textContent = type === 'error' ? '!' : (type === 'delete' ? '×' : '✓');
+        icon.style.color = type === 'error' ? '#ff8c76' : (type === 'delete' ? '#ffe08a' : '#03d437');
+        modal.classList.remove('admin-feedback--delete', 'admin-feedback--error');
+        if (type === 'delete') modal.classList.add('admin-feedback--delete');
+        if (type === 'error') modal.classList.add('admin-feedback--error');
+        modal.classList.add('open');
+        var close = function () {
+            modal.classList.remove('open');
+            document.getElementById('adminFeedbackClose').removeEventListener('click', close);
+            if (callback) callback();
+        };
+        document.getElementById('adminFeedbackClose').addEventListener('click', close);
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) close();
+        }, { once: true });
+    };
     (function () {
         var button = document.getElementById('mobileMenuButton');
         var nav = document.querySelector('.header__nav');

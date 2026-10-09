@@ -75,6 +75,13 @@ include __DIR__ . '/components/header.php';
     setPoint(12.1328, -86.2504);
 })();
 </script>
+<?php if (!empty($_GET['msg'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    adminNotify(<?php echo json_encode($_GET['msg'], JSON_UNESCAPED_UNICODE); ?>, 'success');
+});
+</script>
+<?php endif; ?>
 <style>
 .admin-body { position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:126px 24px 70px; color:#fff; }
 .virtual-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:24px; }

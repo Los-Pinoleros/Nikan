@@ -8,6 +8,7 @@ require_once __DIR__ . '/../config/config.php';
 try {
     $pdo = getDB();
     $secciones = $pdo->query('SELECT * FROM lit_secciones ORDER BY orden ASC')->fetchAll();
+    $poeSecciones = $pdo->query('SELECT * FROM poe_secciones ORDER BY orden ASC')->fetchAll();
 
     if ($secciones) {
         $in = implode(',', array_map('intval', array_column($secciones, 'id')));
@@ -19,9 +20,21 @@ try {
     } else {
         $obrasPorSeccion = [];
     }
+    if ($poeSecciones) {
+        $poeIn = implode(',', array_map('intval', array_column($poeSecciones, 'id')));
+        $poeObras = $pdo->query("SELECT * FROM poe_obras WHERE seccion_id IN ($poeIn) ORDER BY orden ASC")->fetchAll();
+        $poeObrasPorSeccion = [];
+        foreach ($poeObras as $poeObra) {
+            $poeObrasPorSeccion[$poeObra['seccion_id']][] = $poeObra;
+        }
+    } else {
+        $poeObrasPorSeccion = [];
+    }
 } catch (Exception $e) {
     $secciones = [];
     $obrasPorSeccion = [];
+    $poeSecciones = [];
+    $poeObrasPorSeccion = [];
 }
 ?>
 
@@ -89,6 +102,52 @@ try {
     </div>
 </section>
 <?php endforeach; ?>
+
+<section class="lite-seccion lite-seccion--poesia" id="poesia">
+    <div class="lite-inner">
+        <div class="lite-cabecera">
+            <h2>Poesía</h2>
+        </div>
+        <p class="lite-desc">Versos, poetas y antologías que celebran la palabra nicaragüense.</p>
+        <?php if ($poeSecciones): ?>
+            <?php foreach ($poeSecciones as $poeSeccion): ?>
+                <div class="lite-subsection">
+                    <h3><?php echo htmlspecialchars($poeSeccion['titulo']); ?></h3>
+                    <?php if (!empty($poeSeccion['descripcion'])): ?>
+                        <p class="lite-desc"><?php echo htmlspecialchars($poeSeccion['descripcion']); ?></p>
+                    <?php endif; ?>
+                    <?php $poeLista = $poeObrasPorSeccion[$poeSeccion['id']] ?? []; ?>
+                    <?php if ($poeLista): ?>
+                        <div class="lite-grid">
+                            <?php foreach ($poeLista as $poeObra): ?>
+                                <a href="?page=poe_detalle&obra_id=<?php echo (int)$poeObra['id']; ?>&visita=1" class="lite-card lite-card--poesia">
+                                    <div class="lite-card-head">
+                                        <h3><?php echo htmlspecialchars($poeObra['titulo']); ?></h3>
+                                        <?php if (!empty($poeObra['autor'])): ?>
+                                            <span class="lite-autor"><?php echo htmlspecialchars($poeObra['autor']); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="lite-meta">
+                                        <?php if (!empty($poeObra['tema'])): ?><span class="lite-label">Tema: <strong><?php echo htmlspecialchars($poeObra['tema']); ?></strong></span><?php endif; ?>
+                                        <?php if (!empty($poeObra['anio'])): ?><span class="lite-label">Año: <strong><?php echo htmlspecialchars($poeObra['anio']); ?></strong></span><?php endif; ?>
+                                    </div>
+                                    <?php if (!empty($poeObra['poema'])): ?>
+                                        <blockquote class="lite-cita"><?php echo nl2br(htmlspecialchars($poeObra['poema'])); ?></blockquote>
+                                    <?php endif; ?>
+                                    <span class="lite-ver">Leer poema →</span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="lite-vacio">Esta sección aún no tiene poemas.</p>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="lite-vacio">Todavía no hay secciones de poesía.</p>
+        <?php endif; ?>
+    </div>
+</section>
 
 <style>
 @font-face {
@@ -256,6 +315,16 @@ try {
     position: relative;
     z-index: 2;
     border-top: 3px solid #c9a94f;
+}
+.lite-seccion--poesia { border-top-color: #0a7a4b; }
+.lite-subsection { margin-top: 34px; }
+.lite-subsection > h3 {
+    margin: 0 0 10px;
+    color: #8a6a2f;
+    font: 800 clamp(22px, 3vw, 34px)/1.1 'Nikan Felthgothic', serif;
+}
+.lite-card--poesia .lite-cita {
+    white-space: pre-line;
 }
 
 .lite-seccion:nth-child(even) {

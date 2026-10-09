@@ -325,7 +325,7 @@ function autorEditar(id) {
 async function guardarAutor() {
     const fd = new FormData(document.getElementById('formAutor'));
     const r = await postForm('autor_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'success', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 async function autorEliminar(id) {
@@ -334,7 +334,7 @@ async function autorEliminar(id) {
     fd.append('action', 'delete');
     fd.append('id', id);
     const r = await postForm('autor_actions.php', fd);
-    if (r.ok) location.reload(); else alert(r.msg);
+    if (r.ok) adminNotify(r.msg, 'delete', function () { location.reload(); }); else adminNotify(r.msg, 'error');
 }
 
 (function () {
