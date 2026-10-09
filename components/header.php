@@ -442,7 +442,7 @@ $pageTitle = $titulos[$page] ?? 'NIKAN · Museo';
         <button type="button" class="header__menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
-        <a href="/" class="header__logo">NIKAN</a>
+        <a href="/" class="header__logo">NIKANO</a>
         <div class="header__search" id="siteSearch">
             <button type="button" class="header__search-button" id="siteSearchButton" aria-label="Buscar obras o autores" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true">
